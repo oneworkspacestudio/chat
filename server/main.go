@@ -44,21 +44,17 @@ import (
 
 	// Push notifications
 	"github.com/tinode/chat/server/push"
-	_ "github.com/tinode/chat/server/push/fcm"
 	_ "github.com/tinode/chat/server/push/stdout"
-	_ "github.com/tinode/chat/server/push/tnpg"
 
 	"github.com/tinode/chat/server/media"
 	"github.com/tinode/chat/server/store"
 
 	// Credential validators
 	_ "github.com/tinode/chat/server/validate/email"
-	_ "github.com/tinode/chat/server/validate/tel"
 	"google.golang.org/grpc"
 
 	// File upload handlers
 	_ "github.com/tinode/chat/server/media/fs"
-	_ "github.com/tinode/chat/server/media/s3"
 )
 
 const (

@@ -1,0 +1,7 @@
+
+# One Workspace local build outputs
+/dist/
+/workspace/payload/*.zip
+/workspace/client/node_modules/
+/workspace/client/umd/
+/workspace/client/css/base.min.css

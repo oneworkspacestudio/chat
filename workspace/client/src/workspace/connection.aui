@@ -1,0 +1,8 @@
+Page ChatConnection
+  Card
+    Image src="img/my_chat.svg" alt="Chat"
+    Heading level=1 "Your conversations, together."
+    Text "Chat connects with your One Workspace sign-in."
+    Text "If the connection stops, retry to continue with MyAccounts."
+    Button variant=primary action=retry "Reconnect Chat"
+    Link href="/" "Back to Workspace"

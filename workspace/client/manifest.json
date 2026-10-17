@@ -1,0 +1,17 @@
+{
+  "name": "Chat \u00b7 One Workspace",
+  "short_name": "Chat",
+  "description": "Your conversations, together.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#f6f8fc",
+  "background_color": "#f6f8fc",
+  "icons": [
+    {
+      "src": "img/my_chat.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

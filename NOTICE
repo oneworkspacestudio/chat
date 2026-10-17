@@ -1,0 +1,10 @@
+Chat for One Workspace
+Copyright 2026 One Workspace Studio contributors.
+
+This fork contains Tinode server (GPL-3.0, LICENSE and UPSTREAM-README.md),
+Tinode webapp (Apache-2.0, workspace/client/LICENSE), and PostgreSQL runtime
+from zonkyio/embedded-postgres-binaries. Versions/hashes: workspace-components.lock.json.
+Windows process/protection helpers adapted from One Workspace (Apache-2.0).
+Original copyright and license notices are retained in source and binary payloads.
+Material Icons are from Google, Apache-2.0.
+Corresponding source: https://github.com/oneworkspacestudio/chat
