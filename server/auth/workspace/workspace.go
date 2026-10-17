@@ -85,10 +85,16 @@ func (a *authenticator) Authenticate(secret []byte, remote string) (*auth.Rec, [
 	}
 	a.used[t.Nonce] = t.Expires
 	sum := sha256.Sum256([]byte(t.Issuer + "\x00" + t.Subject))
-	unique := hex.EncodeToString(sum[:])
-	uid, _, _, _, err := store.Users.GetAuthUniqueRecord(a.name, unique)
+	// PostgreSQL uname is limited to32 bytes including the workspace: prefix.
+	unique := base64.RawURLEncoding.EncodeToString(sum[:16])
+	fingerprint := []byte(hex.EncodeToString(sum[:]))
+	uid, _, stored, _, err := store.Users.GetAuthUniqueRecord(a.name, unique)
 	if err != nil {
 		return nil, nil, err
+	}
+	// Retain the complete digest too: a truncated-key collision must fail closed.
+	if !uid.IsZero() && !hmac.Equal(stored, fingerprint) {
+		return nil, nil, types.ErrFailed
 	}
 	if uid.IsZero() {
 		user := types.User{State: types.StateOK, Public: map[string]any{"fn": t.Name}}
@@ -101,7 +107,7 @@ func (a *authenticator) Authenticate(secret []byte, remote string) (*auth.Rec, [
 			return nil, nil, err
 		}
 		uid = user.Uid()
-		if err = store.Users.AddAuthRecord(uid, auth.LevelAuth, a.name, unique, nil, time.Time{}); err != nil {
+		if err = store.Users.AddAuthRecord(uid, auth.LevelAuth, a.name, unique, fingerprint, time.Time{}); err != nil {
 			_ = store.Users.Delete(uid, true)
 			return nil, nil, err
 		}
