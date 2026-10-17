@@ -36,7 +36,7 @@ GitHub Actions are disabled.
 
 ## Preview scope
 
-Current version: 0.1.0-preview.2. See [acceptance scope](docs/workspace/ACCEPTANCE.md).
+Current version: 0.1.0-preview.3. See [acceptance scope](docs/workspace/ACCEPTANCE.md).
 Do not infer production, mobile, call-hosting or recovery acceptance from a build.
 Chat does not add end-to-end encryption to Tinode.
 

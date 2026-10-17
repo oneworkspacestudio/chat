@@ -68,3 +68,24 @@ execute scripts on the shared Workspace origin). Workspace33 explicitly calls
 Chat's own loopback logout using only the Chat cookie before clearing suite
 cookies, cancelling upgraded connections; clearing a cookie alone is insufficient.
 These are implementation/source-review fixes, not passed runtime acceptance.
+
+## Actual installation startup correction / preview3
+
+Preview2 published with12 verified assets. Owner-requested app installation used
+the supported stopped-state install-apps flow after a cold Accounts/config backup;
+existing executable bytes and data retained. First native startup failed after
+PostgreSQL initialization/schema116 because Tinode push.Init unmarshals missing
+push JSON and rejects nil. No Chat user/login/message was created.
+
+Preview3 explicitly generates push:[] when notifications are disabled. Other
+optional native config initializers were inspected (video/plugins accept absence).
+Do not patch generated engine.json only; all new installs need this source fix.
+
+Workspace33 draft416008298 withheld; uploader stopped before publication, assets
+and tag remain historical. Temporarily removed only Chat app definition from
+installed33 catalog to restore13 existing apps; Chat software/data and new OIDC
+client retained, no Account backup restored/overwritten. Workspace health200/ready.
+Do not use this owner install as a development fixture; this was the authorized
+actual app deployment. No automated/multi-user/messaging acceptance claimed.
+Target componentv0.1.0-preview.3 and full Workspacepreview34. Preserve all owner
+backups and partial Chat data; no data deletion or identity reset.

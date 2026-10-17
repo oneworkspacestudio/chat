@@ -33,7 +33,7 @@ import (
 
 //go:embed payload/runtime.zip
 var runtimeZip []byte
-var Version = "0.1.0-preview.2"
+var Version = "0.1.0-preview.3"
 
 type privateState struct {
 	Password   string `json:"databasePassword"`
@@ -239,6 +239,7 @@ func run(c Config, noBrowser bool) error {
 	apiKey := base64.URLEncoding.EncodeToString(key)
 	config := map[string]any{
 		"listen": fmt.Sprintf("127.0.0.1:%d", enginePort), "api_path": "/", "grpc_listen": "", "static_data": "", "static_mount": "/", "expvar": "-", "server_status": "-", "max_message_size": 262144, "max_subscriber_count": 256, "max_tag_count": 16, "permanent_accounts": true,
+		"push":         []any{}, // Tinode requires an explicit empty array when push is disabled.
 		"api_key_salt": s.APIKeySalt, "auth_config": map[string]any{"logical_names": []string{"basic:", "anon:", "code:", "rest:"}, "token": map[string]any{"key": s.TokenKey, "expire_in": 28800, "serial_num": 1}, "workspace": map[string]any{"key": s.TicketKey}},
 		"store_config": map[string]any{"uid_key": s.UIDKey, "use_adapter": "postgres", "max_results": 256, "adapters": map[string]any{"postgres": map[string]any{"user": "postgres", "passwd": s.Password, "host": "127.0.0.1", "port": strconv.Itoa(dbPort), "dbname": "tinode", "ssl_mode": "disable", "max_open_conns": 12, "max_idle_conns": 2, "sql_timeout": 10}}},
 		"media":        map[string]any{"use_handler": "fs", "max_size": 25 << 20, "gc_period": 3600, "gc_block_size": 100, "handlers": map[string]any{"fs": map[string]any{"upload_dir": filepath.Join(c.Data, "attachments"), "serve_url": pathBase(c.Origin) + "/v0/file/s/", "cache_control": "private, no-store"}}},
