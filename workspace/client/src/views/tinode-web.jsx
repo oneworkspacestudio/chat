@@ -37,7 +37,7 @@ const POP_SOUND = new Audio('audio/msg.m4a');
 const messages = defineMessages({
   reconnect_countdown: {
     id: 'reconnect_countdown',
-    defaultMessage: 'Disconnected. Reconnecting in {seconds}Ã¢â‚¬Â¦',
+    defaultMessage: 'Disconnected. Reconnecting in {seconds}ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦',
     description: 'Message shown when an app update is available.'
   },
   reconnect_now: {
@@ -858,7 +858,7 @@ class TinodeWeb extends React.Component {
         build()
       ).catch(err => {
         this.tinode.disconnect();
-        localStorage.removeItem('auth-token');
+        LocalStorageUtil.removeItem('auth-token');
         this.handleError(err.message, 'err');
         HashNavigation.navigateTo('');
       }).finally(_ => {
@@ -1392,7 +1392,7 @@ class TinodeWeb extends React.Component {
         console.error("Unable to delete token.", err);
       }).finally(_ => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
-        localStorage.removeItem('firebase-token');
+        LocalStorageUtil.removeItem('firebase-token');
         this.setState({desktopAlerts: false, firebaseToken: null});
         // Inform the server that the token was deleted.
         this.tinode.setDeviceToken(null);
@@ -1578,7 +1578,7 @@ class TinodeWeb extends React.Component {
   handleLogout() {
     this.tinode?.disconnect();
     this.tinode?.clearStorage();
-    localStorage.removeItem('auth-token');
+    LocalStorageUtil.removeItem('auth-token');
     fetch(new URL('auth/logout', document.baseURI), {method:'POST', credentials:'same-origin'})
       .finally(() => window.location.assign('/'));
   }
@@ -1677,7 +1677,7 @@ class TinodeWeb extends React.Component {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
-    const header = params.userName ? 'Ã¢Å¾Â¦ ' + params.userName : '';
+    const header = params.userName ? 'ÃƒÂ¢Ã…Â¾Ã‚Â¦ ' + params.userName : '';
     const content = typeof params.content == 'string' ? Drafty.init(params.content) : Drafty.forwardedContent(params.content);
     const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
     const msg = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, params.userFrom)), content);

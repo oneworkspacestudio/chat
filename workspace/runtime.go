@@ -33,7 +33,7 @@ import (
 
 //go:embed payload/runtime.zip
 var runtimeZip []byte
-var Version = "0.1.0-preview.1"
+var Version = "0.1.0-preview.2"
 
 type privateState struct {
 	Password   string `json:"databasePassword"`

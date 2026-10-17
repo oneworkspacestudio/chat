@@ -70,6 +70,15 @@ func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web s
 	g.proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, e error) {
 		http.Error(w, "Chat is reconnecting. Please try again.", 503)
 	}
+	g.proxy.ModifyResponse = func(response *http.Response) error {
+		if strings.HasPrefix(response.Request.URL.Path, "/v0/file/s/") {
+			// Uploaded HTML/SVG must not become an active document on the
+			// shared Workspace origin when opened directly in another tab.
+			response.Header.Set("Content-Security-Policy", "sandbox; default-src 'none'")
+			response.Header.Set("Referrer-Policy", "no-referrer")
+		}
+		return nil
+	}
 	if c.Issuer != "" {
 		ctx = oidc.ClientContext(ctx, &http.Client{Timeout: 20 * time.Second})
 		p, e := oidc.NewProvider(ctx, c.Issuer)

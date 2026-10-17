@@ -51,3 +51,20 @@ been preserved on I. Remove that exact NTFS cache only after path/process checks
 never touch owner data or unrelated build roots. No app preview was started.
 Final executable packaging, publication, installer bundle and cleanup receipts
 will be appended after completion. Do not claim a planned/uploaded asset published.
+
+## Preview2 integration review fix
+
+Preview1 was published with12 verified assets, before any owner deployment.
+Final source review found Tinode's generic localStorage keys could collide with
+other apps on the Workspace origin. Preview2 prefixes every preference key with
+oneworkspace.chat., ignores malformed cached JSON and uses the same helper for
+removal. Persistent auth/message cache remains disabled. No live owner browser
+was used as a test fixture and no runtime acceptance is claimed. Workspace33
+must pin preview2, not the superseded initial component. Preserve published
+preview1 assets; do not retag/replace them. Build/update receipts to be appended.
+
+The preview2 gateway also sandboxes direct attachment responses (HTML/SVG cannot
+execute scripts on the shared Workspace origin). Workspace33 explicitly calls
+Chat's own loopback logout using only the Chat cookie before clearing suite
+cookies, cancelling upgraded connections; clearing a cookie alone is insufficient.
+These are implementation/source-review fixes, not passed runtime acceptance.

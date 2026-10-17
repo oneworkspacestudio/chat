@@ -4,13 +4,13 @@
 export default class LocalStorageUtil {
   // Replace old object with the new one.
   static setObject(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem('oneworkspace.chat.' + key, JSON.stringify(value));
   }
 
   // Get stored object.
   static getObject(key) {
-    const value = localStorage.getItem(key);
-    return value && JSON.parse(value);
+    const value = localStorage.getItem('oneworkspace.chat.' + key);
+    try { return value && JSON.parse(value); } catch { return null; }
   }
 
   // Partially or wholly update stored object.
@@ -21,6 +21,6 @@ export default class LocalStorageUtil {
 
   // Just a wrapper.
   static removeItem(key) {
-    localStorage.removeItem(key);
+    localStorage.removeItem('oneworkspace.chat.' + key);
   }
 }
