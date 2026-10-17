@@ -89,3 +89,40 @@ Do not use this owner install as a development fixture; this was the authorized
 actual app deployment. No automated/multi-user/messaging acceptance claimed.
 Target componentv0.1.0-preview.3 and full Workspacepreview34. Preserve all owner
 backups and partial Chat data; no data deletion or identity reset.
+
+## Corrected actual installation now running
+
+Supported install-apps deployment of Workspace34/Chat preview3 completed after
+a second cold Accounts/config/program backup. All14 app definitions present;
+normal startup reaches ready and Chat's gateway health passes. Previous logical
+credentials, app executable versions, suite settings and Vault origin/certificate
+verified retained. Existing Chat keys/database and the registered OIDC client were
+reused. No cold Account backup was restored over current owner data. No agent test
+accounts/messages, browser identity flows, multi-user messaging, uploads or
+recovery exercise performed. Health/startup evidence is not full acceptance.
+
+Receipts/scripts: tooling/workspace-chat-release34/deployment.json and protected
+private maintenance directories; component artifacts tooling/chat-build-preview3.
+Final source: Chat260f138c0d19d6c7b2d75e796dc493b08680ca1b; suite387694983fd53df82790ce40edcaf62f737155ec.
+Chat ZIP SHA256a0615356e0dca35c3c80bbd9d5f733eded0847bf7fb43f1b1f8f25d2adebaba8;
+Workspace bundle SHA2562bc6f97fb049974b701f786624582f0c0ecb7e1c7d69e814ad207a89ed8c3fb6.
+Installer SHA256bb518ad842fe7ba854fa0f901e8c0ef0fc6b22f956b918ddd5302ad0e3fdd75c.
+Public release uploads still pending at this handoff edit; append confirmation
+after every remote asset is verified and the drafts are published. Actions stay
+disabled. Do not commit completion documentation while publisher HEAD checks run.
+
+Named NTFS browser build cache removed after both builds with source/output hash,
+reparse and process checks. No fixture service/tunnel left running. Only intended
+installed suite services run. C free space fluctuated during large local builds;
+read-only pagefile/process diagnostics only, no system-memory settings changed
+and no owner data/unknown caches or backups removed.
+
+## Preview3 publication confirmed
+
+Published v0.1.0-preview.3 from260f138c0d19d6c7b2d75e796dc493b08680ca1b with12
+assets; all returned GitHub SHA256 digests/sizes match packaging receipts. Public
+anonymous metadata/download checks passed. Earlier previews1/2 retained and
+clearly marked superseded with the startup issue and preview3 link. No Actions.
+Updated public acceptance matrix records actual startup separately from pending
+browser OIDC, messaging, attachments, lifecycle, clean-host and restore acceptance.
+This documentation-only completion commit does not retag or replace binaries.
