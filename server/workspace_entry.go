@@ -3,7 +3,7 @@
 package main
 
 import (
-	_ "github.com/tinode/chat/server/auth/workspace"
+	workspaceauth "github.com/tinode/chat/server/auth/workspace"
 	"github.com/tinode/chat/workspace"
 	"os"
 )
@@ -12,6 +12,9 @@ import (
 // engine. The internal child retains upstream's normal flags and main loop.
 func init() {
 	if len(os.Args) > 1 && os.Args[1] == "engine" {
+		workspaceRoutes = workspaceauth.RegisterDirectory
+		// Keep authentication tickets and private message bodies out of runtime logs.
+		logClientPackets = false
 		os.Args = append(os.Args[:1], os.Args[2:]...)
 		return
 	}

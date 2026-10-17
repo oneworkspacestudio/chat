@@ -444,13 +444,15 @@ func (s *Session) dispatchRaw(raw []byte) {
 		return
 	}
 
-	toLog := raw
-	truncated := ""
-	if len(raw) > 512 {
-		toLog = raw[:512]
-		truncated = "<...>"
+	if logClientPackets {
+		toLog := raw
+		truncated := ""
+		if len(raw) > 512 {
+			toLog = raw[:512]
+			truncated = "<...>"
+		}
+		logs.Info.Printf("in: '%s%s' sid='%s' uid='%s'", toLog, truncated, s.sid, s.uid)
 	}
-	logs.Info.Printf("in: '%s%s' sid='%s' uid='%s'", toLog, truncated, s.sid, s.uid)
 
 	if err := json.Unmarshal(raw, &msg); err != nil {
 		// Malformed message

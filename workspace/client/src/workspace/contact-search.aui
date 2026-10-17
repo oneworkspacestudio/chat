@@ -1,0 +1,6 @@
+Page ContactSearch
+  Row
+    Input name="query" value=$query placeholder=$placeholder
+    Button variant=primary action=search "Search"
+    If condition=$query
+      Button action=clear "Clear"

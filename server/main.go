@@ -123,6 +123,10 @@ const (
 //	-ldflags "-X main.buildstamp=`git describe --tags`"
 var buildstamp = "undef"
 
+// Optional private routes supplied by the portable Workspace integration.
+var workspaceRoutes func(*http.ServeMux)
+var logClientPackets = true
+
 // CredValidator holds additional config params for a credential validator.
 type credValidator struct {
 	// AuthLevel(s) which require this validator.
@@ -792,6 +796,9 @@ func main() {
 	}
 
 	// Handle websocket clients.
+	if workspaceRoutes != nil {
+		workspaceRoutes(mux)
+	}
 	mux.HandleFunc(config.ApiPath+"v0/channels", serveWebSocket)
 	// Handle long polling clients. Enable compression.
 	mux.Handle(config.ApiPath+"v0/channels/lp", gh.CompressHandler(http.HandlerFunc(serveLongPoll)))

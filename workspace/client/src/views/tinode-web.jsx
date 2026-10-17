@@ -908,6 +908,8 @@ class TinodeWeb extends React.Component {
 
   // Reactions to updates to the contact list.
   tnMeContactUpdate(what, cont) {
+    // Presence can arrive before the SDK has loaded the corresponding contact.
+    if (!cont) { this.resetContactList(); return; }
     if (what == 'on' || what == 'off') {
       this.resetContactList();
       if (this.state.topicSelected == cont.topic) {
@@ -1065,7 +1067,23 @@ class TinodeWeb extends React.Component {
   /** Called when the user enters a contact into the contact search field in the NewAccount panel
     @param query {Array} is an array of contacts to search for
    */
-  handleSearchContacts(query) {
+  async handleSearchContacts(query) {
+    if (window.workspaceChat?.managedDirectory) {
+      const generation = this.peopleSearchGeneration = (this.peopleSearchGeneration || 0) + 1;
+      if (!query || Tinode.isNullValue(query)) {
+        this.setState({searchResults:[]});
+        return;
+      }
+      try {
+        const response=await fetch(new URL('api/people?q='+encodeURIComponent(query),document.baseURI),{credentials:'same-origin',cache:'no-store'});
+        if(!response.ok) throw new Error(response.status===503?'The member directory is connecting to MyAccounts. Try again shortly.':response.status===401?'Your Chat session has ended. Open Chat from Workspace again.':'Enter at least two characters of a name, username, email or Chat ID.');
+        const result=await response.json();
+        if(generation===this.peopleSearchGeneration) this.setState({searchResults:result.users,errorText:'',errorLevel:null});
+      } catch(err) {
+        if(generation===this.peopleSearchGeneration) {this.setState({searchResults:[]});this.handleError(err.message,'err');}
+      }
+      return;
+    }
     const fnd = this.tinode.getFndTopic();
     fnd.setMeta({desc: {public: query}})
       .then(_ => fnd.getMeta(fnd.startMetaQuery().withSub().build()))

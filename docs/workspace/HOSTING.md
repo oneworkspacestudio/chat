@@ -43,3 +43,23 @@ Stop Chat (or stop Workspace) before taking a full folder snapshot. Preserve bot
 database and secrets. Backups bound to this Windows machine need a planned
 export/restore for another machine. No automatic restore or portable migration
 acceptance is claimed in this initial preview.
+
+## MyAccounts member directory
+
+Workspace35+ sends a complete member snapshot to Chat every15 seconds over the
+loopback connection. A separate per-run bearer credential authenticates this
+private endpoint; a per-installation HMAC protects the internal engine request.
+No administrator password, directory credential or provider token goes to the
+browser. Signed OIDC issuer+subject links preserve existing native Chat IDs.
+New members are discoverable before first Chat login. Forbidden/deleted entries
+are excluded and their current gateway sessions are cancelled. Only verified
+email is indexed; names and usernames remain searchable without verified email.
+
+The directory supports up to10,000 members per installation and returns at most
+50 matching people. Standalone Chat without the Workspace directory integration
+retains native email/tag lookup for users who have signed in, and native Chat ID
+lookup. Directory synchronization failure retains the last complete directory
+and retries; first startup displays retry guidance until synchronization succeeds.
+
+Open By ID to copy your native usr... ID, use its QR code, or paste a usr..., grp...
+or chn... ID or tinode:///id/ link. MyAccounts account IDs can be searched in Find.

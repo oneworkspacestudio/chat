@@ -28,12 +28,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/tinode/chat/workspace/platform"
 )
 
 //go:embed payload/runtime.zip
 var runtimeZip []byte
-var Version = "0.1.0-preview.3"
+var Version = "0.1.0-preview.4"
 
 type privateState struct {
 	Password   string `json:"databasePassword"`
@@ -73,6 +74,7 @@ func Main() int {
 		return 2
 	}
 	c := Config{Data: *data, Listen: *listen, Origin: strings.TrimRight(*origin, "/"), Issuer: *issuer, ClientID: *client, ClientSecret: env("WORKSPACE_OIDC_CLIENT_SECRET", "")}
+	c.DirectoryToken = env("WORKSPACE_CHAT_DIRECTORY_TOKEN", "")
 	if e := validate(c); e != nil {
 		log.Print(e)
 		return 1
@@ -175,7 +177,7 @@ func run(c Config, noBrowser bool) error {
 		cmd.Stdout = logs
 		cmd.Stderr = logs
 		for _, v := range os.Environ() {
-			if !strings.HasPrefix(v, "WORKSPACE_OIDC_") {
+			if !strings.HasPrefix(v, "WORKSPACE_OIDC_") && !strings.HasPrefix(v, "WORKSPACE_CHAT_") {
 				cmd.Env = append(cmd.Env, v)
 			}
 		}
@@ -218,12 +220,28 @@ func run(c Config, noBrowser bool) error {
 	pgDone := make(chan error, 1)
 	go func() { pgDone <- postgres.Wait() }()
 	defer runOnce(filepath.Join(pg, "pg_ctl.exe"), "-D", cluster, "stop", "-m", "fast", "-t", "20")
-	deadline := time.Now().Add(30 * time.Second)
+	deadline := time.Now().Add(90 * time.Second)
 	for {
-		conn, err := net.DialTimeout("tcp", fmt.Sprintf("127.0.0.1:%d", dbPort), time.Second)
+		// A listening socket can still be rejecting queries during WAL recovery.
+		// Authenticate to the maintenance database before running migrations.
+		probe, cancelProbe := context.WithTimeout(context.Background(), 2*time.Second)
+		cfg, _ := pgx.ParseConfig("")
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database = "127.0.0.1", uint16(dbPort), "postgres", s.Password, "postgres"
+		cfg.TLSConfig = nil
+		cfg.Fallbacks = nil
+		conn, err := pgx.ConnectConfig(probe, cfg)
 		if err == nil {
-			conn.Close()
+			_, err = conn.Exec(probe, "SELECT 1")
+			conn.Close(probe)
+		}
+		cancelProbe()
+		if err == nil {
 			break
+		}
+		select {
+		case <-pgDone:
+			return errors.New("private database stopped during startup; see runtime.log")
+		default:
 		}
 		if time.Now().After(deadline) {
 			return errors.New("private database did not start; see runtime.log")
@@ -238,7 +256,7 @@ func run(c Config, noBrowser bool) error {
 	copy(key[8:], mac.Sum(nil))
 	apiKey := base64.URLEncoding.EncodeToString(key)
 	config := map[string]any{
-		"listen": fmt.Sprintf("127.0.0.1:%d", enginePort), "api_path": "/", "grpc_listen": "", "static_data": "", "static_mount": "/", "expvar": "-", "server_status": "-", "max_message_size": 262144, "max_subscriber_count": 256, "max_tag_count": 16, "permanent_accounts": true,
+		"listen": fmt.Sprintf("127.0.0.1:%d", enginePort), "api_path": pathBase(c.Origin) + "/", "grpc_listen": "", "static_data": "", "static_mount": "/", "expvar": "-", "server_status": "-", "max_message_size": 262144, "max_subscriber_count": 256, "max_tag_count": 16, "permanent_accounts": true,
 		"push":         []any{}, // Tinode requires an explicit empty array when push is disabled.
 		"api_key_salt": s.APIKeySalt, "auth_config": map[string]any{"logical_names": []string{"basic:", "anon:", "code:", "rest:"}, "token": map[string]any{"key": s.TokenKey, "expire_in": 28800, "serial_num": 1}, "workspace": map[string]any{"key": s.TicketKey}},
 		"store_config": map[string]any{"uid_key": s.UIDKey, "use_adapter": "postgres", "max_results": 256, "adapters": map[string]any{"postgres": map[string]any{"user": "postgres", "passwd": s.Password, "host": "127.0.0.1", "port": strconv.Itoa(dbPort), "dbname": "tinode", "ssl_mode": "disable", "max_open_conns": 12, "max_idle_conns": 2, "sql_timeout": 10}}},

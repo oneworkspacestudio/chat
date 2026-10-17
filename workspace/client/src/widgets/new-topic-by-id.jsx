@@ -1,90 +1,36 @@
-import QRCode from 'qrcodejs';
 import React from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-
+import QRCode from 'qrcode';
+import { ChatById } from '../workspace/topic-id.generated.jsx';
+import { FormContext } from '../workspace/components/ui.js';
+import { normalizeTopicID } from '../workspace/topic-id.js';
 import { QRCODE_SIZE } from '../config';
 
-const messages = defineMessages({
-  invalid_id: {
-    id: 'error_invalid_id',
-    defaultMessage: 'Invalid ID',
-    description: 'Error message'
-  }
-});
-
-class NewTopicById extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.qrCodeRef = React.createRef();
-
-    this.state = {
-      groupId: '',
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
+export default class NewTopicById extends React.PureComponent {
+  state = {topicID: '', error: '', qr: '', copied: false};
   componentDidMount() {
-    new QRCode(this.qrCodeRef.current, {
-      text: this.props.myURI,
-      width: QRCODE_SIZE,
-      height: QRCODE_SIZE,
-    });
+    this.active = true;
+    QRCode.toDataURL(this.props.myURI, {width: QRCODE_SIZE, margin: 1})
+      .then(qr => {if (this.active) this.setState({qr});})
+      .catch(() => {}); // The readable ID remains available if QR generation fails.
   }
-
-  handleChange(e) {
-    this.setState({groupId: e.target.value});
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.handleSubmit(e);
+  componentWillUnmount() {this.active = false;}
+  submit = () => {
+    const id = normalizeTopicID(this.state.topicID);
+    if (!id) {
+      this.setState({error: 'Enter a valid Chat ID (usr...), group ID (grp...) or tinode:///id/ link.'});
+      return;
     }
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.groupId) {
-      const name = this.state.groupId.trim();
-      const prefix = name.substring(0, 3);
-      if (name.length > 3 && ['usr', 'grp', 'chn'].includes(prefix)) {
-        this.props.onSubmit(name);
-      } else {
-        this.props.onError(this.props.intl.formatMessage(messages.invalid_id), 'err');
-      }
+    this.props.onSubmit(id);
+  };
+  action = async action => {
+    if (action === 'open') return this.submit();
+    if (action === 'copy') {
+      try {await navigator.clipboard.writeText(this.props.myURI.replace('tinode:///id/', ''));this.setState({copied:true});}
+      catch (_) {this.setState({error:'Select and copy your Chat ID below.'});}
     }
-  }
-
+  };
   render() {
-    return (
-      <div className="panel-form">
-        <div className="panel-form-row">
-        <FormattedMessage id="group_user_id_prompt" defaultMessage="Group or User ID"
-          description="Prompt for entering user or group ID">{
-          (prompt) => <input type="text" placeholder={prompt}
-            value={this.state.groupId} onChange={this.handleChange}
-            onKeyDown={this.handleKeyPress} required autoFocus />
-        }</FormattedMessage>
-        </div>
-        <div className="dialog-buttons">
-          <button className="primary" onClick={this.handleSubmit}>
-            <FormattedMessage id="button_subscribe" defaultMessage="Subscribe"
-              description="Button [Subscribe]" />
-          </button>
-        </div>
-        <br />
-        <div className="panel-form-column">
-          <label className="small"><FormattedMessage id="label_scan_id"
-            defaultMessage="Scan my ID:" description="Label [Scan my ID:]" />
-          </label>
-          <div className="qr-code" ref={this.qrCodeRef} />
-        </div>
-      </div>
-    );
+    return React.createElement(FormContext.Provider, {value:{kind:'workspace-topic-id',change:topicID=>this.setState({topicID,error:''}),submit:this.submit}},
+      React.createElement(ChatById, {data:{...this.state,myID:this.props.myURI.replace('tinode:///id/', '')},onAction:this.action}));
   }
-};
-
-export default injectIntl(NewTopicById);
+}

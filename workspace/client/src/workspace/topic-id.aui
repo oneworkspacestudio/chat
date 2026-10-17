@@ -1,0 +1,17 @@
+Page ChatById
+  Section
+    Heading level=2 "Open a conversation"
+    Text "Paste a Chat ID or a tinode:///id/ link. Use Find to search by name, username or email."
+    Field label="Chat or group ID"
+      Input name="topicID" value=$topicID placeholder="usr... or grp..."
+    Button variant=primary action=open "Open chat"
+    If condition=$error
+      Alert $error
+  Section
+    Heading level=2 "Your Chat ID"
+    Text $myID
+    Button action=copy "Copy my ID"
+    If condition=$copied
+      Text "ID copied"
+    If condition=$qr
+      Image src=$qr alt="QR code for your Chat ID"

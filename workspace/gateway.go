@@ -30,7 +30,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type Config struct{ Data, Listen, Origin, Issuer, ClientID, ClientSecret string }
+type Config struct{ Data, Listen, Origin, Issuer, ClientID, ClientSecret, DirectoryToken string }
 type flow struct {
 	Verifier, Nonce string
 	Expires         time.Time
@@ -42,26 +42,36 @@ type loginSession struct {
 	Cancel  context.CancelFunc
 }
 type Gateway struct {
-	config   Config
-	base     string
-	oauth    oauth2.Config
-	verifier *oidc.IDTokenVerifier
-	mu       sync.Mutex
-	flows    map[string]flow
-	sessions map[string]*loginSession
-	key      []byte
-	apiKey   string
-	proxy    *httputil.ReverseProxy
-	web      string
+	config         Config
+	base           string
+	oauth          oauth2.Config
+	verifier       *oidc.IDTokenVerifier
+	mu             sync.Mutex
+	flows          map[string]flow
+	sessions       map[string]*loginSession
+	key            []byte
+	apiKey         string
+	proxy          *httputil.ReverseProxy
+	web            string
+	engine         string
+	directoryReady bool
+	directoryUsers []workspace.DirectoryUser
 }
 
 func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web string) (*Gateway, error) {
 	u, _ := url.Parse(c.Origin)
 	target, _ := url.Parse(engine)
 	g := &Gateway{config: c, base: strings.TrimRight(u.Path, "/"), key: key, apiKey: apiKey, web: web, flows: map[string]flow{}, sessions: map[string]*loginSession{}, proxy: httputil.NewSingleHostReverseProxy(target)}
+	g.engine = engine
 	original := g.proxy.Director
 	g.proxy.Director = func(r *http.Request) {
 		original(r)
+		// Keep the native API and media handler on the same public base path.
+		// Its file IDs are parsed against serve_url, which includes /chat.
+		if strings.HasPrefix(r.URL.Path, "/v0/") {
+			r.URL.Path = g.base + r.URL.Path
+			r.URL.RawPath = ""
+		}
 		r.Header.Set("X-Tinode-APIKey", apiKey)
 		r.Header.Del("Cookie")
 		r.Header.Del("Authorization")
@@ -71,7 +81,7 @@ func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web s
 		http.Error(w, "Chat is reconnecting. Please try again.", 503)
 	}
 	g.proxy.ModifyResponse = func(response *http.Response) error {
-		if strings.HasPrefix(response.Request.URL.Path, "/v0/file/s/") {
+		if strings.HasPrefix(strings.TrimPrefix(response.Request.URL.Path, g.base), "/v0/file/s/") {
 			// Uploaded HTML/SVG must not become an active document on the
 			// shared Workspace origin when opened directly in another tab.
 			response.Header.Set("Content-Security-Policy", "sandbox; default-src 'none'")
@@ -169,9 +179,11 @@ func (g *Gateway) callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var claims struct {
-		Name     string `json:"name"`
-		Email    string `json:"email"`
-		Verified bool   `json:"email_verified"`
+		Name        string `json:"name"`
+		Email       string `json:"email"`
+		Verified    bool   `json:"email_verified"`
+		Username    string `json:"preferred_username"`
+		DisplayName string `json:"displayName"`
 	}
 	if id.Claims(&claims) != nil || id.Subject == "" {
 		fail()
@@ -183,12 +195,15 @@ func (g *Gateway) callback(w http.ResponseWriter, r *http.Request) {
 	if claims.Name == "" {
 		claims.Name = "Workspace member"
 	}
+	if claims.DisplayName != "" {
+		claims.Name = claims.DisplayName
+	}
 	expires := time.Now().Add(8 * time.Hour)
 	if id.Expiry.Before(expires) {
 		expires = id.Expiry
 	}
 	sessionCtx, sessionCancel := context.WithDeadline(context.Background(), expires)
-	s := &loginSession{Ticket: workspace.Ticket{Issuer: id.Issuer, Subject: id.Subject, Name: claims.Name, Email: claims.Email}, Expires: expires, Context: sessionCtx, Cancel: sessionCancel}
+	s := &loginSession{Ticket: workspace.Ticket{Issuer: id.Issuer, Subject: id.Subject, Name: claims.Name, Email: claims.Email, Username: claims.Username}, Expires: expires, Context: sessionCtx, Cancel: sessionCancel}
 	value := platform.Token()
 	g.mu.Lock()
 	for k, old := range g.sessions {
@@ -236,6 +251,10 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		g.callback(w, r)
 		return
 	}
+	if path == "/api/directory/sync" {
+		g.syncDirectory(w, r)
+		return
+	}
 	s := g.session(r)
 	if s == nil {
 		if path == "/" && r.Method == "GET" {
@@ -246,6 +265,10 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Cache-Control", "no-store")
+	if path == "/api/people" && r.Method == "GET" {
+		g.findPeople(w, r, s)
+		return
+	}
 	if path == "/api/me" && r.Method == "GET" {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]any{"name": s.Ticket.Name, "email": s.Ticket.Email})
@@ -261,7 +284,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ticket := base64.RawURLEncoding.EncodeToString(body) + "." + base64.RawURLEncoding.EncodeToString(h.Sum(nil))
 		u, _ := url.Parse(g.config.Origin)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https"})
+		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https", "managedDirectory": g.config.DirectoryToken != ""})
 		return
 	}
 	if path == "/auth/logout" {

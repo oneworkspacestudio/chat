@@ -12,7 +12,9 @@ group conversations, message history and file attachments into your workspace.
 ## One account, connected conversations
 
 Open Chat from One Workspace to reuse MyAccounts sign-in. There is no separate
-Chat username or password. Each person gets a Chat identity on their first sign-in.
+Chat username or password. One Workspace connects MyAccounts members automatically,
+so you can find them before their first Chat sign-in. Search by name, username,
+verified email or account ID; the By ID tab accepts Chat IDs and QR links.
 The client uses the One Workspace design system and a matching navy, mint and
 silver icon. Browser libraries, translations and the icon font are served locally.
 
@@ -36,7 +38,7 @@ GitHub Actions are disabled.
 
 ## Preview scope
 
-Current version: 0.1.0-preview.3. See [acceptance scope](docs/workspace/ACCEPTANCE.md).
+Current version: 0.1.0-preview.4. See [acceptance scope](docs/workspace/ACCEPTANCE.md).
 Do not infer production, mobile, call-hosting or recovery acceptance from a build.
 Chat does not add end-to-end encryption to Tinode.
 

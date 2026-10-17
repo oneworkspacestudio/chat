@@ -1,4 +1,4 @@
-import QRCode from 'qrcodejs';
+import QRCode from 'qrcode';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -11,12 +11,13 @@ export default class ShowQRCode extends React.PureComponent {
   }
 
   componentDidMount() {
-    new QRCode(this.qrCodeRef.current, {
-      text: this.props.uri,
-      width: QRCODE_SIZE,
-      height: QRCODE_SIZE,
-    });
+    this.active = true;
+    QRCode.toCanvas(this.props.uri, {width: QRCODE_SIZE, margin: 1})
+      .then(canvas => {if (this.active && this.qrCodeRef.current) this.qrCodeRef.current.replaceChildren(canvas);})
+      .catch(() => {});
   }
+
+  componentWillUnmount() {this.active = false;}
 
   render() {
     return (

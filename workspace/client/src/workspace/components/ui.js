@@ -1,8 +1,14 @@
 import React from 'react';
-export const Page=({children})=>React.createElement('section',{className:'workspace-connection'},children);
+export const FormContext=React.createContext(null);
+export const Page=({children})=>{const form=React.useContext(FormContext);return React.createElement('section',{className:form?.kind || 'workspace-connection'},children);};
 export const Card=({children})=>React.createElement(React.Fragment,null,children);
 export const Heading=({level=1,children})=>React.createElement('h'+level,null,children);
 export const Text=({children})=>React.createElement('p',null,children);
 export const Image=({src,alt})=>React.createElement('img',{src,alt});
 export const Button=({children,onClick})=>React.createElement('button',{type:'button',onClick},children);
 export const Link=({href,children})=>React.createElement('a',{href},children);
+export const Section=({children})=>React.createElement('section',null,children);
+export const Row=({children})=>React.createElement('div',{className:'workspace-search-row'},children);
+export const Field=({label,children})=>React.createElement('label',null,label,children);
+export const Alert=({children})=>React.createElement('p',{role:'alert'},children);
+export const Input=({name,value,placeholder})=>{const form=React.useContext(FormContext);return React.createElement('input',{name,value,placeholder,type:'text','aria-label':name==='query'?'Find people':'Chat or group ID',autoComplete:'off',onChange:e=>form.change(e.target.value),onKeyDown:e=>{if(e.key==='Enter'){e.preventDefault();form.submit();}}});};

@@ -21,12 +21,12 @@ do not enter the Windows One Workspace launcher.
 `workspace/client` contains the exact vendored webapp source and modifications.
 `workspace-components.lock.json` records both upstream commits and the database
 archive hash. `package-lock.json` and `go.sum` pin library downloads. The AUI
-connection screen is compiled by `npm run workspace:ui`; do not edit its generated
+connection, people-search and ID screens is compiled by `npm run workspace:ui`; do not edit its generated
 JSX directly. The component adapter supplies the One Workspace theme.
 
 If a slow checkout drive makes browser extraction expensive, copy the client
 source to one named NTFS build folder and use `--client-build <folder>`. Preserve
-the lockfile, generated connection source and outputs in the checkout/artifact
+the lockfile, generated AUI screen sources and outputs in the checkout/artifact
 storage before removing that task-owned build folder. `--skip-client` reuses an
 already completed browser build; it must not be used on an incomplete directory.
 

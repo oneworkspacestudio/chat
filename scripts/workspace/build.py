@@ -33,7 +33,7 @@ def main():
     p.add_argument('--cache', required=True)
     p.add_argument('--client-build')
     p.add_argument('--skip-client', action='store_true')
-    p.add_argument('--version', default='0.1.0-preview.3')
+    p.add_argument('--version', default='0.1.0-preview.4')
     args = p.parse_args()
     cache = Path(args.cache).resolve()
     cache.mkdir(parents=True, exist_ok=True)
