@@ -126,3 +126,25 @@ clearly marked superseded with the startup issue and preview3 link. No Actions.
 Updated public acceptance matrix records actual startup separately from pending
 browser OIDC, messaging, attachments, lifecycle, clean-host and restore acceptance.
 This documentation-only completion commit does not retag or replace binaries.
+
+## Final public delivery confirmed
+
+Published [Workspace v0.3.0-preview.34](https://github.com/oneworkspacestudio/one-workspace/releases/tag/v0.3.0-preview.34)
+from387694983fd53df82790ce40edcaf62f737155ec with19 assets and
+[Chat v0.1.0-preview.3](https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.3)
+from260f138c0d19d6c7b2d75e796dc493b08680ca1b with12 assets. All remote asset
+sizes/GitHub SHA256 digests match local receipts; anonymous Windows downloads and
+source-tag checks passed. Current installed Workspace34 has14 apps, Chat3 running
+and portal health200. Existing versions/credentials/settings/Vault hosting retained.
+
+Failed33 draft416008298 was deleted only after public34 verification; its source
+tag/commit and local diagnostic records remain. The draft API had an internal
+untagged name after renaming, but exact id/target SHA/name and four known assets
+were checked before deletion. No published tags/binaries replaced. Earlier Chat1/2
+remain public but explicitly superseded with their startup issue and Chat3 link.
+
+Chat repo remains a genuine fork of tinode/chat, branded description/README/icon
+updated. Workspace README contains Chat logo/table/guide and preview34 link.
+Documentation-only completion commits follow tagged source; no rebuild/retag.
+Actions remain disabled. No test suite, messaging/upload/browser OIDC acceptance
+claimed. No C browser-build cache remains; no owner data or backups deleted.
