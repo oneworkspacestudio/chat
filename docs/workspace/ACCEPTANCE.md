@@ -21,7 +21,9 @@ No owner account or private conversation was used as a development fixture.
 | Groups | Create, invite Bob, receive and reply passed |
 | Attachments | 300 KB file upload and recipient download passed with exact bytes |
 | Unauthenticated access | Member directory and attachment denied; file response sandbox retained |
-| Account lifecycle | Forbidden member disappears from search and their gateway session is revoked |
+| Account lifecycle | Forbidden member disappears from search; gateway access revoked and active WebSocket closes |
+| Connected launch and Chat sign-out | Portal login then Chat tile skips another password; Chat logout closes its socket and rejects access |
+| Packaged updater | Official Workspace34/Chat3 to35/4 fixture upgrade, verified backup, retained history and two-app selection passed |
 | Database restart | Existing fixture database recovers and starts after stopping/restarting the suite |
 | Private logging | New engine instance omits raw tickets and message body packets |
 | Global sign-out, token expiry and network interruption | Not fully exercised in this task |
