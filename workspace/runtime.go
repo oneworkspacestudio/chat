@@ -34,7 +34,7 @@ import (
 
 //go:embed payload/runtime.zip
 var runtimeZip []byte
-var Version = "0.1.0-preview.4"
+var Version = "0.1.0-preview.5"
 
 type privateState struct {
 	Password   string `json:"databasePassword"`
@@ -75,6 +75,12 @@ func Main() int {
 	}
 	c := Config{Data: *data, Listen: *listen, Origin: strings.TrimRight(*origin, "/"), Issuer: *issuer, ClientID: *client, ClientSecret: env("WORKSPACE_OIDC_CLIENT_SECRET", "")}
 	c.DirectoryToken = env("WORKSPACE_CHAT_DIRECTORY_TOKEN", "")
+	c.WorkspaceOrigin = env("WORKSPACE_HOME_URL", "")
+	c.CatalogURL = env("WORKSPACE_CHAT_CATALOG_URL", "")
+	if e := managedAdmission(c, env("WORKSPACE_CHAT_MANAGER_CAPABILITIES", "")); e != nil {
+		log.Print(e)
+		return 1
+	}
 	if e := validate(c); e != nil {
 		log.Print(e)
 		return 1
@@ -268,6 +274,9 @@ func run(c Config, noBrowser bool) error {
 	}
 	if e = runOnce(filepath.Join(root, "tinode-db.exe"), "-config", confPath, "-upgrade"); e != nil {
 		return errors.New("Chat database setup or migration failed; see the protected runtime log")
+	}
+	if e = migrateAppState(dbPort, s.Password); e != nil {
+		return errors.New("Chat application migration failed; your existing database has not been replaced")
 	}
 	self, e := os.Executable()
 	if e != nil {

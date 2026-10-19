@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "Alice MyAccounts browser sign-in",
+    "Find a MyAccounts user before their first Chat login",
+    "Case-insensitive name search",
+    "Username search",
+    "Verified email search",
+    "Invalid ID shows guidance without crashing",
+    "By ID panel and QR code render",
+    "Copy my Chat ID",
+    "Bob independent MyAccounts browser sign-in",
+    "Open by native ID and deliver Alice to Bob",
+    "Two-way message delivery across isolated browser sessions",
+    "Conversation history after reload without repeated sign-in",
+    "Open conversation using copied QR URI",
+    "Anonymous member-directory request rejected",
+    "Unknown person gives an empty result",
+    "No uncaught browser errors"
+  ],
+  "uncaughtErrors": [],
+  "isolatedFixture": true
+}

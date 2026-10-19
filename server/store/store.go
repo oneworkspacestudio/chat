@@ -682,6 +682,21 @@ var Messages MessagesPersistenceInterface
 func (messagesMapper) Save(msg *types.Message, attachmentURLs []string, readBySender bool) (error, bool) {
 	msg.InitTimes()
 	msg.SetUid(Store.GetUid())
+	if msg.Head["workspace_id"] != nil || ManagedMediaAuthorization {
+		adapter, ok := adp.(interface {
+			SaveManagedMessage(*types.Message, []string, []string, bool) (error, bool)
+		})
+		if !ok {
+			return types.ErrUnsupported, false
+		}
+		files := []string{}
+		for _, url := range attachmentURLs {
+			if id := mediaHandler.GetIdFromUrl(url); !id.IsZero() {
+				files = append(files, id.String())
+			}
+		}
+		return adapter.SaveManagedMessage(msg, attachmentURLs, files, readBySender)
+	}
 	// Increment topic's or user's SeqId
 	err := adp.TopicUpdateOnMessage(msg.Topic, msg)
 	if err != nil {

@@ -1,0 +1,110 @@
+{
+  "checks": [
+    "Dedicated-origin app switcher has real app links, Escape/focus restoration and no duplicate floating launcher",
+    "Managed name/password/security point to MyAccounts; no broken second-password or native account-delete control",
+    "Create/select/rename/reorder/delete a real custom list with membership and independent-session synchronization",
+    "Conversation deep link and account/topic draft survive reload",
+    "Composing Enter retains the unsent draft",
+    "Create a native group in the UI, add a contact and exchange actual group messages",
+    "Five responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow",
+    "Offline worker caches static shell only; no API, credentials or private attachments",
+    "Offline shell reload restores the correct cached account and retains the unacknowledged draft",
+    "Reconnect replays the durable outbox once and clears draft only after server acknowledgement",
+    "Workspace logout revokes open Chat sessions and sockets for Alice; Bob remains authenticated",
+    "No uncaught browser errors"
+  ],
+  "captures": [
+    {
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 1365,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 1365,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    }
+  ],
+  "deviceScope": "Desktop Chrome viewport emulation; not physical Android/iOS acceptance",
+  "errors": []
+}

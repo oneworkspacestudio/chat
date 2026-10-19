@@ -102,7 +102,8 @@ type Session struct {
 
 	// ID of the current user. Could be zero if session is not authenticated
 	// or for multiplexing sessions.
-	uid types.Uid
+	uid          types.Uid
+	workspaceUid types.Uid
 
 	// Authentication level - NONE (unset), ANON, AUTH, ROOT.
 	authLvl auth.Level
@@ -1058,6 +1059,9 @@ func (s *Session) authSecretReset(params []byte) error {
 
 // onLogin performs steps after successful authentication.
 func (s *Session) onLogin(msgID string, timestamp time.Time, rec *auth.Rec, missing []string) *ServerComMessage {
+	if !s.workspaceUid.IsZero() && s.workspaceUid != rec.Uid {
+		return ErrPermissionDenied(msgID, "", timestamp)
+	}
 	var reply *ServerComMessage
 	var params map[string]any
 

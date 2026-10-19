@@ -18,6 +18,7 @@ module.exports = (env, argv) => {
     },
     devtool: 'source-map',
     module: {
+      strictExportPresence: true,
       rules: [
         {
           test: /\.jsx?$/,
@@ -61,7 +62,15 @@ module.exports = (env, argv) => {
     plugins: [
       new CopyPlugin({
         patterns: [
-          { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js`, to: `tinode.${mode}.js` },
+          { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js`, to: `tinode.${mode}.js`, transform: content => {
+            const source=content.toString();
+            const matches=source.match(/(["'])tinode-web\1/g)||[];
+            if(matches.length!==1)throw new Error('Pinned SDK cache adapter changed; review before building');
+            const inserts=source.match(/\.objectStore\((["'])message\1\)\.add\(/g)||[];
+            if(inserts.length!==1)throw new Error('Pinned SDK idempotent cache adapter changed; review before building');
+            return source.replace(/(["'])tinode-web\1/g,'("oneworkspace.chat.v2.cache."+globalThis.workspaceChat.accountKey)')
+              .replace(/(\.objectStore\((["'])message\2\))\.add\(/g,'$1.put(');
+          } },
           { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js.map`, to: `tinode.${mode}.js.map` },
         ],
       }),

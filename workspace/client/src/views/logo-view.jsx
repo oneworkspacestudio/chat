@@ -1,27 +1,7 @@
-/* This is just a static page to display when no conversation is selected. */
+// Product empty state; protocol diagnostics remain in advanced support.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-
-import { Tinode } from 'tinode-sdk';
-
-import { APP_NAME } from '../config.js';
-
-export default class LogoView extends React.PureComponent {
-  render() {
-    const version = APP_NAME + ' (' + Tinode.getLibrary() + ')';
-    return (
-      <div id="dummy-view">
-        <div>
-          <a href="https://github.com/oneworkspacestudio/chat/">
-            <img id="logo" alt="logo" src="img/logo.svg" />
-            <h2>Your conversations, together.</h2>
-          </a>
-          <p><FormattedMessage id="label_client" defaultMessage="Client:"
-            description="Label for a client version" /> {version}</p>
-          <p><FormattedMessage id="label_server" defaultMessage="Server:"
-            description="Label for a server version" /> {this.props.serverVersion} ({this.props.serverAddress})</p>
-        </div>
-      </div>
-    );
-  }
-};
+import {ChatEmpty} from '../workspace/empty-state.generated.jsx';
+import {FormContext} from '../workspace/components/ui.js';
+export default function LogoView(){
+ return React.createElement('div',{id:'dummy-view'},React.createElement(FormContext.Provider,{value:{kind:'workspace-empty',label:'Chat'}},React.createElement(ChatEmpty,{data:{},onAction:()=>{}})));
+}

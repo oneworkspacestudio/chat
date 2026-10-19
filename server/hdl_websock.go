@@ -171,6 +171,11 @@ var upgrader = websocket.Upgrader{
 
 func serveWebSocket(wrt http.ResponseWriter, req *http.Request) {
 	now := types.TimeNow()
+	bound, bindingErr := boundGatewayUser(req)
+	if bindingErr != nil {
+		http.Error(wrt, "Gateway identity required", http.StatusUnauthorized)
+		return
+	}
 
 	if isValid, _ := checkAPIKey(getAPIKey(req)); !isValid {
 		wrt.WriteHeader(http.StatusForbidden)
@@ -196,6 +201,7 @@ func serveWebSocket(wrt http.ResponseWriter, req *http.Request) {
 	}
 
 	sess, count := globals.sessionStore.NewSession(ws, "")
+	sess.workspaceUid = bound
 	if globals.useXForwardedFor {
 		sess.remoteAddr = req.Header.Get("X-Forwarded-For")
 		if !isRoutableIP(sess.remoteAddr) {

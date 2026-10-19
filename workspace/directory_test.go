@@ -18,7 +18,7 @@ func TestProxyKeepsPublicMediaBase(t *testing.T) {
 		if r.URL.Path != "/chat/v0/file/s/test.txt" {
 			t.Errorf("media path changed to %q", r.URL.Path)
 		}
-		if r.Header.Get("Cookie") != "" || r.Header.Get("Authorization") != "" {
+		if r.Header.Get("Cookie") != "" || !strings.HasPrefix(r.Header.Get("Authorization"), "workspace ") {
 			t.Error("browser/provider credentials leaked to engine")
 		}
 		w.Write([]byte("fixture"))

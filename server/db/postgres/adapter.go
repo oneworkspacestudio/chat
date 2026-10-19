@@ -3385,7 +3385,7 @@ func (a *adapter) FileGet(fid string) (*t.FileDef, error) {
 		return nil, err
 	}
 
-	fd.Id = common.EncodeUidString(fd.Id).String()
+	fd.Id = store.EncodeUid(ID).String()
 	fd.User = store.EncodeUid(userId).String()
 
 	return &fd, nil
@@ -3463,6 +3463,32 @@ func (a *adapter) FileDeleteUnused(olderThan time.Time, limit int) ([]string, er
 func (a *adapter) FileLinkAttachments(topic string, userId, msgId t.Uid, fids []string) error {
 	if len(fids) == 0 || (topic == "" && msgId.IsZero() && userId.IsZero()) {
 		return t.ErrMalformed
+	}
+	if store.ManagedMediaAuthorization {
+		actor := userId
+		if actor.IsZero() {
+			ctx, cancel := a.getContext()
+			if cancel != nil {
+				defer cancel()
+			}
+			var decoded int64
+			var err error
+			if !msgId.IsZero() {
+				err = a.db.QueryRow(ctx, `SELECT "from" FROM messages WHERE id=$1`, int64(msgId)).Scan(&decoded)
+			} else {
+				err = a.db.QueryRow(ctx, `SELECT owner FROM topics WHERE name=$1`, topic).Scan(&decoded)
+			}
+			if err != nil {
+				return t.ErrPermissionDenied
+			}
+			actor = store.EncodeUid(decoded)
+		}
+		for _, fid := range fids {
+			allowed, err := a.FileCanRead(actor, fid)
+			if err != nil || !allowed {
+				return t.ErrPermissionDenied
+			}
+		}
 	}
 	now := t.TimeNow()
 

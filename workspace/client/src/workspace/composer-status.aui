@@ -1,0 +1,5 @@
+Page ComposerStatus
+  If condition=$sending
+    Text "Sending… Your draft is kept until the server confirms."
+  If condition=$error
+    Alert $error

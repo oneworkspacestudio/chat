@@ -1,0 +1,10 @@
+Page ChatRail
+  Image src="img/my_chat.svg" alt="Chat"
+  Button icon=chat_bubble action=chats "Chats"
+  Button icon=add_comment action=new-chat "New chat"
+  Button icon=archive action=archive "Archived"
+  Button icon=person action=profile "Profile"
+  Button icon=settings action=settings "Settings"
+  Button icon=contrast action=appearance "Appearance"
+  If condition=$workspace
+    Button icon=apps action=workspace "Workspace"

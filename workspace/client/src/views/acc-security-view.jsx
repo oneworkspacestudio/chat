@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import CheckBox from '../widgets/checkbox.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
+import {ManagedAccountConnection} from '../workspace/account-connection.js';
 
 const messages = defineMessages({
   delete_account: {
@@ -90,6 +91,7 @@ class AccSecurityView extends React.Component {
   }
 
   render() {
+    if(window.workspaceChat?.accountsURL)return React.createElement(ManagedAccountConnection,{actions:true,onBlocked:this.props.onShowBlocked,onLogout:this.props.onLogout});
     return (
       <>{this.state.showPermissionEditorFor ?
         <PermissionsEditor

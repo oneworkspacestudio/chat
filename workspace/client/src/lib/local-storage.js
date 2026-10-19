@@ -2,14 +2,15 @@
 // By default localStorage can store only strings, not objects or other types.
 
 export default class LocalStorageUtil {
+  static prefix() { return 'oneworkspace.chat.' + (globalThis.workspaceChat?.accountKey || 'anonymous') + '.'; }
   // Replace old object with the new one.
   static setObject(key, value) {
-    localStorage.setItem('oneworkspace.chat.' + key, JSON.stringify(value));
+    localStorage.setItem(this.prefix() + key, JSON.stringify(value));
   }
 
   // Get stored object.
   static getObject(key) {
-    const value = localStorage.getItem('oneworkspace.chat.' + key);
+    const value = localStorage.getItem(this.prefix() + key);
     try { return value && JSON.parse(value); } catch { return null; }
   }
 
@@ -21,6 +22,6 @@ export default class LocalStorageUtil {
 
   // Just a wrapper.
   static removeItem(key) {
-    localStorage.removeItem('oneworkspace.chat.' + key);
+    localStorage.removeItem(this.prefix() + key);
   }
 }

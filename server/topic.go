@@ -1128,6 +1128,34 @@ func (t *Topic) saveAndBroadcastMessage(msg *ClientComMessage, asUid types.Uid, 
 	}
 
 	markedReadBySender := false
+	if head["workspace_id"] != nil {
+		digest, err := store.ClientMessageDigest(head, content, attachments)
+		if err != nil {
+			msg.sess.queueOut(ErrMalformed(msg.Id, t.original(asUid), msg.Timestamp))
+			return err
+		}
+		seq, previous, err := store.ClientMessageReceipt(t.name, asUid.String(), head["workspace_id"].(string))
+		if err == types.ErrNotFound {
+			reply := ErrGone(msg.Id, t.original(asUid), msg.Timestamp)
+			reply.Ctrl.Text = "This message was deleted and was not resent."
+			msg.sess.queueOut(reply)
+			return nil
+		}
+		if err != nil {
+			msg.sess.queueOut(ErrUnknown(msg.Id, t.original(asUid), msg.Timestamp))
+			return err
+		}
+		if seq != 0 {
+			if previous != digest {
+				msg.sess.queueOut(ErrMalformed(msg.Id, t.original(asUid), msg.Timestamp))
+				return types.ErrMalformed
+			}
+			reply := NoErrAccepted(msg.Id, t.original(asUid), msg.Timestamp)
+			reply.Ctrl.Params = map[string]any{"seq": seq, "duplicate": true}
+			msg.sess.queueOut(reply)
+			return nil
+		}
+	}
 	if err, unreadUpdated := store.Messages.Save(
 		&types.Message{
 			ObjHeader: types.ObjHeader{CreatedAt: msg.Timestamp},
@@ -1138,7 +1166,7 @@ func (t *Topic) saveAndBroadcastMessage(msg *ClientComMessage, asUid types.Uid, 
 			Content:   content,
 		}, attachments, (pud.modeGiven & pud.modeWant).IsReader()); err != nil {
 		logs.Warn.Printf("topic[%s]: failed to save message: %v", t.name, err)
-		msg.sess.queueOut(ErrUnknown(msg.Id, t.original(asUid), msg.Timestamp))
+		msg.sess.queueOut(decodeStoreErrorExplicitTs(err, msg.Id, t.original(asUid), types.TimeNow(), msg.Timestamp, nil))
 
 		return err
 	} else {
@@ -2313,6 +2341,12 @@ func (t *Topic) replyGetDesc(sess *Session, asUid types.Uid, _ bool, opts *MsgGe
 func (t *Topic) replySetDesc(sess *Session, asUid types.Uid, asChan bool,
 	authLevel auth.Level, msg *ClientComMessage) error {
 	now := types.TimeNow()
+	if msg.Extra != nil {
+		if err := store.AuthorizeManagedAttachments(asUid, msg.Extra.Attachments); err != nil {
+			sess.queueOut(decodeStoreErrorExplicitTs(err, msg.Id, t.original(asUid), now, msg.Timestamp, nil))
+			return err
+		}
+	}
 
 	assignAccess := func(upd map[string]any, mode *MsgDefaultAcsMode) error {
 		if mode == nil {

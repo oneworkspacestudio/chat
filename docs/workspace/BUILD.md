@@ -33,3 +33,25 @@ already completed browser build; it must not be used on an incomplete directory.
 Distribute the corresponding source archive, root GPL license, web client Apache
 license, PostgreSQL notices, dependency license inventory and checksums with the
 executable. Build success does not claim messaging or recovery acceptance.
+
+## Candidate acceptance and source mapping
+
+`--release` requires a clean committed checkout and checks that any NTFS client
+build copy matches its source. The receipt records the source commit and dirty
+state. Build from the intended commit, generate AUI, preserve generated sources,
+and run acceptance against the resulting packaged bytes before publishing.
+
+`browser-acceptance.cjs`, `parity-acceptance.cjs` and `ui-acceptance.cjs` require
+an isolated native MyAccounts/Chat installation and synthetic `example.test`
+accounts. Credentials stay in its protected NTFS fixture, outside the repository.
+Use the test fixture variables documented in each harness, never owner data.
+
+`workspace/crypto` is a separately built OpenMLS proof, not part of Chat.exe.
+Its Cargo.lock pins dependencies. Build its library natively and as
+`wasm32-unknown-unknown`, then use the matching wasm-bindgen CLI (the exact version
+in Cargo.lock) for web bindings. `cargo test --locked` checks the proof and
+`cargo build --locked --bin protocol-proof` builds the synthetic stdin/stdout
+interop helper. `crypto-interop.cjs` connects that actual Windows process to a
+real browser WASM client. Set `CHAT_CRYPTO_PROOF_ROOT` to the proof artifact
+folder and `PLAYWRIGHT_MODULE` to your local Playwright installation. Signing,
+native mobile clients and production device/keystore/recovery are not implied.

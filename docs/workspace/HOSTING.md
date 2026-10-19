@@ -3,9 +3,22 @@
 ## Managed installation
 
 Choose Chat in One Workspace Advanced installation. The manager sets its own data
-folder, loopback port, public URL and dedicated OIDC client. Open the tile at
-https://your-workspace.example/chat. The existing Workspace tunnel carries HTTPS
-and WebSockets; no new public DNS record or public database port is needed.
+folder, loopback port, public URL and dedicated OIDC client. Workspace 43+ gives
+Chat a separate browser hostname and updates its existing OIDC registration.
+Old `/chat` entry links redirect there, retaining conversation fragments. A
+callback started before the migration restarts PKCE instead of forwarding codes.
+
+Local Chat uses the other loopback hostname at its allocated port. Managed
+Cloudflare hosting allocates an unused first-level name such as
+`chat.example.com` and saves it under `chat/workspace-hosting.json`. Existing DNS
+and unrelated tunnel rules are preserved. Updates retain that address and can
+repair its owned route. Chat uses the existing HTTPS/WebSocket tunnel; PostgreSQL
+stays private. This does not provide UDP/TURN transport or a calling service.
+
+Update Workspace and Chat together. A managed Chat 5 process rejects an older
+manager before touching its data. Its independent update manifest also requires
+the compatible manager; old full-bundle update paths must recover the previous
+working Chat if they try to launch it without that integration.
 
 ## Standalone with MyAccounts
 

@@ -9,6 +9,19 @@ Chat is the One Workspace messaging app, built from [Tinode](https://github.com/
 and its [web client](https://github.com/tinode/webapp). It brings direct messages,
 group conversations, message history and file attachments into your workspace.
 
+The current upgrade is an **incomplete development candidate** for the WhatsApp
+parity brief. It adds tested messaging reliability, isolated hosting, offline
+reconnect, custom lists and Workspace navigation. See the
+[implementation status](docs/whatsapp-parity/IMPLEMENTATION-STATUS.md) and
+[platform feature matrix](docs/whatsapp-parity/features.csv) for the remaining work.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/whatsapp-parity/evidence/foundation-5-dark-1365.png">
+  <img src="docs/whatsapp-parity/evidence/foundation-5-light-1365.png" alt="Chat candidate with a real synthetic group conversation in the One Workspace design system">
+</picture>
+
+Browser capture with synthetic users. [Narrow layout and evidence](docs/whatsapp-parity/evidence/README.md).
+
 ## One account, connected conversations
 
 Open Chat from One Workspace to reuse MyAccounts sign-in. There is no separate
@@ -17,6 +30,14 @@ so you can find them before their first Chat sign-in. Search by name, username,
 verified email or account ID; the By ID tab accepts Chat IDs and QR links.
 The client uses the One Workspace design system and a matching navy, mint and
 silver icon. Browser libraries, translations and the icon font are served locally.
+Lists and favourites synchronize between signed-in sessions. Drafts remain on
+their account and conversation until the server confirms a send. Reconnecting
+reuses a durable message ID so an acknowledgement retry does not send another copy.
+
+Managed Chat 5 requires **One Workspace 43 or newer**. It gets its own browser
+hostname, reuses the existing MyAccounts identity and keeps old Workspace Chat
+links working. The app switcher links to installed apps without sharing portal
+cookies, browser storage or scripts with Chat.
 
 ## Windows without Docker
 
@@ -38,9 +59,15 @@ GitHub Actions are disabled.
 
 ## Preview scope
 
-Current version: 0.1.0-preview.4. See [acceptance scope](docs/workspace/ACCEPTANCE.md).
-Do not infer production, mobile, call-hosting or recovery acceptance from a build.
-Chat does not add end-to-end encryption to Tinode.
+Candidate version: 0.1.0-preview.5. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
+and the [security boundary](docs/whatsapp-parity/SECURITY.md). Release/download
+acceptance remains separate from development fixture results.
+
+Application messages and attachments are **not end-to-end encrypted**. The shared
+OpenMLS native/browser module is a protocol proof, not production Chat encryption.
+Device trust/recovery, complete social families, calls and native Android/iOS
+clients remain incomplete. No full-parity, exact pixel-match or physical-device
+acceptance is claimed.
 
 ## Licenses and upstream
 

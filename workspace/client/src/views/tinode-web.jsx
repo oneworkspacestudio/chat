@@ -27,9 +27,15 @@ import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
+import {ChatRail} from '../workspace/rail.generated.jsx';
+import {WorkspaceAppsDialog} from '../workspace/workspace-apps.js';
+import {FormContext} from '../workspace/components/ui.js';
+import {applyTheme} from '../workspace/theme.mjs';
+import {clearAccountDrafts} from '../workspace/composer-state.mjs';
+import {saveOfflineContext,clearOfflineContext,OFFLINE_CONTEXT_KEY} from '../../workspace-offline.mjs';
 import HashNavigation from '../lib/navigation.js';
 import { secondsToTime } from '../lib/strformat.js'
-import { defaultWallpaper, updateFavicon } from '../lib/utils.js';
+import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.m4a');
@@ -205,11 +211,10 @@ class TinodeWeb extends React.Component {
 
   getBlankState() {
     const settings = LocalStorageUtil.getObject('settings') || {};
-    const persist = false; // Workspace sessions own authentication; no browser token cache.
-    if (!settings.wallpaper) {
-      const wallpaper = defaultWallpaper();
-      settings.wallpaper = wallpaper.name || '';
-      settings.wallpaperSize = wallpaper.size || 0;
+    const persist = !!window.workspaceChat?.accountKey; // Account-scoped message/outbox cache; authentication remains gateway-owned.
+    if (settings.wallpaper === undefined) {
+      settings.wallpaper = '';
+      settings.wallpaperSize = 0;
       settings.wallpaperBlur = 0;
     }
     return {
@@ -324,7 +329,25 @@ class TinodeWeb extends React.Component {
     // Listen for Escape key to clear selections.
     document.addEventListener('keydown', this.handleEscapeKey);
 
-    document.documentElement.style.colorScheme = this.state.colorSchema == 'auto' ? 'light dark' : this.state.colorSchema;
+    applyTheme(this.state.colorSchema);
+    this.workspaceThemeChange = e => {
+      if (e.key === 'workspace-theme') this.handleChangeColorSchema(e.newValue === 'system' ? 'auto' : e.newValue === 'dark' ? 'dark' : 'light');
+    };
+    window.addEventListener('storage', this.workspaceThemeChange);
+    this.workspaceAccountChange=e=>{
+      if(e.key!==OFFLINE_CONTEXT_KEY)return;
+      let next;try{next=JSON.parse(e.newValue)}catch{}
+      if(!next||next.accountKey!==window.workspaceChat.accountKey){this.tinode?.disconnect();window.location.assign(new URL(e.newValue?'./':'?signedOut=1',document.baseURI))}
+    };
+    window.addEventListener('storage',this.workspaceAccountChange);
+    this.workspaceSessionHeartbeat=setInterval(async()=>{
+      if(!this.state.myUserId||!navigator.onLine||document.hidden)return;
+      try{
+        const response=await fetch(new URL('api/me',document.baseURI),{credentials:'same-origin',cache:'no-store'});
+        if(response.status===401){this.endWorkspaceSession();return}
+        if(response.ok&&(await response.json()).accountKey!==window.workspaceChat.accountKey){this.tinode.disconnect();window.location.reload()}
+      }catch{}
+    },5000);
     document.documentElement.style.setProperty('--message-text-size', `${this.state.textSize}pt`);
 
     this.applyWallpaperSettings(this.state.wallpaper, this.state.wallpaperSize, this.state.wallpaperBlur,
@@ -376,8 +399,12 @@ class TinodeWeb extends React.Component {
       // Read contacts from cache.
       this.resetContactList();
 
-      this.setState({autoLogin: true, loadSpinnerVisible: true}, () => {
-        this.tinode.connect().catch(err => this.handleError('Chat could not connect. Reconnect to try again.', 'err'));
+      if(window.workspaceChat.offline){
+        this.setState({myUserId:window.workspaceChat.uid,connected:false,ready:false,autoLogin:true,loadSpinnerVisible:false,errorText:'Offline — showing this device’s cached Chat account. Sends remain pending until the server confirms them.',errorLevel:'warn'});
+      }
+
+      this.setState({autoLogin: true, loadSpinnerVisible: !window.workspaceChat.offline}, () => {
+        this.tinode.connect().catch(err => {this.setState({loadSpinnerVisible:false});if(!window.workspaceChat.offline)this.handleError('Chat could not connect. Reconnect to try again.', 'err')});
       });
 
       // Parse the hash navigation params.
@@ -386,10 +413,10 @@ class TinodeWeb extends React.Component {
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         // Save possible topic name.
         this.setState({requestedTopic: parsedNav.path[1]});
-        const path = parsedNav.params && parsedNav.params.cred_done ?
-          HashNavigation.addUrlParam('', 'cred_done', parsedNav.params.cred_done):
-          '';
-        HashNavigation.navigateTo(path);
+        // Cache hydration and the gateway login are asynchronous. Keep the
+        // requested screen in the URL while they finish; clearing it here or
+        // forcing Contacts after login races with a user's New chat action.
+        this.handleHashRoute();
       } else {
         this.handleHashRoute();
       }
@@ -397,6 +424,9 @@ class TinodeWeb extends React.Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.workspaceSessionHeartbeat);
+    window.removeEventListener('storage',this.workspaceAccountChange);
+    window.removeEventListener('storage', this.workspaceThemeChange);
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
     window.removeEventListener('online', this.handleOnlineOn);
@@ -414,6 +444,16 @@ class TinodeWeb extends React.Component {
       secure: secureConnection, persist: persistentCache}, onSetupCompleted);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
+    // Gateway cookies authenticate media; engine bearer tokens never belong in
+    // shareable file URLs. The engine receives a fresh gateway-bound ticket.
+    tinode.authorizeURL = value => {
+      if (!value || typeof value !== 'string') return value;
+      try {
+        const url=new URL(value,document.baseURI);
+        if(url.origin===location.origin){for(const key of ['auth','secret','apikey','sid'])url.searchParams.delete(key);return url.href;}
+      } catch {}
+      return value;
+    };
     return tinode;
   }
 
@@ -780,9 +820,11 @@ class TinodeWeb extends React.Component {
     const connectionPromise = this.tinode.isConnected() ? Promise.resolve() : this.tinode.connect();
     const loginPromise = connectionPromise.then(async () => {
       const response = await fetch(new URL('api/bootstrap', document.baseURI), {credentials: 'same-origin', cache: 'no-store'});
-      if (response.status === 401) { window.location.assign(new URL('auth/login', document.baseURI)); throw new Error('Your session has expired. Reconnecting to MyAccounts.'); }
+      if (response.status === 401) { const error=new Error('Your Chat session ended. Choose Reconnect Chat when you want to sign in again.');error.code=401;throw error; }
       if (!response.ok) throw new Error('Chat sign-in is temporarily unavailable. Please retry.');
       const bootstrap = await response.json();
+      if(bootstrap.accountKey!==window.workspaceChat.accountKey){this.tinode.disconnect();window.location.reload();throw new Error('Chat account changed. Opening its separate cache.')}
+      window.workspaceChat={...window.workspaceChat,...bootstrap,offline:false};
       return this.tinode.login('workspace', bootstrap.ticket);
     });
 
@@ -797,6 +839,10 @@ class TinodeWeb extends React.Component {
         this.handleLoginSuccessful();
       }
     }).catch(err => {
+      if(err.code===401){
+        this.endWorkspaceSession();
+        return;
+      }
       const autoLogin = err.code >= 500;
       // Connection or login failed, report error.
       this.setState({
@@ -825,6 +871,7 @@ class TinodeWeb extends React.Component {
 
   handleLoginSuccessful() {
     this.handleError();
+    try{saveOfflineContext(window.workspaceChat,this.tinode.getCurrentUserID())}catch{this.handleError('Offline access is unavailable because this browser could not save its account context.','warn')}
 
     // Refresh authentication token.
     if (false) { // Workspace never stores Tinode authentication tokens.
@@ -856,7 +903,7 @@ class TinodeWeb extends React.Component {
         withTags().
         withCred().
         build()
-      ).catch(err => {
+      ).then(()=>this.flushWorkspaceOutbox()).catch(err => {
         this.tinode.disconnect();
         LocalStorageUtil.removeItem('auth-token');
         this.handleError(err.message, 'err');
@@ -864,11 +911,46 @@ class TinodeWeb extends React.Component {
       }).finally(_ => {
         this.setState({loadSpinnerVisible: false});
       });
-    let urlHash = HashNavigation.setUrlSidePanel(window.location.hash, 'contacts');
+    const requestedPanel = HashNavigation.parseUrlHash(window.location.hash).path[0];
+    let urlHash = requestedPanel && !['login','cred','register','reset'].includes(requestedPanel) ?
+      window.location.hash : HashNavigation.setUrlSidePanel(window.location.hash, 'contacts');
     if (goToTopic) {
       urlHash = HashNavigation.setUrlTopic(urlHash, goToTopic);
     }
     HashNavigation.navigateTo(urlHash);
+  }
+
+  endWorkspaceSession() {
+    clearOfflineContext();clearInterval(this.reconnectCountdown);this.tinode?.disconnect();
+    this.setState({myUserId:null,topicSelected:null,chatList:[],sidePanelSelected:'login',autoLogin:false,loadSpinnerVisible:false,loginDisabled:false});
+    HashNavigation.navigateTo('');
+    this.handleError('Your Chat session ended. Choose Reconnect Chat when you want to sign in again.','warn');
+  }
+
+  async flushWorkspaceOutbox() {
+    if(this.workspaceOutboxFlushing)return;
+    this.workspaceOutboxFlushing=true;
+    try{
+    // Replay only durable UUID messages for this authenticated account. Keep
+    // permission failures visible for correction instead of deleting drafts.
+    const topics=[];
+    this.tinode.mapTopics(topic=>{const pending=[];topic.queuedMessages(pub=>{if(pub.head?.workspace_id&&!pub._sending&&!pub._fatal&&!pub.head?.webrtc)pending.push(pub)});if(pending.length)topics.push({topic,pending})});
+    for(const {topic,pending} of topics){
+      if(!this.tinode.isAuthenticated())return;
+      try{
+        if(!topic.isSubscribed())await topic.subscribe();
+        for(const pub of pending){
+          if(pub._sending)continue;
+          // Tinode deliberately omits its per-connection request ID from the
+          // persisted message. Regenerate that wire ID after hydration while
+          // retaining the durable workspace_id used by the server receipt.
+          pub.id=this.tinode.createMessage(topic.name,pub.content,false).id;
+          const ctrl=await topic.publishMessage(pub);
+          if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
+        }
+      }catch(error){this.handleError('A pending message could not be sent: '+String(error.message).slice(0,180)+'. It remains in its conversation; check access and retry.','warn')}
+    }
+    }finally{this.workspaceOutboxFlushing=false}
   }
 
   tnMeMetaDesc(desc) {
@@ -998,9 +1080,7 @@ class TinodeWeb extends React.Component {
       chatList: []
     };
 
-    if (!this.state.ready) {
-      newState.ready = true;
-    }
+    newState.ready = this.tinode.isAuthenticated();
 
     const me = this.tinode.getMeTopic();
     me.contacts(c => {
@@ -1152,6 +1232,8 @@ class TinodeWeb extends React.Component {
   }
 
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
+    head = {...head};
+    if (!head.workspace_id) head.workspace_id = crypto.randomUUID();
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
@@ -1167,35 +1249,14 @@ class TinodeWeb extends React.Component {
 
     if (!topic.isSubscribed()) {
       // Topic is not subscribed yet. Subscribe.
-      const subscribePromise =
-        topic.subscribe()
-          .then(_ => {
-            // If there are unsent messages (except video call messages),
-            // try sending them now. Unsent video call messages will be dropped.
-            let calls = [];
-            topic.queuedMessages(pub => {
-              if (pub._sending || pub.seq == msg.seq) {
-                return;
-              }
-              if (pub.head && pub.head.webrtc) {
-                // Filter out unsent video call messages.
-                calls.push(pub.seq);
-                return;
-              }
-              if (topic.isSubscribed()) {
-                topic.publishMessage(pub);
-              }
-            });
-            if (calls.length > 0) {
-              topic.delMessagesList(calls, true);
-            }
-          });
+      const subscribePromise = topic.subscribe();
       completion.push(subscribePromise);
     }
 
     // TODO: check if return is required.
     return topic.publishDraft(msg, Promise.all(completion))
       .then(ctrl => {
+        if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:head.workspace_id}}));
         if (topic.isArchived()) {
           topic.archive(false);
         }
@@ -1285,13 +1346,14 @@ class TinodeWeb extends React.Component {
   handleChangeColorSchema(schema) {
     this.setState({colorSchema: schema});
     LocalStorageUtil.updateObject('settings', {colorSchema: schema});
-    document.documentElement.style.colorScheme = schema == 'auto' ? 'light dark' : schema;
+    applyTheme(schema);
     this.applyColorSchema(schema, this.state.systemColorSchema, this.state.wallpaperSize);
   }
 
   // System color scheme has changed.
   handleColorSchemeChange(event) {
     const systemSchema = event.matches ? 'dark' : 'light';
+    applyTheme(this.state.colorSchema);
     this.setState({systemColorSchema: systemSchema});
     this.applyColorSchema(this.state.colorSchema, systemSchema, this.state.wallpaperSize);
   }
@@ -1308,7 +1370,7 @@ class TinodeWeb extends React.Component {
   }
 
   applyWallpaperSettings(wallpaper, size, blur, effectiveSchema) {
-    document.documentElement.style.setProperty('--wallpaper-url', `url('${wallpaper}')`);
+    document.documentElement.style.setProperty('--wallpaper-url', wallpaper ? `url('${wallpaper}')` : 'none');
     document.documentElement.style.setProperty('--wallpaper-repeat', size ? 'repeat' : 'no-repeat');
     document.documentElement.style.setProperty('--wallpaper-blur', size ? '0px' : `${blur}px`);
     document.documentElement.style.setProperty('--wallpaper-size', size ? `${size}px` : 'cover');
@@ -1594,11 +1656,13 @@ class TinodeWeb extends React.Component {
   }
 
   handleLogout() {
+    clearOfflineContext();
     this.tinode?.disconnect();
     this.tinode?.clearStorage();
     LocalStorageUtil.removeItem('auth-token');
+    clearAccountDrafts(localStorage, window.workspaceChat?.accountKey);
     fetch(new URL('auth/logout', document.baseURI), {method:'POST', credentials:'same-origin'})
-      .finally(() => window.location.assign('/'));
+      .finally(() => window.location.assign(new URL('?signedOut=1',document.baseURI)));
   }
 
   handleDeleteAccount() {
@@ -2083,6 +2147,12 @@ class TinodeWeb extends React.Component {
     const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
     return (
       <div id="app-container" ref={this.selfRef}>
+        {this.state.myUserId ? React.createElement(FormContext.Provider, {value: {kind: 'workspace-rail', label: 'Chat navigation'}}, React.createElement(ChatRail, {data: {workspace:!!window.workspaceChat.workspaceNavigation}, onAction: action => {
+          if(action==='workspace') {this.setState({workspaceAppsOpen:true});return;}
+          const panel = {'chats': 'contacts', 'new-chat': 'newtpk', archive: 'archive', profile: 'general', settings: 'edit', appearance: 'acc_general'}[action];
+          if (panel) HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, panel));
+        }})) : null}
+        {this.state.workspaceAppsOpen ? React.createElement(WorkspaceAppsDialog,{close:()=>this.setState({workspaceAppsOpen:false}),logout:this.handleLogout}) : null}
         {this.state.contextMenuVisible ?
           <ContextMenu
             tinode={this.tinode}

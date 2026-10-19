@@ -1,0 +1,12 @@
+{
+  "scope": "Development fixture acceptance; final published-byte installation acceptance is separate",
+  "version": "0.1.0-preview.5-dev",
+  "executableSHA256": "f366d24d4c2378f0873ec4868b3df24fbd50dfd6080235890456237cf3ceb2ed",
+  "runtimeSHA256": "49167c8ebb8ce355b97b2afbd629fbbca7026bf74d5a8732371cfdcd149fa816",
+  "sourceCommit": "c5c48b021e9a104ef9d68ea0fcd4451c3515e2d3",
+  "sourceDirty": true,
+  "githubActionsUsed": false,
+  "data": "Synthetic accounts only; no owner installation fixture",
+  "physicalMobileAcceptance": false,
+  "productionChatEncryption": false
+}

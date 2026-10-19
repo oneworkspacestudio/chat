@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="photos-title">
+<title id="photos-title">Photos</title>
+<defs>
+<linearGradient id="photos-navy" x1="15" y1="59" x2="202" y2="227" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4B4DD8"/><stop offset="0.48" stop-color="#302B99"/><stop offset="1" stop-color="#1C165E"/></linearGradient>
+<linearGradient id="photos-back-photo" x1="190" y1="65" x2="243" y2="214" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E4EAF4"/><stop offset="1" stop-color="#9CA8C2"/></linearGradient>
+<linearGradient id="photos-green-photo" x1="78" y1="37" x2="228" y2="205" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3BD9C0"/><stop offset="0.55" stop-color="#11B8A8"/><stop offset="1" stop-color="#00A496"/></linearGradient>
+<linearGradient id="photos-moon" x1="57" y1="93" x2="95" y2="139" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.47" stop-color="#E8EDF5"/><stop offset="1" stop-color="#AAB5C9"/></linearGradient>
+<linearGradient id="photos-blue-mountain" x1="139" y1="122" x2="159" y2="227" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7185FF"/><stop offset="0.53" stop-color="#4E61EE"/><stop offset="1" stop-color="#3338D0"/></linearGradient>
+<linearGradient id="photos-grey-mountain" x1="59" y1="166" x2="103" y2="231" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E8EDF5"/><stop offset="1" stop-color="#A0ABC2"/></linearGradient>
+<clipPath id="photos-front-photo-clip"><rect x="14" y="60" width="178" height="167" rx="26"/></clipPath>
+</defs>
+<rect x="158" y="63" width="85" height="150" rx="24" fill="url(#photos-back-photo)"/>
+<rect x="64" y="37" width="150" height="175" rx="25" fill="url(#photos-green-photo)"/>
+<path d="M217 66V187C217 202 205 214 190 214" fill="none" stroke="#F6F8FC" stroke-width="6" stroke-linecap="round"/>
+<rect x="14" y="60" width="178" height="167" rx="26" fill="url(#photos-navy)"/>
+<g clip-path="url(#photos-front-photo-clip)">
+<circle cx="74" cy="113" r="24" fill="url(#photos-moon)"/>
+<path d="M58 201 125 129C133 121 141 121 149 129L201 183V235H58Z" fill="url(#photos-blue-mountain)"/>
+<path d="M3 215 53 167C60 160 67 160 74 167L139 234H3Z" fill="url(#photos-grey-mountain)"/>
+</g>
+</svg>

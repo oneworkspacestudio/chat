@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="drive-title">
+<title id="drive-title">Drive</title>
+<defs>
+<linearGradient id="drive-back-cloud" x1="115" y1="49" x2="189" y2="162" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#687AFF"/><stop offset="0.47" stop-color="#404CDD"/><stop offset="1" stop-color="#242074"/></linearGradient>
+<linearGradient id="drive-left-cloud" x1="45" y1="112" x2="102" y2="210" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4C52D7"/><stop offset="0.54" stop-color="#302A98"/><stop offset="1" stop-color="#211A69"/></linearGradient>
+<linearGradient id="drive-front-cloud" x1="117" y1="96" x2="222" y2="211" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#A1F4DF"/><stop offset="0.44" stop-color="#57D8BD"/><stop offset="1" stop-color="#08AB95"/></linearGradient>
+</defs>
+<path d="M67 125C67 82 98 50 138 50C178 50 209 78 211 113L186 169 92 191Z" fill="url(#drive-back-cloud)"/>
+<path d="M109 131C93 106 65 100 42 114C20 127 10 151 17 173C21 188 32 200 50 205L122 207 153 153Z" fill="url(#drive-left-cloud)"/>
+<path d="M49 205 111 123C131 97 160 88 187 97C219 108 240 131 240 160C240 187 219 209 191 209H75C65 209 56 208 49 205Z" fill="url(#drive-front-cloud)"/>
+<path d="M83 84C97 63 116 51 139 51C164 51 184 62 197 80" fill="none" stroke="#B3C2FF" stroke-opacity="0.22" stroke-width="1.1" stroke-linecap="round"/>
+</svg>

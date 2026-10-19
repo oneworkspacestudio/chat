@@ -41,7 +41,7 @@ export const NO_ACCESS_MODE = 'N';
 
 // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
 // in @media (max-size: 640px) in base.css
-export const MEDIA_BREAKPOINT = 640;
+export const MEDIA_BREAKPOINT = 720;
 // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
 export const REM_SIZE = 13;
 

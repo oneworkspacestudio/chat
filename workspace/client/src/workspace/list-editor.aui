@@ -1,0 +1,17 @@
+Page ListEditor
+  Heading level=2 "$heading"
+  Field label="List name"
+    Input name="list-name" value=$name placeholder="Family, work or friends"
+  Text "Choose chats for this list. This does not change conversation membership."
+  For each=$contacts
+    Checkbox label=$item.name value=$item.id checked=$item.selected
+  If condition=$error
+    Alert $error
+  Row
+    Button action=save "Save"
+    Button action=cancel "Cancel"
+  If condition=$existing
+    Row
+      Button action=move-up "Move earlier"
+      Button action=move-down "Move later"
+      Button action=delete "Delete list"

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="docs-title">
+<title id="docs-title">Docs</title>
+<defs>
+<linearGradient id="docs-navy" x1="28" y1="16" x2="226" y2="239" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4B4DD8"/><stop offset="0.48" stop-color="#302B99"/><stop offset="1" stop-color="#1C165E"/></linearGradient>
+<linearGradient id="docs-fold" x1="171" y1="16" x2="235" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#A0B7FF"/><stop offset="0.53" stop-color="#7087FF"/><stop offset="1" stop-color="#495DFC"/></linearGradient>
+<linearGradient id="docs-content-block" x1="63" y1="74" x2="120" y2="135" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8AEFD9"/><stop offset="0.42" stop-color="#49D4BA"/><stop offset="1" stop-color="#00A58F"/></linearGradient>
+<linearGradient id="docs-text" x1="0" y1="114" x2="0" y2="207" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.47" stop-color="#E8EDF5"/><stop offset="1" stop-color="#AAB5C9"/></linearGradient>
+</defs>
+<path d="M56 16H171L235 80V207C235 225 220 240 202 240H56C38 240 23 225 23 207V49C23 31 38 16 56 16Z" fill="url(#docs-navy)"/>
+<path d="M171 16 235 80H192C180 80 171 71 171 59Z" fill="url(#docs-fold)"/>
+<rect x="60" y="74" width="65" height="60" rx="9" fill="url(#docs-content-block)" stroke="#B4F9E4" stroke-opacity="0.22" stroke-width="0.8"/>
+<rect x="142" y="114" width="54" height="18" rx="9" fill="url(#docs-text)"/>
+<rect x="60" y="153" width="136" height="18" rx="9" fill="url(#docs-text)"/>
+<rect x="60" y="189" width="136" height="18" rx="9" fill="url(#docs-text)"/>
+</svg>

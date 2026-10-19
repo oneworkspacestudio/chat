@@ -8,6 +8,7 @@ import { Tinode } from 'tinode-sdk';
 import AvatarCrop from './avatar-crop.jsx';
 import AvatarUpload from './avatar-upload.jsx';
 import InPlaceEdit from './in-place-edit.jsx';
+import {ManagedAccountConnection} from '../workspace/account-connection.js';
 import TagManager from './tag-manager.jsx';
 
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LENGTH,
@@ -286,14 +287,14 @@ class TopicDescEdit extends React.Component {
               description="Label for full name editing" />
             </label>
             <div>
-              <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
+              {window.workspaceChat?.accountsURL ? React.createElement(ManagedAccountConnection,{name:this.state.fullName}) : <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
                 description="Input placeholder for person's full name">{
                 (full_name_placeholder) => <InPlaceEdit
                   placeholder={full_name_placeholder}
                   value={this.state.fullName}
                   required={true}
                   onFinished={this.handleFullNameUpdate} />
-              }</FormattedMessage>
+              }</FormattedMessage>}
             </div>
           </div>
         :

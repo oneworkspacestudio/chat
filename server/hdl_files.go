@@ -46,7 +46,7 @@ func largeFileServeHTTP(wrt http.ResponseWriter, req *http.Request) {
 		wrt.WriteHeader(msg.Ctrl.Code)
 		enc.Encode(msg)
 		if err != nil {
-			logs.Warn.Println("media serve:", req.URL.String(), err)
+			logs.Warn.Println("media serve:", req.URL.Path, err)
 		}
 	}
 
@@ -99,6 +99,13 @@ func largeFileServeHTTP(wrt http.ResponseWriter, req *http.Request) {
 		// Not authenticated
 		writeHttpResponse(ErrAuthRequired("", "", now, now), errors.New("user not authenticated"))
 		return
+	}
+	if workspaceMediaMembership {
+		allowed, err := store.ManagedFileCanRead(uid, mh.GetIdFromUrl(req.URL.String()).String())
+		if err != nil || !allowed {
+			writeHttpResponse(ErrPermissionDenied("", "", now), nil)
+			return
+		}
 	}
 
 	// Check if media handler redirects or adds headers.
@@ -615,7 +622,7 @@ func authFileRequest(authMethod, secret, sid, remoteAddr string) (types.Uid, []b
 		decodedSecret := make([]byte, base64.StdEncoding.DecodedLen(len(secret)))
 		n, err := base64.StdEncoding.Decode(decodedSecret, []byte(secret))
 		if err != nil {
-			logs.Info.Println("media: invalid auth secret", authMethod, "'"+secret+"'")
+			logs.Info.Println("media: invalid auth secret", authMethod)
 			return uid, nil, types.ErrMalformed
 		}
 

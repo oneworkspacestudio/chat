@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "Three independent MyAccounts identities on a dedicated Chat hostname",
+    "Host-only Chat session does not share the portal cookie",
+    "Native runtime restart preserves identity links, durable deleted-message receipt and exact attachment bytes",
+    "Durable retry returns the original sequence; changed payload rejected; recipient sees one delivery",
+    "Unshared uploaded file denies other signed-in users for GET and HEAD",
+    "Authorized recipient downloads exact bytes; outsider remains denied; active documents sandboxed",
+    "Forged attachment sharing rejected atomically; subsequent valid send still works",
+    "Retry after delete returns Gone without republishing or reinserting deleted content into the SDK",
+    "Account-scoped custom lists persist with concurrent-write conflict protection",
+    "Long-poll session cannot be transplanted to a different authenticated account",
+    "WebSocket gateway identity rejects a valid ticket for a different account",
+    "Group media membership enforced; removed member loses access; outsider denied",
+    "Deleting and reopening a private conversation cannot replay its retired message UUID",
+    "Shared hostname cannot access the isolated gateway"
+  ],
+  "synthetic": true,
+  "mockedSuccessfulResponses": false,
+  "cryptoAcceptance": false
+}

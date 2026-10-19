@@ -1,0 +1,12 @@
+{
+  "nativeToBrowser": true,
+  "browserToNative": true,
+  "authenticatedAAD": true,
+  "bothReplayChecks": true,
+  "nativeTamperRejected": true,
+  "restoredSenderFenced": true,
+  "actualNativeProcess": true,
+  "actualBrowserWasm": true,
+  "productionChatEncryption": false,
+  "nativeMobileAcceptance": false
+}

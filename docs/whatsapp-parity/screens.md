@@ -1,0 +1,52 @@
+# Screen inventory
+
+Every row needs web/Android/iOS and light/dark captures. No row is marked visually verified yet.
+
+- Desktop navigation rail
+- Chats list/search/filters
+- Custom list editor
+- Archived chats
+- New chat/people search
+- Exact ID/QR
+- Conversation/history/composer
+- Message context menu/selection
+- Message info/receipts
+- In-chat search/jump
+- Contact information/profile
+- Group create/member picker
+- Group information/permissions
+- Invites/approval requests
+- Shared media/viewer
+- Photo/video preview/edit
+- Document preview/download
+- Voice recording/preview/playback
+- Stickers/GIF picker/packs
+- Location consent/live session
+- Contact card preview
+- Poll create/results/close
+- Event create/RSVP/reminders
+- Updates/recent/viewed/muted
+- Status compose/audience/viewer
+- Channel directory/follow
+- Channel administration
+- Community/groups/announcements
+- Calls/history/favourites
+- Incoming call/waiting/busy
+- Active call/participant/device controls
+- Guest admission/revocation
+- Screen sharing/transfer
+- Profile/account/identifiers
+- Appearance/wallpaper/text
+- Notification/privacy/security settings
+- Storage/network/cleanup
+- Linked devices/QR/approval
+- Device verification/change warning
+- First secure device/enrolment
+- Client recovery/backup/restore
+- Multi-account switch
+- Phone verification/provider errors
+- Parent/teen approvals
+- Provider and unsupported capability states
+- Permission denial/offline/session expiry
+- Global logout/revocation
+- Keyboard/focus/Back/safe-area states

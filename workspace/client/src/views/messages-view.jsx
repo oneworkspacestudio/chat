@@ -571,25 +571,8 @@ class MessagesView extends React.Component {
           this.setState({deleted: false});
         }
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-        // If there are unsent messages (except hard-failed and video call messages),
-        // try sending them now. Hard-failed and unsent video call messages will be dropped.
-        let discard = [];
-        topic.queuedMessages(pub => {
-          if (pub._sending) {
-            return;
-          }
-          if (pub._fatal || (pub.head && pub.head.webrtc)) {
-            // Filter out unsent failed & video call messages.
-            discard.push(pub.seq);
-            return;
-          }
-          if (topic.isSubscribed()) {
-            this.retrySend(pub);
-          }
-        });
-        if (discard.length > 0) {
-          topic.delMessagesList(discard, true);
-        }
+        // Reconnect replay is owned by TinodeWeb.flushWorkspaceOutbox.
+        // Keep failed drafts for correction; never delete them on subscribe.
       })
       .catch(err => {
         console.error("Failed subscription to", this.state.topic, err);
@@ -1026,13 +1009,12 @@ class MessagesView extends React.Component {
   }
 
   // sendMessage sends the message with an optional subscription to topic first.
-  sendMessage(msg, uploadCompletionPromise, uploader) {
-    let head;
+  sendMessage(msg, uploadCompletionPromise, uploader, clientHead) {
+    let head = clientHead;
     if (!msg && this.props.forwardMessage) {
       // We are forwarding a message.
       msg = this.props.forwardMessage.msg;
-      head = this.props.forwardMessage.head;
-      this.handleCancelReply();
+      head = {...this.props.forwardMessage.head, ...clientHead, workspace_id:clientHead?.workspace_id||crypto.randomUUID()};
     } else if (this.state.reply) {
       if (this.state.reply.editing) {
         if (msg == this.state.contentToEdit) {
@@ -1041,29 +1023,34 @@ class MessagesView extends React.Component {
           return;
         }
         // Editing an existing message.
-        head = {replace: ':' + this.state.reply.seq};
+        head = {...head, replace: ':' + this.state.reply.seq};
       } else if (this.state.reply.content) {
         // Replying to a message in this topic.
         // Turn it into Drafty so we can make a quoted Drafty object later.
-        head = {reply: '' + this.state.reply.seq};
+        head = {...head, reply: '' + this.state.reply.seq};
         if (typeof msg == 'string') {
           msg = Drafty.parse(msg);
         }
         msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       }
-      this.handleCancelReply();
     }
-    this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
+    return Promise.resolve(this.props.sendMessage(msg, uploadCompletionPromise, uploader, head)).then(ctrl=>{
+      if(ctrl&&ctrl.code>=200&&ctrl.code<300)this.handleCancelReply();
+      return ctrl;
+    });
   }
 
   // Retry sending a message.
-  retrySend(pub) {
-    this.props.sendMessage(pub.content, undefined, undefined, pub.head)
-      .then(_ => {
-        // All good. Remove the original message draft from the cache.
-        const topic = this.props.tinode.getTopic(this.state.topic);
-        topic.delMessagesList([pub.seq], true);
-      });
+  async retrySend(pub) {
+    if(pub._sending || Tinode.isServerAssignedSeq(pub.seq))return;
+    const topic=this.props.tinode.getTopic(this.state.topic);
+    try{
+      if(!topic.isSubscribed())await topic.subscribe();
+      pub.head={...pub.head,workspace_id:pub.head?.workspace_id||crypto.randomUUID()};
+      pub.id=this.props.tinode.createMessage(topic.name,pub.content,false).id;
+      const ctrl=await topic.publishMessage(pub);
+      if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
+    }catch(error){this.props.onError('This message remains pending. Check your connection and conversation access, then retry.','warn')}
   }
 
   // sendFileAttachment sends the file as Drafty message:

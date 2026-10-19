@@ -124,6 +124,11 @@ func (sess *Session) readOnce(wrt http.ResponseWriter, req *http.Request) (int, 
 //   - if sid is not empty but there is no session, report an error
 func serveLongPoll(wrt http.ResponseWriter, req *http.Request) {
 	now := time.Now().UTC().Round(time.Millisecond)
+	bound, bindingErr := boundGatewayUser(req)
+	if bindingErr != nil {
+		http.Error(wrt, "Gateway identity required", http.StatusUnauthorized)
+		return
+	}
 
 	// Use the lowest common denominator - this is a legacy handler after all (otherwise would use application/json)
 	wrt.Header().Set("Content-Type", "text/plain")
@@ -167,6 +172,7 @@ func serveLongPoll(wrt http.ResponseWriter, req *http.Request) {
 		// New session
 		var count int
 		sess, count = globals.sessionStore.NewSession(wrt, "")
+		sess.workspaceUid = bound
 		sess.remoteAddr = getRemoteAddr(req)
 		logs.Info.Println("longPoll: session started", sess.sid, sess.remoteAddr, count)
 
@@ -186,6 +192,10 @@ func serveLongPoll(wrt http.ResponseWriter, req *http.Request) {
 		logs.Warn.Println("longPoll: invalid or expired session id", sid)
 		wrt.WriteHeader(http.StatusForbidden)
 		enc.Encode(ErrSessionNotFound(now))
+		return
+	}
+	if !bound.IsZero() && sess.workspaceUid != bound {
+		http.Error(wrt, "Session belongs to a different account", http.StatusForbidden)
 		return
 	}
 

@@ -63,7 +63,7 @@ export default class AccGeneralView extends React.PureComponent {
                     onChange={this.handleColorSchemaSelected} />&nbsp;
                   <label htmlFor="light">
                     <FormattedMessage id="color_schema_light" defaultMessage="Light" description="Name of the color schema"/>&nbsp;
-                    <i className="material-icons orange large">light_mode</i>
+                    <i aria-hidden="true" className="material-icons orange large">light_mode</i>
                   </label>
                 </li>
                 <li key="dark">
@@ -72,7 +72,7 @@ export default class AccGeneralView extends React.PureComponent {
                     onChange={this.handleColorSchemaSelected} />&nbsp;
                   <label htmlFor="dark">
                     <FormattedMessage id="color_schema_dark" defaultMessage="Dark" description="Name of the color schema"/>&nbsp;
-                    <i className="material-icons blue large">dark_mode</i>
+                    <i aria-hidden="true" className="material-icons blue large">dark_mode</i>
                   </label>
                 </li>
               </ul>

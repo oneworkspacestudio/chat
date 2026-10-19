@@ -605,6 +605,11 @@ func initTopicNewGrp(t *Topic, sreg *ClientComMessage, isChan bool) error {
 
 	// store.Topics.Create will add a subscription record for the topic creator
 	stopic.GiveAccess(t.owner, userData.modeWant, userData.modeGiven)
+	if sreg.Extra != nil {
+		if err := store.AuthorizeManagedAttachments(t.owner, sreg.Extra.Attachments); err != nil {
+			return err
+		}
+	}
 	err := store.Topics.Create(stopic, t.owner, t.perUser[t.owner].private)
 	if err != nil {
 		return err

@@ -7,6 +7,7 @@ import { Drafty, Tinode } from 'tinode-sdk';
 
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
+import {readDraft} from '../workspace/composer-state.mjs';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
@@ -121,6 +122,8 @@ class ContactList extends React.PureComponent {
             }
           }
 
+          const draft=readDraft(localStorage,window.workspaceChat?.accountKey,key);
+          if(draft.text && !this.props.showMode) {preview='Draft: '+draft.text.slice(0,MESSAGE_PREVIEW_LENGTH);deliveryStatus=undefined;}
           contactNodes.push(
             <Contact
               tinode={this.props.tinode}

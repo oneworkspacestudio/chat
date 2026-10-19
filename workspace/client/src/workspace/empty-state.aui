@@ -1,0 +1,5 @@
+Page ChatEmpty
+  Image src="img/my_chat.svg" alt="Chat"
+  Heading level=2 "Your conversations, together."
+  Text "Choose a conversation or start a new chat."
+  Text "Your messages and files stay on your Workspace server."

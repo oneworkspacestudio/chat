@@ -1,0 +1,16 @@
+Page ChatFilters
+  Input name="conversation-search" value=$query placeholder="Search chats"
+  Row
+    Button name=filter value=all action=all "All"
+    Button name=filter value=unread action=unread "Unread"
+    Button name=filter value=favourites action=favourites "Favourites"
+    Button name=filter value=groups action=groups "Groups"
+    For each=$lists
+      Button name="custom-list" value=$item.id "$item.name"
+    Button action=new-list "New list"
+  If condition=$customList
+    Button action=edit-list "Edit list"
+  If condition=$selected
+    Button action=favourite-selected "$favouriteAction"
+  If condition=$error
+    Alert $error

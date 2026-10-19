@@ -3,6 +3,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const root=process.env.CHAT_TEST_PRIVATE_ROOT,origin=process.env.CHAT_TEST_ORIGIN;
 assert(root && origin && /^http:\/\/(localhost|127\.0\.0\.1):[0-9]+$/.test(origin),'Use a dedicated local test installation and protected test credential folder.');
 const users=JSON.parse(fs.readFileSync(root+'/test-users.json','utf8'));
+const safeError=value=>users.reduce((text,user)=>user.password?text.replaceAll(user.password,'[redacted]'):text,String(value));
 assert(users.length>=3 && users.every(u=>u.email.endsWith('@example.test')),'Only synthetic example.test users may be used.');
 async function main(){
  const browser=await chromium.launch({executablePath:process.env.CHAT_TEST_BROWSER || 'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
@@ -32,6 +33,6 @@ async function main(){
   assert.deepEqual(errors,[]);pass('No uncaught browser errors');
   await bob.page.screenshot({path:root+'/messages-after.png'});await alice.page.screenshot({path:root+'/search-after.png'});
   fs.writeFileSync(root+'/browser-results.json',JSON.stringify({passed:checks,uncaughtErrors:errors,isolatedFixture:true},null,2));
- }catch(e){if(current)await current.screenshot({path:root+'/failure.png'}).catch(()=>{});fs.writeFileSync(root+'/browser-failure.json',JSON.stringify({passed:checks,error:e.message,uncaughtErrors:errors},null,2));throw e;}finally{await browser.close();}
+ }catch(e){if(current)await current.screenshot({path:root+'/failure.png'}).catch(()=>{});fs.writeFileSync(root+'/browser-failure.json',JSON.stringify({passed:checks,error:safeError(e.message),uncaughtErrors:errors},null,2));throw e;}finally{await browser.close();}
 }
-main().catch(e=>{console.error(e.message);process.exitCode=1;});
+main().catch(e=>{console.error(safeError(e.message));process.exitCode=1;});

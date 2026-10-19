@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="gitea-title">
+<title id="gitea-title">Gitea</title>
+<defs>
+<linearGradient id="gitea-navy" x1="57" y1="29" x2="190" y2="230" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4B4DD8"/><stop offset="0.48" stop-color="#302B99"/><stop offset="1" stop-color="#1C165E"/></linearGradient>
+<linearGradient id="gitea-silver" x1="102" y1="56" x2="174" y2="196" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.47" stop-color="#E8EDF5"/><stop offset="1" stop-color="#AAB5C9"/></linearGradient>
+<linearGradient id="gitea-top-node" x1="104" y1="63" x2="136" y2="94" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8AEFD9"/><stop offset="0.42" stop-color="#49D4BA"/><stop offset="1" stop-color="#00A58F"/></linearGradient>
+<linearGradient id="gitea-branch-node" x1="155" y1="119" x2="197" y2="162" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8AEFD9"/><stop offset="0.42" stop-color="#49D4BA"/><stop offset="1" stop-color="#00A58F"/></linearGradient>
+<linearGradient id="gitea-bottom-node" x1="110" y1="169" x2="136" y2="198" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6C80FF"/><stop offset="0.48" stop-color="#455CF3"/><stop offset="1" stop-color="#3029C6"/></linearGradient>
+</defs>
+<path d="M149 25 231 107C243 119 243 137 231 149L149 231C137 243 119 243 107 231L25 149C13 137 13 119 25 107L107 25C119 13 137 13 149 25Z" fill="url(#gitea-navy)"/>
+<path d="M119 77V180M119 88 176 136" fill="none" stroke="url(#gitea-silver)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="119" cy="77" r="25" fill="url(#gitea-silver)"/>
+<circle cx="119" cy="77" r="14" fill="url(#gitea-top-node)"/>
+<circle cx="119" cy="181" r="25" fill="url(#gitea-silver)"/>
+<circle cx="119" cy="181" r="14" fill="url(#gitea-bottom-node)"/>
+<circle cx="176" cy="138" r="25" fill="url(#gitea-branch-node)"/>
+</svg>

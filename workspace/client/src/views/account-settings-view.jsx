@@ -6,6 +6,7 @@ import { parsePhoneNumber } from 'libphonenumber-js/mobile';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 import CredentialEdit from '../widgets/credential-edit.jsx';
+import {ManagedAccountConnection} from '../workspace/account-connection.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { truncateString } from '../lib/strformat.js';
@@ -145,7 +146,7 @@ export default class AccountSettingsView extends React.Component {
         </div>
         <div className="hr" />
         <div className="panel-form-column">
-          <div className="group">{credentials}</div>
+          {window.workspaceChat?.accountsURL ? React.createElement(ManagedAccountConnection) : <div className="group">{credentials}</div>}
         </div>
         <div className="hr" />
         <div className="panel-form-column">

@@ -30,7 +30,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type Config struct{ Data, Listen, Origin, Issuer, ClientID, ClientSecret, DirectoryToken string }
+type Config struct{ Data, Listen, Origin, Issuer, ClientID, ClientSecret, DirectoryToken, WorkspaceOrigin, CatalogURL string }
 type flow struct {
 	Verifier, Nonce string
 	Expires         time.Time
@@ -41,6 +41,18 @@ type loginSession struct {
 	Context context.Context
 	Cancel  context.CancelFunc
 }
+type gatewaySessionContext struct{}
+
+func (g *Gateway) signedTicket(s *loginSession) string {
+	t := s.Ticket
+	t.Expires = time.Now().Add(time.Minute).Unix()
+	t.Nonce = platform.Token()
+	body, _ := json.Marshal(t)
+	mac := hmac.New(sha256.New, g.key)
+	mac.Write(body)
+	return base64.StdEncoding.EncodeToString([]byte(base64.RawURLEncoding.EncodeToString(body) + "." + base64.RawURLEncoding.EncodeToString(mac.Sum(nil))))
+}
+
 type Gateway struct {
 	config         Config
 	base           string
@@ -75,6 +87,20 @@ func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web s
 		r.Header.Set("X-Tinode-APIKey", apiKey)
 		r.Header.Del("Cookie")
 		r.Header.Del("Authorization")
+		r.Header.Del("X-Tinode-Auth")
+		r.Header.Del("X-Workspace-Gateway")
+		query := r.URL.Query()
+		query.Del("auth")
+		query.Del("secret")
+		if s, ok := r.Context().Value(gatewaySessionContext{}).(*loginSession); ok {
+			if strings.Contains(r.URL.Path, "/v0/file/") {
+				query.Del("sid")
+				r.Header.Set("Authorization", "workspace "+g.signedTicket(s))
+			} else {
+				r.Header.Set("X-Workspace-Gateway", g.signedTicket(s))
+			}
+		}
+		r.URL.RawQuery = query.Encode()
 		r.Host = target.Host
 	}
 	g.proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, e error) {
@@ -102,10 +128,22 @@ func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web s
 }
 func (g *Gateway) cookie(w http.ResponseWriter, name, value string, age int) {
 	p := g.base + "/"
+	if g.config.WorkspaceOrigin != "" {
+		p = "/"
+		if strings.HasPrefix(g.config.Origin, "https:") {
+			name = "__Host-" + name
+		}
+	}
 	http.SetCookie(w, &http.Cookie{Name: name, Value: value, Path: p, MaxAge: age, HttpOnly: true, Secure: strings.HasPrefix(g.config.Origin, "https:"), SameSite: http.SameSiteLaxMode})
 }
+func (g *Gateway) cookieName(name string) string {
+	if g.config.WorkspaceOrigin != "" && strings.HasPrefix(g.config.Origin, "https:") {
+		return "__Host-" + name
+	}
+	return name
+}
 func (g *Gateway) session(r *http.Request) *loginSession {
-	c, e := r.Cookie("chat_session")
+	c, e := r.Cookie(g.cookieName("chat_session"))
 	if e != nil {
 		return nil
 	}
@@ -149,7 +187,7 @@ func (g *Gateway) callback(w http.ResponseWriter, r *http.Request) {
 		fail()
 		return
 	}
-	c, e := r.Cookie("chat_login")
+	c, e := r.Cookie(g.cookieName("chat_login"))
 	state := r.URL.Query().Get("state")
 	if e != nil || state == "" || !hmac.Equal([]byte(c.Value), []byte(state)) {
 		fail()
@@ -212,7 +250,7 @@ func (g *Gateway) callback(w http.ResponseWriter, r *http.Request) {
 			delete(g.sessions, k)
 		}
 	}
-	if oldCookie, e := r.Cookie("chat_session"); e == nil {
+	if oldCookie, e := r.Cookie(g.cookieName("chat_session")); e == nil {
 		if old := g.sessions[oldCookie.Value]; old != nil {
 			old.Cancel()
 			delete(g.sessions, oldCookie.Value)
@@ -243,6 +281,24 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, `{"status":"ok"}`)
 		return
 	}
+	if path == "/api/directory/sync" {
+		g.syncDirectory(w, r)
+		return
+	}
+	if path == "/api/session/revoke" {
+		g.revokeSessions(w, r)
+		return
+	}
+	// Loopback integration endpoints above authenticate separately. Browser
+	// requests must use the dedicated configured hostname, including callbacks.
+	if g.config.WorkspaceOrigin != "" {
+		u, _ := url.Parse(g.config.Origin)
+		if !strings.EqualFold(r.Host, u.Host) {
+			http.Error(w, "Open Chat using its dedicated Workspace address.", 421)
+			return
+		}
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'")
+	}
 	if path == "/auth/login" && r.Method == "GET" {
 		g.login(w, r)
 		return
@@ -251,13 +307,15 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		g.callback(w, r)
 		return
 	}
-	if path == "/api/directory/sync" {
-		g.syncDirectory(w, r)
-		return
-	}
 	s := g.session(r)
 	if s == nil {
 		if path == "/" && r.Method == "GET" {
+			if r.URL.Query().Get("signedOut") == "1" {
+				w.Header().Set("Content-Type", "text/html; charset=utf-8")
+				w.Header().Set("Cache-Control", "no-store")
+				fmt.Fprintf(w, `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signed out · Chat</title><link rel="stylesheet" href="%s/css/workspace.css"><main class="workspace-connection"><h1>You’re signed out of Chat</h1><p>Your MyAccounts session is managed separately in Workspace.</p><a href="%s/auth/login">Reconnect Chat</a></main></html>`, html.EscapeString(g.base), html.EscapeString(g.base))
+				return
+			}
 			http.Redirect(w, r, g.base+"/auth/login", 302)
 		} else {
 			http.Error(w, "Sign in to Chat through MyAccounts.", 401)
@@ -265,13 +323,22 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Cache-Control", "no-store")
+	if path == "/api/workspace/apps" {
+		g.workspaceApps(w, r, s)
+		return
+	}
+	if path == "/api/preferences" {
+		g.preferences(w, r, s)
+		return
+	}
 	if path == "/api/people" && r.Method == "GET" {
 		g.findPeople(w, r, s)
 		return
 	}
 	if path == "/api/me" && r.Method == "GET" {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"name": s.Ticket.Name, "email": s.Ticket.Email})
+		key := sha256.Sum256([]byte(s.Ticket.Issuer + "\x00" + s.Ticket.Subject))
+		json.NewEncoder(w).Encode(map[string]any{"name": s.Ticket.Name, "email": s.Ticket.Email, "accountKey": fmt.Sprintf("%x", key)})
 		return
 	}
 	if path == "/api/bootstrap" && r.Method == "GET" {
@@ -284,7 +351,8 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ticket := base64.RawURLEncoding.EncodeToString(body) + "." + base64.RawURLEncoding.EncodeToString(h.Sum(nil))
 		u, _ := url.Parse(g.config.Origin)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https", "managedDirectory": g.config.DirectoryToken != ""})
+		accountKey := sha256.Sum256([]byte(t.Issuer + "\x00" + t.Subject))
+		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https", "managedDirectory": g.config.DirectoryToken != "", "accountKey": fmt.Sprintf("%x", accountKey), "protocol": 2, "workspaceNavigation": g.config.CatalogURL != "", "isolatedOrigin": g.config.WorkspaceOrigin != "", "expires": s.Expires.Unix(), "accountsURL": g.config.Issuer})
 		return
 	}
 	if path == "/auth/logout" {
@@ -292,7 +360,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Use Chat's sign-out button.", 403)
 			return
 		}
-		c, _ := r.Cookie("chat_session")
+		c, _ := r.Cookie(g.cookieName("chat_session"))
 		g.mu.Lock()
 		delete(g.sessions, c.Value)
 		g.mu.Unlock()
@@ -310,7 +378,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		defer cancel()
 		stop := context.AfterFunc(s.Context, cancel)
 		defer stop()
-		r = r.Clone(ctx)
+		r = r.Clone(context.WithValue(ctx, gatewaySessionContext{}, s))
 		r.URL.Path = path
 		g.proxy.ServeHTTP(w, r)
 		return
@@ -327,6 +395,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		body = []byte(strings.Replace(string(body), "<!--WORKSPACE_BASE-->", fmt.Sprintf(`<base href="%s/">`, html.EscapeString(g.base)), 1))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("X-Chat-Shell", "static")
 		w.Write(body)
 		return
 	}
@@ -362,6 +431,23 @@ func validate(c Config) error {
 	}
 	if c.Issuer != "" && (c.ClientID == "" || c.ClientSecret == "") {
 		return errors.New("Chat needs its own registered MyAccounts OIDC client")
+	}
+	if c.WorkspaceOrigin != "" {
+		chat, _ := url.Parse(c.Origin)
+		home, err := url.Parse(c.WorkspaceOrigin)
+		if err != nil || home.Host == "" || home.User != nil || home.Path != "" || home.RawQuery != "" || home.Fragment != "" || home.Scheme != "https" && !(home.Scheme == "http" && (home.Hostname() == "localhost" || net.ParseIP(home.Hostname()).IsLoopback())) {
+			return errors.New("Workspace needs a valid HTTPS or loopback origin")
+		}
+		// Hostnames must also differ: cookies are not isolated by TCP port.
+		if strings.EqualFold(home.Hostname(), chat.Hostname()) {
+			return errors.New("Chat requires a separate hostname from Workspace before enabling managed isolation")
+		}
+	}
+	if c.CatalogURL != "" {
+		u, err := url.Parse(c.CatalogURL)
+		if err != nil || u.Scheme != "http" || !net.ParseIP(u.Hostname()).IsLoopback() || u.User != nil || u.RawQuery != "" || u.Fragment != "" || len(c.DirectoryToken) < 32 {
+			return errors.New("Chat navigation requires its private loopback Workspace integration")
+		}
 	}
 	return nil
 }

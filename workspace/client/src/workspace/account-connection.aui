@@ -1,0 +1,8 @@
+Page AccountConnection
+  If condition=$name
+    Text $name
+  Text "MyAccounts manages your name, password and account security."
+  Link href=$accountsURL "Open MyAccounts"
+  If condition=$actions
+    Button action=blocked "Blocked contacts"
+    Button action=logout "Sign out of Chat"
