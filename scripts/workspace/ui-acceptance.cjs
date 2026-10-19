@@ -38,12 +38,12 @@ async function main(){
   for(const theme of ['light','dark']){
    await page.goto(base+'#acc_general');await page.locator('input#'+theme).check();await page.waitForFunction(theme=>document.documentElement.dataset.theme===theme,theme);
    await page.goto(base+'#contacts/'+reviewGroup);await page.locator('#send-message-input').waitFor();
-   for(const [width,height]of[[390,844],[430,932],[768,1024],[1365,768],[1920,1080]]){
+   for(const [width,height]of[[360,800],[390,844],[430,932],[768,1024],[1365,768],[1366,768],[1920,1080]]){
     await page.setViewportSize({width,height});await page.screenshot({path:root+`/chat-${theme}-${width}.png`});
     const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,height:document.documentElement.scrollHeight,incoming:getComputedStyle(document.querySelector('li.left .bubble')).backgroundColor,outgoing:getComputedStyle(document.querySelector('li.right .bubble')).backgroundColor,scheme:document.documentElement.style.colorScheme}));
     assert.equal(metrics.overflow,false,'Document must not overflow horizontally');assert.equal(metrics.scheme,theme);assert.equal(metrics.incoming,theme==='dark'?'rgb(41, 49, 61)':'rgb(240, 244, 249)');assert.equal(metrics.outgoing,theme==='dark'?'rgb(36, 63, 96)':'rgb(211, 227, 253)');captures.push({theme,width,height,...metrics});
    }
-  }pass('Five responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow');
+  }pass('Seven responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow');
   await page.setViewportSize({width:1365,height:768});await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
   const cached=await page.evaluate(async()=>{const urls=[];for(const name of await caches.keys())if(name.startsWith('oneworkspace-chat-shell-'))for(const request of await(await caches.open(name)).keys())urls.push(new URL(request.url).pathname);return urls});assert(cached.length>0&&!cached.some(path=>/\/(api|auth|v0)\//.test(path)));pass('Offline worker caches static shell only; no API, credentials or private attachments');
   await alice.context.setOffline(true);await page.evaluate(()=>acceptanceSockets.forEach(socket=>socket.close()));
