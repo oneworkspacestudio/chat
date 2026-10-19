@@ -26,4 +26,3 @@ async function main(){
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));child.stdin.end();await new Promise(resolve=>{child.once('exit',resolve);setTimeout(()=>{child.kill();resolve()},2000)})}
 }
 main().catch(error=>{console.error(error.message);process.exitCode=1});
-
