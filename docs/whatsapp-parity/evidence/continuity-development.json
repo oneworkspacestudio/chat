@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "version": "0.1.0-dev.continuity",
+  "sourceCommit": "7e7207e0baa6a6328c91b6edcab97d801b9fab85",
+  "sourceDirty": true,
+  "publicRelease": false,
+  "githubActionsUsed": false,
+  "executableSHA256": "d87fd2efa2948a90de8a2f43fae184b4ebc411ae4e0e85dbbd2cc1ea7098a326",
+  "executableBytes": 81724416,
+  "runtimeSHA256": "2956ecc00ae01550749ad50ca3898ef74ec5a9b7b71d41866a70b19cb96e4600",
+  "browser": {
+    "checks": [
+      "Two authenticated users establish a real WebRTC data channel after mutual opt-in",
+      "Foreign session cannot steal a device and a non-member cannot establish fallback",
+      "Local picker sends emoji and keeps its close button reachable on three narrow/short screens",
+      "Stop the entire synthetic Workspace: real bidirectional text/emoji/sticker delivery continues over WebRTC",
+      "IndexedDB contains ciphertext with a non-exportable WebCrypto key",
+      "Actual duplicate data-channel packet creates no extra local message",
+      "Offline reload restores cached UI, direct history and durable queue without claiming reconnection",
+      "Restart server and reconcile every durable UUID into canonical history exactly once",
+      "HTTP503 bootstrap keeps the cached conversation usable and recovers without losing it",
+      "Saved opt-in reconnects automatically after authenticated recovery",
+      "Real membership revocation closes direct fallback and rejects delayed publication"
+    ],
+    "uncaughtErrors": [],
+    "realWebRTC": true,
+    "syntheticWholeServerStop": true,
+    "physicalDevices": false,
+    "internetTURNTested": false,
+    "defaultChromeNetworkPolicy": true
+  },
+  "controllerChecks": [
+    "durable send and direct receipt are separate from server save",
+    "confirmed server save drains the outbox once",
+    "duplicate packets deduplicate and conflicting content/incarnations fail closed",
+    "canonical sticker reconciliation ignores JSON object property order",
+    "rich text reconciles Tinode zero-offset wire defaults",
+    "closed or replaced sessions cannot commit or acknowledge late packets",
+    "storage failure never returns delivery receipt",
+    "only bounded text and exact local stickers accepted",
+    "Tinode publication cannot mutate the shared sticker pack",
+    "an expired peer lease cannot acknowledge another packet",
+    "a network change during send preserves and accepts the durable queue",
+    "controller shutdown",
+    "native wrapper resume/network boundary retries and removes listeners",
+    "late SDK identity initialization resumes the same authenticated account",
+    "account identity changes close the old transport",
+    "session renewal closes transport while preserving opt-in",
+    "authoritative membership revocation disables saved opt-in",
+    "one conversation failure does not block another conversation outbox"
+  ],
+  "regressions": [
+    {
+      "suite": "browser-acceptance",
+      "checks": [
+        "Alice MyAccounts browser sign-in",
+        "Find a MyAccounts user before their first Chat login",
+        "Case-insensitive name search",
+        "Username search",
+        "Verified email search",
+        "Invalid ID shows guidance without crashing",
+        "By ID panel and QR code render",
+        "Copy my Chat ID",
+        "Bob independent MyAccounts browser sign-in",
+        "Open by native ID and deliver Alice to Bob",
+        "Two-way message delivery across isolated browser sessions",
+        "Conversation history after reload without repeated sign-in",
+        "Open conversation using copied QR URI",
+        "Anonymous member-directory request rejected",
+        "Unknown person gives an empty result",
+        "No uncaught browser errors"
+      ]
+    },
+    {
+      "suite": "parity-acceptance",
+      "checks": [
+        "Three independent MyAccounts identities on a dedicated Chat hostname",
+        "Host-only Chat session does not share the portal cookie",
+        "Durable retry returns the original sequence; changed payload rejected; recipient sees one delivery",
+        "Unshared uploaded file denies other signed-in users for GET and HEAD",
+        "Authorized recipient downloads exact bytes; outsider remains denied; active documents sandboxed",
+        "Forged attachment sharing rejected atomically; subsequent valid send still works",
+        "Retry after delete returns Gone without republishing or reinserting deleted content into the SDK",
+        "Account-scoped custom lists persist with concurrent-write conflict protection",
+        "Long-poll session cannot be transplanted to a different authenticated account",
+        "WebSocket gateway identity rejects a valid ticket for a different account",
+        "Group media membership enforced; removed member loses access; outsider denied",
+        "Deleting and reopening a private conversation cannot replay its retired message UUID",
+        "Shared hostname cannot access the isolated gateway"
+      ]
+    },
+    {
+      "suite": "ui-acceptance",
+      "checks": [
+        "Dedicated-origin app switcher has real app links, Escape/focus restoration and no duplicate floating launcher",
+        "Managed name/password/security point to MyAccounts; no broken second-password or native account-delete control",
+        "Create/select/rename/reorder/delete a real custom list with membership and independent-session synchronization",
+        "Conversation deep link and account/topic draft survive reload",
+        "Composing Enter retains the unsent draft",
+        "Create a native group in the UI, add a contact and exchange actual group messages",
+        "Seven responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow",
+        "Offline worker caches static shell only; no API, credentials or private attachments",
+        "Offline shell reload restores the correct cached account and retains the unacknowledged draft",
+        "Reconnect replays the durable outbox once and clears draft only after server acknowledgement",
+        "Workspace logout revokes open Chat sessions and sockets for Alice; Bob remains authenticated",
+        "No uncaught browser errors"
+      ]
+    },
+    {
+      "suite": "mobile-layout-acceptance",
+      "checks": [
+        "Mobile branded header, three real tabs and compose action (empty state captured on first fresh run)",
+        "Real discovery, two-user delivery and full-height conversation without bottom navigation",
+        "Five narrow/short viewports in both themes, visible44px tabs and a fixed close button with a20-item layout stress grid",
+        "Enlarged root text, modal keyboard containment, Escape and opener focus restoration",
+        "Profile/settings/archive actions work; picker Escape preserves conversation and unsent draft",
+        "No uncaught browser errors"
+      ]
+    },
+    {
+      "suite": "navigation-acceptance",
+      "checks": [
+        "Leaving a conversation before a real delayed data end preserves Settings without stale callbacks or crashes",
+        "Rapid conversation/settings navigation and re-entry retain a usable conversation with no uncaught errors"
+      ]
+    },
+    {
+      "suite": "manual-retry-acceptance",
+      "checks": [
+        "Real recipient received the message while its real sender ACK was dropped",
+        "Actual Retry menu retains the durable ID and exactly one message after reload"
+      ]
+    }
+  ],
+  "scope": {
+    "isolatedWindowsFixture": true,
+    "syntheticAccounts": 4,
+    "ownerUsedAsFixture": false,
+    "physicalMobileDevices": false,
+    "internetTURN": false,
+    "androidIOSPackages": false,
+    "completeApplicationE2EE": false
+  },
+  "sources": {
+    "server/auth/workspace/directory.go": "c268a8248ad8e49fd4e64ef00e3acadf273d23d2500a55ae691e6c84c4b8a679",
+    "server/topic.go": "520bfc50727c611b01c0bbbc515ed64692d965a88e0eac9f6c2913e8fe852b1b",
+    "workspace/client/css/workspace.css": "b16b313f81eb4d0340b8031716bcb880f53926de03bbeb2e97feecd86a69080c",
+    "workspace/client/scripts/workspace-ui.mjs": "5d45ed2863f82df021b19ffebc780a5784525899a68d8f68593fce109bea86dc",
+    "workspace/client/src/views/messages-view.jsx": "bae3688f630210175324000bfb4fcb619d8e2dea488ca3eefd2df15d07e45425",
+    "workspace/client/src/views/tinode-web.jsx": "5bf78ce231267d8c2095b5638e82d348dde8a751c97f9b466be613af14c13b52",
+    "workspace/client/src/widgets/send-message.jsx": "3e2b465afd72497d6a83cf6a7bc38985294483c3a8ed8bfab8cf63d2f4ee059f",
+    "workspace/client/src/workspace/components/ui.js": "34bf78a586b5e5ae0a91192b16567452f1816b85eea82ae92ca16d957d66b963",
+    "workspace/client/workspace-bootstrap.js": "a136e5b02a1cbcbfa265c743657885d2ada8a421d2eacd6927b0d0c26a70d47b",
+    "workspace/client/workspace-worker.js": "a18a424a7c87496e68af1f71efeed4a48825c7d104b42aca56f0f3cfc338629e",
+    "workspace/gateway.go": "d44008cb4f351bf6732a51c43ac087aee7f0491492129e3cda50bc5ba6d28ad1",
+    "server/auth/workspace/continuity.go": "e7bc79b27546cb5529d71e6e5d32816b967b6b0e2419abbb7148529e242eb3c7",
+    "workspace/client/src/workspace/composer-extras.aui": "c60ce40619bcfc0f985a1f3d07f80599bcc5174a03eba6af22069d3978e8944a",
+    "workspace/client/src/workspace/composer-extras.generated.jsx": "d50290d690ba1d8722495548407557a150459bb0e8ff52e683c694acab7db0b1",
+    "workspace/client/src/workspace/continuity-dialog.aui": "91538d66cd504d4164168b0a707d2998db10a4bb3d0658a8259c64ffb378444c",
+    "workspace/client/src/workspace/continuity-dialog.generated.jsx": "84ad1d9d5099699c67a3712e4e66fe0cedb7f5c571a04ca2d9782507a9c9bf3d",
+    "workspace/client/src/workspace/continuity-panel.aui": "e433e1efc56d917cbcdd1a4936bf20077cf97b8e0e7d43f4a035cd7a971bd026",
+    "workspace/client/src/workspace/continuity-panel.generated.jsx": "16f37463472136234836e0c22bad3a849d342a9b5ecf4ccbfe2a18aa0fffefab",
+    "workspace/client/src/workspace/continuity-store.mjs": "0a7384ff5f7a2a3ef7c7d7b785e629cf37a71fbc528bcf643338867a84edd27c",
+    "workspace/client/src/workspace/continuity-ui.js": "66bc6d033b1a8ff23d629c1b34fdcbde20ae8209f5b53a0d978a43f500f6140c",
+    "workspace/client/src/workspace/continuity.mjs": "1144fb59bab8935d537584ebe3e319c2dfcf5e995693178d8a332cf902c18e49",
+    "workspace/client/src/workspace/emoji-stickers.aui": "8acbec5cbd732e8e45c33627a5f6d6a453a53c4f3da30e8324076ff1b380ca07",
+    "workspace/client/src/workspace/emoji-stickers.generated.jsx": "6489bd7aae40773a4e47f44fe1f7da43523c8647f32e793181941d5cd32fd4c7",
+    "workspace/client/src/workspace/native-continuity.mjs": "b26c65bdf5b59c029e2a7a0fa99db019371a275e76b9d3c7b6830a9386b08721",
+    "workspace/client/src/workspace/stickers.mjs": "07d40fc1465c997195db173e203f50d59e3ab82ef63ced787153a2635d995c58",
+    "workspace/continuity.go": "a60a4d7ce973956c1e0285528b9bbfb647cefb8130b6fc675ea226d01432ff0b",
+    "workspace/continuity_test.go": "3b622c48a9eb25a801d6b9afe02ceeb1dc9677e50647248fb0f0b659ee97e919"
+  }
+}

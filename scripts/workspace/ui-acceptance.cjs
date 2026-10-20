@@ -46,6 +46,9 @@ async function main(){
   }pass('Seven responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow');
   await page.setViewportSize({width:1365,height:768});await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
   const cached=await page.evaluate(async()=>{const urls=[];for(const name of await caches.keys())if(name.startsWith('oneworkspace-chat-shell-'))for(const request of await(await caches.open(name)).keys())urls.push(new URL(request.url).pathname);return urls});assert(cached.length>0&&!cached.some(path=>/\/(api|auth|v0)\//.test(path)));pass('Offline worker caches static shell only; no API, credentials or private attachments');
+  // Exercise the ordinary SDK draft path after an explicit direct-mode opt-out.
+  // Independent WebRTC/reload/queue behavior is covered in continuity-acceptance.
+  await page.evaluate(async peer=>window.workspaceContinuity?.disable(peer),meta.bobID);
   await alice.context.setOffline(true);await page.evaluate(()=>acceptanceSockets.forEach(socket=>socket.close()));
   const pending='Synthetic offline delivery '+Date.now();await page.locator('#send-message-input').fill(pending);await page.locator('#send-message-input').press('Enter');await page.getByText(/Your draft is kept|Not confirmed by the server/).first().waitFor();
   await page.reload();await page.locator('#send-message-input').waitFor();assert.equal(await page.locator('#send-message-input').inputValue(),pending);assert.equal(await page.evaluate(()=>workspaceChat.offline),true);pass('Offline shell reload restores the correct cached account and retains the unacknowledged draft');

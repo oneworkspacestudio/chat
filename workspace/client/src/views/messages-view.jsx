@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import { Drafty, Tinode, TheCard } from 'tinode-sdk';
 import {deliveryStatus,refreshDeliveryAudience} from '../workspace/delivery-state.mjs';
+import {DirectConversation} from '../workspace/continuity-ui.js';
 
 const CallPanel = React.lazy(_ => import('../widgets/call-panel.jsx'));
 import ChatMessage from '../widgets/chat-message.jsx';
@@ -1050,6 +1051,7 @@ class MessagesView extends React.Component {
       // We are forwarding a message.
       msg = this.props.forwardMessage.msg;
       head = {...this.props.forwardMessage.head, ...clientHead, workspace_id:clientHead?.workspace_id||crypto.randomUUID()};
+      delete head.workspace_continuity;
     } else if (this.state.reply) {
       if (this.state.reply.editing) {
         if (msg == this.state.contentToEdit) {
@@ -1861,6 +1863,8 @@ class MessagesView extends React.Component {
             {this.state.unconfirmed ?
               <Invitation onAction={this.handleNewChatAcceptance} />
               :
+              <React.Fragment>
+              {React.createElement(DirectConversation,{peer:this.state.topic})}
               <SendMessage
                 tinode={this.props.tinode}
                 topicName={this.state.topic}
@@ -1877,7 +1881,8 @@ class MessagesView extends React.Component {
                 onAttachAudio={this.props.forwardMessage ? null : this.sendAudioAttachment}
                 onError={this.props.onError}
                 onQuoteClick={this.handleQuoteClick}
-                onCancelReply={this.handleCancelReply} />}
+                onCancelReply={this.handleCancelReply} />
+              </React.Fragment>}
           </>
         );
 

@@ -1,0 +1,2 @@
+Page ComposerExtras
+  Button name=extras-toggle action=open label="Emoji and stickers" "☺"

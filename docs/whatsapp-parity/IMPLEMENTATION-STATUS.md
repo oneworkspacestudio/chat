@@ -4,6 +4,21 @@ The requested brief remains the delivery contract. This is a usable development
 candidate, **not full WhatsApp parity or a production E2EE messenger**. Public
 release versions and hashes are recorded below after their actual publication.
 
+## Preview10 continuity increment
+
+The current working tree adds a local emoji/sticker picker and automatic one-to-one
+WebRTC continuity, an encrypted local outbox and exact-ID server reconciliation.
+It now uses public Nostr discovery by default, with signed browser identities,
+bounded cached-shell fallback and automatic MyAccounts session recovery. The
+separate private rendezvous remains optional. Public discovery and the shared
+desktop navigation correction passed real Chrome development checks: public
+relay reconnect after two cached reloads with the server stopped, Chrome network
+disabled and restored, durable receipts, exactly-once history and revocation.
+Final packaged-build acceptance is attached to the release separately.
+The [plan and limits](CONTINUITY.md) separate this web implementation from future
+Android/iOS wrappers, background push, restrictive-network TURN provisioning
+and full application E2EE. Preview9 and earlier do not include these changes.
+
 ## Published preview9 mobile correction
 
 Chat9 /2eca735e279585601dd1abdca3fab700254e3e4e is public. It replaces the

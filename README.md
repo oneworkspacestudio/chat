@@ -31,7 +31,7 @@ Lists and favourites synchronize between signed-in sessions. Drafts remain on
 their account and conversation until the server confirms a send. Reconnecting
 reuses a durable message ID so an acknowledgement retry does not send another copy.
 
-Managed Chat 5–9 requires **One Workspace 43 or newer**. It gets its own browser
+Managed Chat 5–10 requires **One Workspace 43 or newer**. It gets its own browser
 hostname, reuses the existing MyAccounts identity and keeps old Workspace Chat
 links working. The app switcher links to installed apps without sharing portal
 cookies, browser storage or scripts with Chat.
@@ -47,6 +47,28 @@ Messages remain in PostgreSQL files under your chosen protected data folder.
 Attachments remain ordinary files beside that database. No hosted Tinode account
 or cloud database is required. One executable starts the app; it extracts bundled
 runtime software on first use, so it is not a zero-file executable.
+
+## Outage continuity and local stickers in preview10
+
+The source now includes a local emoji picker, six original Workspace stickers,
+an encrypted device outbox and automatic WebRTC fallback for recent one-to-one
+conversations. Direct receipts are separate from server-save receipts. Cached
+UI and queued messages survive an offline reload; exact message IDs reconcile
+when Chat returns. See the [plan, setup and limits](docs/whatsapp-parity/CONTINUITY.md).
+Preview9 and earlier do not include this feature. Android/iOS wrapper
+lifecycle interfaces are included; signed native apps and background push are
+not implemented by this web change. Public Nostr discovery through pinned
+Trystero now enables automatic reconnection without installing another service.
+Private connection secrets and signed device challenges authenticate peers;
+public relays carry encrypted connection details, never Chat message payloads.
+Cloudflare's public STUN endpoint supplies address discovery. Restrictive
+networks can still need configured TURN; delivery stays queued if no route works.
+Real Chrome checks cover disabled network, same-URL reload, durable queued sends,
+public discovery after both browsers reload with the server stopped, and exact-ID
+synchronization after recovery. These use synthetic accounts on one PC; separate
+networks and physical mobile devices have not been accepted.
+The desktop rail also uses the shared navigation states and outline icons,
+with readable selected/hover text and non-shrinking controls.
 
 ## Build locally
 

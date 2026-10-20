@@ -1,13 +1,18 @@
 import {loadOfflineContext,clearOfflineContext} from './workspace-offline.mjs';
 try {
  let r;
- try{r=await fetch(new URL('api/bootstrap',document.baseURI),{credentials:'same-origin',cache:'no-store'})}catch(error){
+ try{r=await fetch(new URL('api/bootstrap',document.baseURI),{credentials:'same-origin',cache:'no-store',signal:AbortSignal.timeout(2500)});if(r.status>=500){r=undefined;throw new Error('Chat server unavailable')}}catch(error){
   window.workspaceChat=loadOfflineContext();if(!window.workspaceChat)throw new Error('Connect once to MyAccounts before opening Chat offline.');
  }
  if(r?.status===401){clearOfflineContext();window.location.assign(new URL('auth/login',document.baseURI));}else{
   if(r&&!r.ok)throw new Error('Chat connection unavailable.');
   if(r)window.workspaceChat=await r.json();
   if(!/^[0-9a-f]{64}$/.test(window.workspaceChat.accountKey||''))throw new Error('Chat account scope is unavailable.');
+  try{
+   const key='oneworkspace.chat.return-conversation',saved=JSON.parse(sessionStorage.getItem(key)||'null');
+   sessionStorage.removeItem(key);
+   if(saved?.account===window.workspaceChat.accountKey&&/^#(?:contacts)?\/(?:usr|grp)[A-Za-z0-9_-]+$/.test(saved.hash||'')&&!location.hash)history.replaceState(null,'',location.pathname+saved.hash);
+  }catch{}
   // Initialise the pinned SDK only after the authenticated account scope exists.
   // Its deterministic build adapter scopes the cache database to that identity.
   await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=new URL('umd/tinode.prod.js',document.baseURI);script.onload=resolve;script.onerror=reject;document.head.append(script)});

@@ -1,0 +1,16 @@
+Page EmojiStickers
+  Row name=dialog-header
+    Heading level=2 "Emoji and stickers"
+    Button name=dialog-close icon=close label="Close emoji and stickers" action=close
+  Section name=dialog-body
+    Heading level=3 "Emoji"
+    Section name=emoji-grid
+      For each=$emoji
+        Button name=emoji value=$item label=$item action=emoji $item
+    Heading level=3 "Workspace stickers"
+    Section name=sticker-grid
+      For each=$stickers
+        Button name=sticker value=$item.id label=$item.label action=sticker
+          Image src=$item.src alt=$item.label
+  If condition=$error
+    Alert $error

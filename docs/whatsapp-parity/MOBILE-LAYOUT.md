@@ -1,5 +1,22 @@
 # Mobile layout correction — 20 October 2026
 
+## Unpublished shared navigation correction
+
+The newer desktop report showed white hover text on a pale background, inherited
+minimum widths overflowing the rail, and labels clipped by fixed button heights.
+The shared Button adapter now resets those inherited dimensions and supplies
+token-based hover/focus foregrounds. The AUI rail uses explicit primary/secondary
+sections, outline icons, active-page semantics, a 96px width and non-shrinking
+64px controls. Profile and Appearance highlight their actual desktop destination.
+The phone navigation continues to use the same adapter with its three tabs.
+
+The actual generated components and app CSS were rendered in an isolated Chrome
+preview in light, dark, mobile, hover and keyboard-focus states. This is a
+component visual review, not owner-installation or physical-phone acceptance.
+The temporary capture harness needed the same automatic JSX/production settings
+as the app; initial blank captures were harness failures and are not evidence.
+Final captures live in the task's `public-discovery-preview` tooling directory.
+
 The supplied phone captures exposed an overflowing seven-action navigation bar,
 an account name used as the app header, the upstream shrug empty state, a visible
 filter scrollbar, and a Workspace close action after the entire app catalog.

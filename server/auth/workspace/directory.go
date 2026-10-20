@@ -29,6 +29,7 @@ type DirectorySnapshot struct {
 // This engine route is private to the gateway, never forwarded from a browser.
 // A separate per-installation HMAC authenticates the entire bounded snapshot.
 func RegisterDirectory(mux *http.ServeMux) {
+	registerContinuity(mux)
 	mux.HandleFunc("POST /internal/workspace/directory", func(w http.ResponseWriter, r *http.Request) {
 		a := managedAuthenticator
 		body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 8<<20))

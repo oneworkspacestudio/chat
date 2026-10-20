@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/tinode/chat/server/auth"
+	workspaceauth "github.com/tinode/chat/server/auth/workspace"
 	"github.com/tinode/chat/server/logs"
 	"github.com/tinode/chat/server/store"
 	"github.com/tinode/chat/server/store/types"
@@ -1131,6 +1132,18 @@ func (t *Topic) saveAndBroadcastMessage(msg *ClientComMessage, asUid types.Uid, 
 	// This header describes the server's original publication audience. Drop any
 	// supplied copy, including one replayed from a cached outbound message.
 	delete(head, "workspace_audience")
+	if raw, exists := head["workspace_continuity"]; exists {
+		first, second, err := types.ParseP2P(t.name)
+		peer := first
+		if peer == asUid {
+			peer = second
+		}
+		epoch, bindingErr := workspaceauth.ContinuityEpoch(asUid, peer)
+		if err != nil || (asUid != first && asUid != second) || bindingErr != nil || raw != epoch {
+			msg.sess.queueOut(ErrPermissionDenied(msg.Id, t.original(asUid), msg.Timestamp))
+			return types.ErrPermissionDenied
+		}
+	}
 	if head["workspace_id"] != nil {
 		digest, err := store.ClientMessageDigest(head, content, attachments)
 		if err != nil {

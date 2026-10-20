@@ -54,20 +54,22 @@ func (g *Gateway) signedTicket(s *loginSession) string {
 }
 
 type Gateway struct {
-	config         Config
-	base           string
-	oauth          oauth2.Config
-	verifier       *oidc.IDTokenVerifier
-	mu             sync.Mutex
-	flows          map[string]flow
-	sessions       map[string]*loginSession
-	key            []byte
-	apiKey         string
-	proxy          *httputil.ReverseProxy
-	web            string
-	engine         string
-	directoryReady bool
-	directoryUsers []workspace.DirectoryUser
+	config            Config
+	base              string
+	oauth             oauth2.Config
+	verifier          *oidc.IDTokenVerifier
+	mu                sync.Mutex
+	flows             map[string]flow
+	sessions          map[string]*loginSession
+	key               []byte
+	apiKey            string
+	proxy             *httputil.ReverseProxy
+	web               string
+	engine            string
+	instance          string
+	directoryReady    bool
+	directoryUsers    []workspace.DirectoryUser
+	continuityDevices map[string]*continuityDevice
 }
 
 func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web string) (*Gateway, error) {
@@ -75,6 +77,7 @@ func NewGateway(ctx context.Context, c Config, key []byte, apiKey, engine, web s
 	target, _ := url.Parse(engine)
 	g := &Gateway{config: c, base: strings.TrimRight(u.Path, "/"), key: key, apiKey: apiKey, web: web, flows: map[string]flow{}, sessions: map[string]*loginSession{}, proxy: httputil.NewSingleHostReverseProxy(target)}
 	g.engine = engine
+	g.instance = platform.Token()
 	original := g.proxy.Director
 	g.proxy.Director = func(r *http.Request) {
 		original(r)
@@ -297,7 +300,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Open Chat using its dedicated Workspace address.", 421)
 			return
 		}
-		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'")
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'"+g.continuityConnectSource()+"; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'")
 	}
 	if path == "/auth/login" && r.Method == "GET" {
 		g.login(w, r)
@@ -307,6 +310,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		g.callback(w, r)
 		return
 	}
+	w.Header().Set("X-Chat-Instance", g.instance)
 	s := g.session(r)
 	if s == nil {
 		if path == "/" && r.Method == "GET" {
@@ -331,6 +335,10 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		g.preferences(w, r, s)
 		return
 	}
+	if path == "/api/continuity" {
+		g.continuity(w, r, s)
+		return
+	}
 	if path == "/api/people" && r.Method == "GET" {
 		g.findPeople(w, r, s)
 		return
@@ -352,7 +360,7 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		u, _ := url.Parse(g.config.Origin)
 		w.Header().Set("Content-Type", "application/json")
 		accountKey := sha256.Sum256([]byte(t.Issuer + "\x00" + t.Subject))
-		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https", "managedDirectory": g.config.DirectoryToken != "", "accountKey": fmt.Sprintf("%x", accountKey), "protocol": 2, "workspaceNavigation": g.config.CatalogURL != "", "isolatedOrigin": g.config.WorkspaceOrigin != "", "expires": s.Expires.Unix(), "accountsURL": g.config.Issuer})
+		json.NewEncoder(w).Encode(map[string]any{"ticket": base64.StdEncoding.EncodeToString([]byte(ticket)), "apiKey": g.apiKey, "host": u.Host + g.base, "secure": u.Scheme == "https", "managedDirectory": g.config.DirectoryToken != "", "accountKey": fmt.Sprintf("%x", accountKey), "protocol": 2, "workspaceNavigation": g.config.CatalogURL != "", "isolatedOrigin": g.config.WorkspaceOrigin != "", "expires": s.Expires.Unix(), "accountsURL": g.config.Issuer, "instance": g.instance})
 		return
 	}
 	if path == "/auth/logout" {

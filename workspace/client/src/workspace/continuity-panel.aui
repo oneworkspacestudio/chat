@@ -1,0 +1,16 @@
+Page ContinuityPanel
+  Row name=continuity-status
+    Text $status
+    Button action=details "Direct fallback"
+  If condition=$error
+    Alert $error
+  If condition=$hasRows
+    Section name=direct-messages
+      For each=$rows
+        Section name=direct-message
+          Text $item.caption
+          If condition=$item.image
+            Image src=$item.image alt=$item.alt
+          Else
+            Text $item.text
+          Text $item.status

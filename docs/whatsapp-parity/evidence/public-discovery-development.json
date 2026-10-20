@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-20",
+  "scope": "Unpublished public Nostr discovery and shared navigation correction",
+  "build": {
+    "version": "0.1.0-dev.public-discovery",
+    "windowsAMD64": true,
+    "githubActionsUsed": false,
+    "sourceCommit": "7e7207e0baa6a6328c91b6edcab97d801b9fab85",
+    "sourceDirty": true,
+    "runtimeSHA256": "727ee803f16340481228839409fedb18e90d492d2d3b8077045df332c58c6ce4",
+    "executableSHA256": "2a6bdc5946e62f01dcacc82f5f92116205b5d1195c0de27faa3995b8ef3ba31a",
+    "executableBytes": 81786368,
+    "components": {
+      "server": {
+        "repository": "tinode/chat",
+        "commit": "eb90ef83acae6542f52719377ee5a76d267a5618"
+      },
+      "web": {
+        "repository": "tinode/webapp",
+        "commit": "670717633c5218d7e9115038ab96f87e847e621b"
+      },
+      "postgres": {
+        "version": "18.6.0",
+        "url": "https://repo.maven.apache.org/maven2/io/zonky/test/postgres/embedded-postgres-binaries-windows-amd64/18.6.0/embedded-postgres-binaries-windows-amd64-18.6.0.jar",
+        "sha256": "b7ef2d03588e0439f0d0a2250f43905f7464f1e96ace47703ceaf79094198150"
+      }
+    },
+    "automatedTestsRun": false
+  },
+  "sourceHashes": {
+    "workspace/continuity.go": "e825509219d751298653aff81f531afd9b48456c484c45453bce4a40bc74a7ec",
+    "workspace/continuity_discovery.go": "8a3aa935277715d9e171ed1ea2548351acb94a7975d87f43c9d5c5abd36f425e",
+    "workspace/continuity_relay.go": "f59fdec0565a74833aa416ab6003cb22a293899af75e3b7ba258da24e8a8352b",
+    "workspace/client/package.json": "1d97fe78a71ca092f9a84139f3e93132e0ce0e85cece04ec6ee0757659f73a53",
+    "workspace/client/package-lock.json": "b65d8c4bb64437dd904129097a65b9d57010ab817f578d9d0f7fdfb65f6e0342",
+    "workspace/client/src/workspace/continuity.mjs": "e460410a5dc9db6c2e96977021c583622035594d278f7b47c891c27e65739e2a",
+    "workspace/client/src/workspace/continuity-discovery.mjs": "c4d3539828f034c83029fe42f08f68d2d6df4c55e13fba32140d317257cbdd8f",
+    "workspace/client/src/workspace/continuity-signaling.mjs": "6965124b942264360beab78745f77ce9ac874147d429117a046715e455dffb36",
+    "workspace/client/src/workspace/continuity-store.mjs": "559a13e42b8b437687bbd3aaf2055072ea5742d08a6c25d36c4cecb6894d6156",
+    "workspace/client/src/workspace/rail.aui": "3572dec36727a51d3a75ad35f1f939a85964d207d4cde2b863d36f63ed8b0e2d",
+    "workspace/client/src/workspace/rail.generated.jsx": "525dc1b8f8ea1833a3cf5dad383c0383a0f6bd90778f97c1eaa77f53834061fc",
+    "workspace/client/src/workspace/components/ui.js": "b7b1604c8e6fee9cdc102ffe8a4f6939341ffb05ec090d15682c8e3d7033d249",
+    "workspace/client/src/views/tinode-web.jsx": "1ac5f88764015fa3fc6f75f8bf2fed8a2cafe9b39af9e59a0ea234e4d476ce7c",
+    "workspace/client/src/workspace/continuity-dialog.aui": "9578f12dbb083a0b85e9d5cad6b403a67b4966e800e238dfc67a7418fd7952ee",
+    "workspace/client/src/workspace/continuity-dialog.generated.jsx": "d5bca8d39598f20df21d2c1fec8a16ea2b3928efb445ceeff5ec7a4517273192",
+    "workspace/client/css/workspace.css": "9cb702e463923368d0847747b4a30b1369c61caf8c33f54761edd8363a9feced"
+  },
+  "dependency": "trystero@0.26.0",
+  "verification": {
+    "browserProductionBuild": true,
+    "windowsGatewayBuild": true,
+    "windowsExecutableBuild": true,
+    "generatedComponentVisualReview": [
+      "light",
+      "dark",
+      "mobile",
+      "hover",
+      "keyboard focus"
+    ],
+    "captures": [
+      {
+        "name": "sidebar-light.png",
+        "sha256": "3404d3e8342a1b885cb0b620f5d72f8ab306b71f1a41186ca2c61a1433ff4e7e"
+      },
+      {
+        "name": "sidebar-dark.png",
+        "sha256": "ed0359c1711b59e3f070385b4a47f4eb838331c28212b88ed8661db025bf7771"
+      },
+      {
+        "name": "sidebar-hover.png",
+        "sha256": "e1d46eef62e4a6861862f1e736e3c27cf75bb02ba1505c24d5a358f651149b94"
+      },
+      {
+        "name": "sidebar-focus.png",
+        "sha256": "b3034663478bd71a0d97e2ef75d1cc20ce4e6be3177819b8ed3d224d77886177"
+      },
+      {
+        "name": "navigation-mobile.png",
+        "sha256": "227f5dab7c26c326c25febea562c8f5636eb237b47863e04a91a01d919f2ef64"
+      }
+    ],
+    "automatedTestsRun": false,
+    "publicRelayOutageRun": false,
+    "separateNetworkRun": false,
+    "ownerInstallationChanged": false,
+    "published": false
+  },
+  "limitations": [
+    "Public relays are best effort; restrictive networks can require TURN.",
+    "Cached authenticated permissions expire within two hours and cannot renew during an outage.",
+    "Only existing one-to-one text, emoji and bundled sticker continuity is implemented.",
+    "Older acceptance evidence describes private-rendezvous builds, not this public transport."
+  ]
+}

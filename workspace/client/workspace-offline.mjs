@@ -3,8 +3,8 @@ const KEY=OFFLINE_CONTEXT_KEY;
 export function saveOfflineContext(bootstrap,uid) {
  if(!bootstrap.isolatedOrigin||!/^usr[A-Za-z0-9_-]{11}$/.test(uid||''))return;
  // Explicit fields only: never serialize the OIDC/engine bootstrap response.
- const {accountKey,host,secure,apiKey,managedDirectory,workspaceNavigation,expires,accountsURL}=bootstrap;
- localStorage.setItem(KEY,JSON.stringify({accountKey,host,secure,apiKey,managedDirectory,workspaceNavigation,expires,accountsURL,uid,isolatedOrigin:true,protocol:2}));
+ const {accountKey,host,secure,apiKey,managedDirectory,workspaceNavigation,expires,accountsURL,instance}=bootstrap;
+ localStorage.setItem(KEY,JSON.stringify({accountKey,host,secure,apiKey,managedDirectory,workspaceNavigation,expires,accountsURL,instance,uid,isolatedOrigin:true,protocol:2}));
 }
 export function loadOfflineContext(){
  try{

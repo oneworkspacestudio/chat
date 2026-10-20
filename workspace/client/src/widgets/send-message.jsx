@@ -13,6 +13,8 @@ import { replyFormatter } from '../lib/formatters.js';
 import {readDraft, writeDraft, shouldSendKey, acknowledged} from '../workspace/composer-state.mjs';
 import {ComposerStatus} from '../workspace/composer-status.generated.jsx';
 import {FormContext} from '../workspace/components/ui.js';
+import {ComposerMedia} from '../workspace/continuity-ui.js';
+import {stickers} from '../workspace/stickers.mjs';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -211,7 +213,7 @@ class SendMessage extends React.PureComponent {
         if (!editing && !this.props.noInput) writeDraft(localStorage, account, topic, message, clientID);
         this.setState({sending: true, draftError: ''});
         const ctrl = await this.props.onSendMessage(message, undefined, undefined, {workspace_id: clientID});
-        if (!acknowledged(ctrl)) throw new Error('Not confirmed by the server. Your draft is kept; retry when connected.');
+        if (!acknowledged(ctrl)&&!ctrl?.workspaceQueued) throw new Error('Not confirmed by the server. Your draft is kept; retry when connected.');
         this.pendingRetry = null;
         if ((editing || this.props.noInput) && this.props.topicName === topic) {
           this.setState({message:readDraft(localStorage,account,topic).text,sending:false});
@@ -294,6 +296,10 @@ class SendMessage extends React.PureComponent {
         <div id="send-message-panel">
           {!this.props.disabled ?
             <>
+              {!this.props.noInput&&!this.state.audioRec?React.createElement(ComposerMedia,{
+                onEmoji:emoji=>{const start=this.messageEditArea?.selectionStart??this.state.message.length,end=this.messageEditArea?.selectionEnd??start;const text=this.state.message.slice(0,start)+emoji+this.state.message.slice(end);this.handleMessageTyping({target:{value:text}});requestAnimationFrame(()=>{this.messageEditArea?.focus();this.messageEditArea?.setSelectionRange(start+emoji.length,start+emoji.length)})},
+                onSticker:async id=>{const sticker=stickers.find(s=>s.id===id);if(!sticker)throw new Error('Sticker unavailable');const ctrl=await this.props.onSendMessage(sticker.content,undefined,undefined,{workspace_id:crypto.randomUUID(),workspace_sticker:id});if(!acknowledged(ctrl)&&!ctrl?.workspaceQueued)throw new Error('Sticker not confirmed. Please retry when connected.')}
+              }):null}
               {this.props.onAttachFile && !this.state.audioRec ?
                 <>
                   <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title={formatMessage(messages.icon_title_add_image)}>

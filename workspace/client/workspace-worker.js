@@ -45,7 +45,7 @@ self.addEventListener('fetch',event=>{
  event.respondWith((async()=>{
   const allowed=navigation||(await paths()).has(url.pathname);
   if(!allowed)return fetch(request);
-  try{return await fetch(request)}catch(error){
+  try{const response=await fetch(request,{signal:AbortSignal.timeout(1500)});if(response.status>=500)throw new Error('Chat origin is unavailable');return response}catch(error){
    const cache=await caches.open(PREFIX+REVISION),cached=await cache.match(navigation?self.registration.scope:new URL(url.pathname,self.location.origin));
    if(cached)return cached;throw error;
   }

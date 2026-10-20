@@ -35,6 +35,8 @@ import {FormContext} from '../workspace/components/ui.js';
 import {applyTheme} from '../workspace/theme.mjs';
 import {clearAccountDrafts} from '../workspace/composer-state.mjs';
 import {saveOfflineContext,clearOfflineContext,OFFLINE_CONTEXT_KEY} from '../../workspace-offline.mjs';
+import {ChatContinuity} from '../workspace/continuity.mjs';
+import {stickers} from '../workspace/stickers.mjs';
 import HashNavigation from '../lib/navigation.js';
 import { secondsToTime } from '../lib/strformat.js'
 import { updateFavicon } from '../lib/utils.js';
@@ -346,7 +348,7 @@ class TinodeWeb extends React.Component {
       if(!this.state.myUserId||!navigator.onLine||document.hidden)return;
       try{
         const response=await fetch(new URL('api/me',document.baseURI),{credentials:'same-origin',cache:'no-store'});
-        if(response.status===401){this.endWorkspaceSession();return}
+        if(response.status===401){this.endWorkspaceSession(response.headers.get('X-Chat-Instance'));return}
         if(response.ok&&(await response.json()).accountKey!==window.workspaceChat.accountKey){this.tinode.disconnect();window.location.reload()}
       }catch{}
     },5000);
@@ -401,6 +403,14 @@ class TinodeWeb extends React.Component {
       // Read contacts from cache.
       this.resetContactList();
 
+      this.continuity=window.workspaceContinuity=new ChatContinuity({account:window.workspaceChat.accountKey,uid:this.tinode.getCurrentUserID()||window.workspaceChat.uid,getUID:()=>this.tinode.getCurrentUserID(),
+        getPeers:()=>[...(this.state.chatList||[])].sort((a,b)=>new Date(b.touched||0)-new Date(a.touched||0)).map(c=>c.topic||c.name).filter(id=>/^usr[A-Za-z0-9_-]{11}$/.test(id||'')),
+        online:()=>this.tinode.isAuthenticated(),
+        hasHistory:(peer,seq,id)=>Number.isInteger(seq)&&this.tinode.getTopic(peer).findMessage(seq)?.head?.workspace_id===id,
+        normalizeContent:content=>{if(typeof content!=='string')return content;const draft=Drafty.parse(content);return draft&&!Drafty.isPlainText(draft)?draft:content},
+        fetchHistory:async(peer,seq)=>{const topic=this.tinode.getTopic(peer);if(!topic.isSubscribed())await topic.subscribe();await topic.getMeta(topic.startMetaQuery().withData(seq,seq+1,1).build());return topic.findMessage(seq)},
+        publish:async(peer,content,head)=>{const topic=this.tinode.getTopic(peer);if(!topic.isSubscribed())await topic.subscribe();const pub=topic.createMessage(content,false);pub.head={...pub.head,...head};const ctrl=await topic.publishMessage(pub);refreshDeliveryAudience(topic,ctrl);return ctrl;}});
+
       if(window.workspaceChat.offline){
         this.setState({myUserId:window.workspaceChat.uid,connected:false,ready:false,autoLogin:true,loadSpinnerVisible:false,errorText:'Offline — showing this device’s cached Chat account. Sends remain pending until the server confirms them.',errorLevel:'warn'});
       }
@@ -426,6 +436,7 @@ class TinodeWeb extends React.Component {
   }
 
   componentWillUnmount() {
+    this.continuity?.stop();
     clearInterval(this.workspaceSessionHeartbeat);
     window.removeEventListener('storage',this.workspaceAccountChange);
     window.removeEventListener('storage', this.workspaceThemeChange);
@@ -806,8 +817,8 @@ class TinodeWeb extends React.Component {
       connected: false,
       ready: false,
       topicSelectedOnline: false,
-      errorText: err && err.message ? err.message : "Disconnected",
-      errorLevel: err && err.message ? 'err' : 'warn',
+      errorText: 'Chat server is reconnecting. Direct connections marked ready can continue; other messages stay pending.',
+      errorLevel: 'warn',
       loginDisabled: false,
       contextMenuVisible: false,
       forwardDialogVisible: false,
@@ -824,8 +835,8 @@ class TinodeWeb extends React.Component {
 
     const connectionPromise = this.tinode.isConnected() ? Promise.resolve() : this.tinode.connect();
     const loginPromise = connectionPromise.then(async () => {
-      const response = await fetch(new URL('api/bootstrap', document.baseURI), {credentials: 'same-origin', cache: 'no-store'});
-      if (response.status === 401) { const error=new Error('Your Chat session ended. Choose Reconnect Chat when you want to sign in again.');error.code=401;throw error; }
+      const response = await fetch(new URL('api/bootstrap', document.baseURI), {credentials: 'same-origin', cache: 'no-store', signal:AbortSignal.timeout(2500)});
+      if (response.status === 401) { const error=new Error('Your Chat session ended. Choose Reconnect Chat when you want to sign in again.');error.code=401;error.instance=response.headers.get('X-Chat-Instance');throw error; }
       if (!response.ok) throw new Error('Chat sign-in is temporarily unavailable. Please retry.');
       const bootstrap = await response.json();
       if(bootstrap.accountKey!==window.workspaceChat.accountKey){this.tinode.disconnect();window.location.reload();throw new Error('Chat account changed. Opening its separate cache.')}
@@ -845,10 +856,10 @@ class TinodeWeb extends React.Component {
       }
     }).catch(err => {
       if(err.code===401){
-        this.endWorkspaceSession();
+        this.endWorkspaceSession(err.instance);
         return;
       }
-      const autoLogin = err.code >= 500;
+      const autoLogin = !!window.workspaceChat.offline || err.code >= 500 || (!err.code && !!this.state.myUserId);
       // Connection or login failed, report error.
       this.setState({
         loginDisabled: false,
@@ -857,7 +868,7 @@ class TinodeWeb extends React.Component {
         loadSpinnerVisible: false,
         autoLogin: autoLogin
       });
-      this.handleError(err.message, 'err');
+      this.handleError(autoLogin?'Chat server is reconnecting. Direct connections marked ready can continue; other messages stay pending.':err.message, autoLogin?'warn':'err');
       console.warn("Login failed", err);
       if (!autoLogin) {
         HashNavigation.navigateTo('');
@@ -876,6 +887,7 @@ class TinodeWeb extends React.Component {
 
   handleLoginSuccessful() {
     this.handleError();
+    if(this.continuity){this.continuity.uid=this.tinode.getCurrentUserID();this.continuity.tick().catch(()=>{})}
     try{saveOfflineContext(window.workspaceChat,this.tinode.getCurrentUserID())}catch{this.handleError('Offline access is unavailable because this browser could not save its account context.','warn')}
 
     // Refresh authentication token.
@@ -925,8 +937,22 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo(urlHash);
   }
 
-  endWorkspaceSession() {
+  endWorkspaceSession(instance) {
+    if(this.workspaceSessionEnding)return;this.workspaceSessionEnding=true;
+    // Recover a restarted gateway through the existing MyAccounts session.
+    // A short per-tab guard prevents an unhealthy provider from redirect-looping.
+    let resume=false;
+    try{
+      const key='oneworkspace.chat.session-recovery',previous=Number(sessionStorage.getItem(key)||0);
+      if(instance&&window.workspaceChat.instance&&instance!==window.workspaceChat.instance&&Date.now()-previous>60000){
+        sessionStorage.setItem(key,String(Date.now()));
+        if(/^#(?:contacts)?\/(?:usr|grp)[A-Za-z0-9_-]+$/.test(location.hash))sessionStorage.setItem('oneworkspace.chat.return-conversation',JSON.stringify({account:window.workspaceChat.accountKey,hash:location.hash}));
+        resume=true;
+      }
+    }catch{}
+    this.continuity?.stop();
     clearOfflineContext();clearInterval(this.reconnectCountdown);this.tinode?.disconnect();
+    if(resume){window.location.replace(new URL('auth/login',document.baseURI));return}
     this.setState({myUserId:null,topicSelected:null,chatList:[],sidePanelSelected:'login',autoLogin:false,loadSpinnerVisible:false,loginDisabled:false});
     HashNavigation.navigateTo('');
     this.handleError('Your Chat session ended. Choose Reconnect Chat when you want to sign in again.','warn');
@@ -1240,6 +1266,12 @@ class TinodeWeb extends React.Component {
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     head = {...head};
     if (!head.workspace_id) head.workspace_id = crypto.randomUUID();
+    if(!this.tinode.isAuthenticated()&&this.continuity?.canQueue(topic.name)&&/^usr[A-Za-z0-9_-]{11}$/.test(topic.name)&&!uploadCompletionPromise&&!uploader&&!head.replace&&!head.reply&&!head.webrtc&&!head.forwarded){
+      let alreadyQueued=false;topic.queuedMessages(pub=>{if(pub.head?.workspace_id===head.workspace_id)alreadyQueued=true});
+      if(alreadyQueued)throw new Error('This message already has a server attempt pending. It will retry with the same ID when Chat reconnects.');
+      const sticker=stickers.find(item=>item.id===head.workspace_sticker);
+      if(typeof msg==='string'||sticker)return this.continuity.send(topic.name,sticker?{kind:'sticker',id:sticker.id}:{kind:'text',text:msg},head.workspace_id);
+    }
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
@@ -1662,7 +1694,11 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleLogout() {
+  async handleLogout() {
+    this.workspaceSessionEnding=true;clearInterval(this.workspaceSessionHeartbeat);
+    // An unsynced direct message may be its only surviving copy. Keep the
+    // encrypted account-scoped outbox for this same account's next sign-in.
+    await this.continuity?.stop();
     clearOfflineContext();
     this.tinode?.disconnect();
     this.tinode?.clearStorage();
@@ -1685,7 +1721,8 @@ class TinodeWeb extends React.Component {
     }
 
     // Request to hard-delete topic.
-    topic.delTopic(true).then(_ => {
+    topic.delTopic(true).then(async _ => {
+      await this.continuity?.discardConversation(topicName);
       // Hide MessagesView and InfoView panels.
       HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch(err => {
@@ -1700,7 +1737,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Request hard-delete all messages.
-    topic.delMessagesAll(true)
+    topic.delMessagesAll(true).then(()=>this.continuity?.discardConversation(topicName))
       .catch(err => this.handleError(err.message, 'err'));
   }
 
@@ -1710,7 +1747,8 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.leave(true).then(_ => {
+    topic.leave(true).then(async _ => {
+      await this.continuity?.discardConversation(topicName);
       // Hide MessagesView and InfoView panels.
       HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch(err => {
@@ -2118,6 +2156,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleDataMessage(data) {
+    this.continuity?.reconcile(data).catch(()=>{});
     if (data.head && data.head.webrtc && data.head.webrtc == CALL_HEAD_STARTED && Tinode.isP2PTopicName(data.topic)) {
       // If it's a video call invite message.
       // See if we need to display incoming call UI.
@@ -2159,9 +2198,12 @@ class TinodeWeb extends React.Component {
 
   render() {
     const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
+    const railActive = ({contacts:'chats',newtpk:'new-chat',archive:'archive',general:'profile',acc_general:'appearance'})[this.state.sidePanelSelected]
+      || (['edit','notif','security','support','wallpapers'].includes(this.state.sidePanelSelected)?'settings':'chats');
+    const navigationActive = this.state.displayMobile && ['profile','appearance'].includes(railActive) ? 'settings' : railActive;
     return (
       <div id="app-container" ref={this.selfRef}>
-        {this.state.myUserId && (!this.state.displayMobile || this.state.mobilePanel==='sidepanel') ? React.createElement(FormContext.Provider, {value: {kind: this.state.displayMobile?'workspace-mobile-nav':'workspace-rail',as:'nav',label:'Chat navigation',outlineIcons:this.state.displayMobile,active:this.state.sidePanelSelected==='archive'?'archive':['edit','general','acc_general','notif','security','support','wallpapers'].includes(this.state.sidePanelSelected)?'settings':'chats'}}, React.createElement(this.state.displayMobile?MobileNav:ChatRail, {data: {workspace:!!window.workspaceChat.workspaceNavigation,compose:!this.state.sidePanelSelected||this.state.sidePanelSelected==='contacts'}, onAction: action => this.handleWorkspaceNavigation(action)})) : null}
+        {this.state.myUserId && (!this.state.displayMobile || this.state.mobilePanel==='sidepanel') ? React.createElement(FormContext.Provider, {value: {kind: this.state.displayMobile?'workspace-mobile-nav':'workspace-rail',as:'nav',label:'Chat navigation',outlineIcons:true,active:navigationActive}}, React.createElement(this.state.displayMobile?MobileNav:ChatRail, {data: {workspace:!!window.workspaceChat.workspaceNavigation,compose:!this.state.sidePanelSelected||this.state.sidePanelSelected==='contacts'}, onAction: action => this.handleWorkspaceNavigation(action)})) : null}
         {this.state.workspaceAppsOpen ? React.createElement(WorkspaceAppsDialog,{close:()=>this.setState({workspaceAppsOpen:false}),logout:this.handleLogout}) : null}
         {this.state.contextMenuVisible ?
           <ContextMenu

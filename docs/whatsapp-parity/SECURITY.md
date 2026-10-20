@@ -58,6 +58,34 @@ keystore, application lock, cross-device ciphertext search and encrypted outbox
 remain required before encrypted-production acceptance. A shared PC/browser
 profile is not a secure multi-user operating-system boundary.
 
+The unshipped continuity increment adds a separate encrypted IndexedDB outbox
+for recent one-to-one text/emoji/bundled stickers. It uses standard AES-GCM
+with an origin-local non-exportable WebCrypto key. It does not encrypt the
+ordinary SDK history/drafts, server database or legacy attachment path. Direct
+WebRTC transport has authenticated signaling and DTLS, not the full application
+E2EE/trusted-device/recovery architecture. Authorization leases last at most two
+hours and online membership checks stop revoked links; an outage necessarily
+delays remote revocation until lease expiry. See [continuity limits](CONTINUITY.md).
+The new default public discovery adapter pins Trystero 0.26.0 and restricts
+WebSocket access to three declared Nostr origins. Private, per-conversation
+HMAC-derived room secrets encrypt SDP. A P-256 authority in protected Chat data
+signs short-lived device permissions; mutual proof of possession binds a fresh
+challenge to both connection IDs before receiving application messages.
+Non-exportable browser signing keys persist separately from encrypted permission
+records. Existing origin 401/403 responses invalidate cached public grants.
+Public relay operators see IP/timing/discovery metadata; STUN exposes address
+metadata, and peers can learn each other's IP addresses. There is no anonymity
+or guaranteed-connectivity claim. Missing relay/network paths keep messages
+queued. These new paths have compiled but have not had public outage acceptance.
+
+An optional legacy independent rendezvous verifies origin/conversation-scoped Ed25519
+permissions without holding the signing key. Cached permissions cannot renew
+offline. Gateway restart recovery is keyed to a public process instance ID:
+same-instance session revocation requires explicit reconnection, and logout
+does not trigger automatic sign-in.
+Sign-out stops transport and clears the offline bootstrap, but retains encrypted
+pending copies scoped to that account to avoid destroying unsynced messages.
+
 ## OpenMLS proof
 
 `workspace/crypto` pins OpenMLS 0.9.0 and its reviewed protocol implementations.

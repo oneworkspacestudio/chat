@@ -32,7 +32,7 @@ function buttonIcon(icon,outline){
  return React.createElement('span',{className:'material-icons','aria-hidden':true},icon);
 }
 export const Icon=({name})=>buttonIcon(name,true);
-export const Button=({children,onClick,name,value,icon,label})=>{const form=React.useContext(FormContext);return React.createElement('button',{type:'button','data-control':name,'aria-label':label,disabled:!!form?.busy&&name!=='dialog-close','aria-current':name==='navigation'&&form?.active===value?'page':undefined,'aria-pressed':name==='custom-list'||name==='filter'?form?.filter===value:undefined,onClick:name==='custom-list'?()=>form.select(value):onClick},icon?buttonIcon(icon,form?.outlineIcons):null,children);};
+export const Button=({children,onClick,name,value,icon,label})=>{const form=React.useContext(FormContext);return React.createElement('button',{type:'button',className:'workspace-button','data-control':name,'aria-label':label,title:name==='navigation'&&typeof children==='string'?children:undefined,disabled:!!form?.busy&&name!=='dialog-close','aria-current':name==='navigation'&&form?.active===value?'page':undefined,'aria-pressed':name==='custom-list'||name==='filter'?form?.filter===value:undefined,onClick:['emoji','sticker'].includes(name)?()=>form.choose(name,value):name==='custom-list'?()=>form.select(value):onClick},icon?buttonIcon(icon,form?.outlineIcons):null,children);};
 export const Link=({href,children})=>React.createElement('a',{href},children);
 export const Section=({children,name})=>React.createElement('section',{'data-section':name},children);
 export const Row=({children,name})=>React.createElement('div',{className:'workspace-search-row','data-row':name},children);
