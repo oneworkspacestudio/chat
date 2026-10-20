@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "chatRelease": {
+    "url": "https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.10",
+    "commit": "9ec055bf3d742a5044660cad4ca88b45c6a92190",
+    "assetsVerified": 15
+  },
+  "workspaceRelease": {
+    "url": "https://github.com/oneworkspacestudio/one-workspace/releases/tag/v0.3.0-preview.49",
+    "commit": "b3282bee45343489cd5bcdaec08504d09cbfe498",
+    "assetsVerified": 21
+  },
+  "chat": {
+    "schema": 1,
+    "version": "0.1.0-preview.10",
+    "sourceCommit": "9ec055bf3d742a5044660cad4ca88b45c6a92190",
+    "executableSHA256": "b669639b71301a430245c2d2f10a22f50cad501ae82c81e01f01997baabdebf8",
+    "zipSHA256": "2d7b345aacc3d78dec45bf761c62f92b19d027394969108e99b9ec6e438c2c3e",
+    "exactFinalBinary": true,
+    "ownerDataUsed": false,
+    "githubActionsUsed": false,
+    "continuity": {
+      "checks": [
+        "Two authenticated users automatically establish real WebRTC without mode selection",
+        "Foreign session cannot steal a device and a non-member cannot establish fallback",
+        "Local picker sends emoji and keeps its close button reachable on three narrow/short screens",
+        "Stop the entire synthetic Workspace: real bidirectional text/emoji/sticker delivery continues over WebRTC",
+        "IndexedDB contains ciphertext with a non-exportable WebCrypto key",
+        "Actual duplicate data-channel packet creates no extra local message",
+        "Both browsers reload the same URLs with Workspace stopped, automatically reconnect and deliver a new message",
+        "Restart server and reconcile every durable UUID into canonical history exactly once",
+        "Chrome network disabled: same URL reloads, history stays readable and an unsent message survives a second reload",
+        "Restoring Chrome network saves the queued message exactly once for both users",
+        "HTTP503 bootstrap keeps the cached conversation usable and recovers without losing it",
+        "Saved opt-in reconnects automatically after authenticated recovery",
+        "Real membership revocation closes direct fallback and rejects delayed publication"
+      ],
+      "uncaughtErrors": [],
+      "realWebRTC": true,
+      "independentRendezvous": false,
+      "publicDiscovery": true,
+      "relayHosts": [
+        "nos.lol",
+        "relay.damus.io",
+        "relay.primal.net"
+      ],
+      "chromeNetworkDisabled": true,
+      "automaticSessionRecovery": true,
+      "syntheticWholeServerStop": true,
+      "physicalDevices": false,
+      "separateNetworks": false,
+      "internetTURNTested": false
+    },
+    "regressionSuites": [
+      "browser-acceptance",
+      "parity-acceptance",
+      "navigation-acceptance",
+      "manual-retry-acceptance",
+      "topic-id-loading-acceptance",
+      "ui-acceptance",
+      "mobile-layout-acceptance",
+      "continuity-controller-test",
+      "continuity-signaling-test",
+      "continuity-discovery-test",
+      "manual-retry-controller-test",
+      "topic-id-lifecycle-test",
+      "navigation-controller-test"
+    ],
+    "applicationE2EE": false,
+    "fullWhatsAppParity": false
+  },
+  "freshInstaller": {
+    "directoryAfterSyncPassed": true,
+    "explicitOptOuts": 19,
+    "myAccountsSignIn": true,
+    "directoryInitialWaitExpired": true,
+    "ownerDataUsed": false,
+    "apps": 2,
+    "twoWayMessaging": true,
+    "attachmentSecurity": true,
+    "workspace": "0.3.0-preview.49",
+    "packagedPayloadSHA256": "b669639b71301a430245c2d2f10a22f50cad501ae82c81e01f01997baabdebf8",
+    "chat": "0.1.0-preview.10"
+  },
+  "upgrade": {
+    "identityIssuerPathsPreserved": true,
+    "actualIDsHistoryAttachmentBytesPreserved": true,
+    "ownerDataUsed": false,
+    "toChat": "0.1.0-preview.10",
+    "fromChat": "0.1.0-preview.9",
+    "from": "0.3.0-preview.48",
+    "normalUpdater": true,
+    "schema": 1,
+    "to": "0.3.0-preview.49",
+    "twoApps19OptOutsPreserved": true
+  },
+  "cleanup": {
+    "freeCBytes": 9380683776,
+    "testServicesStopped": true,
+    "ownerDataTouched": false,
+    "reclaimedBytes": 1924948698.0
+  },
+  "githubActionsUsed": false,
+  "ownerInstallationChanged": false,
+  "anonymousChatZIPDownloadVerified": true
+}

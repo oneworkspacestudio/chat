@@ -232,3 +232,11 @@ remove independent browser/backend features from scope.
 
 Do not infer completion from a build, screenshot, protocol proof, release tag or
 successful test for one subset of a larger capability.
+
+
+## Public preview10 acceptance
+
+Chat10 and Workspace49 are published. See the [exact binary, Chrome outage,
+fresh install, upgrade and cleanup evidence](evidence/release-10-continuity.json).
+This includes real public discovery and Chrome network-disabled recovery;
+separate-network and physical-mobile acceptance remain open.

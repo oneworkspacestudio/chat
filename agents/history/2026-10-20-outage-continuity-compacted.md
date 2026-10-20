@@ -293,3 +293,34 @@ server/store/rendezvous tests pass. New Go test covers persisted authority,
 signed scope, symmetric room derivation, epoch separation and corrupt-key denial.
 Final clean packaged acceptance and immutable Chat10/Workspace49 publication
 remain next. Release receipts must describe exact built bytes separately.
+
+
+## Publication complete
+
+Chat10 and Workspace49 are public, with exact uploaded asset sizes/SHA256 and
+tag/source mappings verified (15 Chat assets,21 Workspace assets). Chat's
+anonymous public ZIP matches the locally tested digest. Workspace49 bundles
+21 apps/104 payloads; only manager, Chat and the two release/provenance notices
+changed from48. All payload hashes and launch contracts pass. No Actions used;
+the Workspace release source commit has zero workflow runs.
+
+Exact-binary Chrome acceptance passed13 outage cases plus seven regression
+suites and46 controller/signaling/crypto cases. Fresh49/Chat10 installation
+passed MyAccounts, discovery, messaging and permissions. One first-search
+15-second timeout occurred during new directory synchronization; after the
+sync window the same unmodified browser checks passed. Published48/Chat9 to
+49/Chat10 via the normal updater preserved identity/issuer/paths, native Chat
+IDs/history/exact attachment bytes and19 explicit app opt-outs. No owner fixture.
+
+Public source commits: Chat9ec055bf3d742a5044660cad4ca88b45c6a92190;
+Workspaceb3282bee45343489cd5bcdaec08504d09cbfe498. Tags/assets stay immutable.
+Follow-up evidence/history commits change no packaged runtime code.
+Owner installation was not updated this turn; its local health remains OK.
+Three synthetic suites stopped and all their listeners closed. Named C data,
+browser mirror and test temp roots removed after evidence capture, reclaiming
+1.79GiB. Unknown data and owner newest recovery copy untouched.
+Builds/downloads/evidence remain in I tooling/chat-parity-20261019.
+
+Separate-network/physical Android/iOS/TURN/background delivery remain untested.
+Outage grants expire within two hours; normal server messages are not E2EE.
+Future release builds must recreate the removed NTFS client mirror.
