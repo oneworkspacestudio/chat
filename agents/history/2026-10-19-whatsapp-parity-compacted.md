@@ -385,3 +385,31 @@ checks all passed and Chat state/document preserved. Final build is running in a
 temporary detached NTFS worktree because source processing on I was very slow.
 Canonical source/artifacts stay I; scoped C worktree/toolchain copies must be
 removed after verification. No provider tag/release44 or owner update yet.
+
+## Latest publication/cleanup checkpoint (supersedes historical pending wording)
+
+Final8 r2/source9df7307771d24f8b9a4654832866929138dd0bc8 is PUBLIC as
+v0.1.0-preview.8, release417976383,15 assets all SHA/size/tag-source verified both
+before and after publication. EXE b06d21022f68a45908008a840c84e0c35cf9bd23f637cc48d45253037fe1f691;
+ZIP a8f31aa9ebe82140d06d4db90e149fafc3350a10910a9afac21572c35517db0c.
+All actual ordered-frame navigation/rapid re-entry, real3s login/QR pixels,
+manual lost-ACK menu, baseline/security, directory/group receipts,7viewport×2themes,
+offline/logout and restart passed final bytes.13 controller units/native tests
+passed. Stage generation rejects stale result timestamps and requires actual
+terminal UI/restart passes; no failed candidate counted.7 release body discloses
+its QR startup limitation; all published assets/tags remain immutable.
+
+MyAccountspreview-20261020.1/87a1c98 and Workspace44/11561f6d are public as
+recorded above; provider NTFS scratch was verified and removed. The last older
+provider-build paragraph is historical, not the current publication state.
+
+Workspace45 r2 sourceedf3a8affbf89fd0ceed31a83f9fbffc6174c5a4 pins actual8 ZIP
+and is building from public org assets. First47b45 stage remains preserved but
+unpublished; use separate release-workspace45-r2. Three completed synthetic C
+fixtures (local44/fresh/local45) were stopped, process/reparse/path checked and
+removed after proof, reclaiming~2.35GiB. I artifacts/logs and primary30960 old42
+upgrade fixture remain. Initial cleanup guard expected config.owner to be an
+email and refused before mutation; corrected guard verifies exact origin/data
+root and all synthetic example.test users. Owner42/recovery copies untouched.
+New45 public fresh/paired/recovery/remote-origin gates precede owner update.
+Full mandatory encryption/device/rich/social/calls/native/recovery scope stays open.

@@ -90,7 +90,7 @@ The paired45 installer/public download/update acceptance is recorded separately
 when performed. The correction does not establish full CHAT-04 or application
 E2EE, signed device/recovery, complete rich/social/calling or Android/iOS parity.
 
-## Preview8 preparation: By ID startup and QR lifecycle
+## Published preview8: By ID startup and conversation lifecycle
 
 The NOT-YET-PUBLISHED45 fresh installation found a By ID startup race. Its
 baseline harness read the heading before the ID arrived. Waiting for the actual
@@ -113,6 +113,19 @@ conversation. That candidate is held, not published. The follow-up owns/detaches
 callbacks, guards deferred pin work, ignores stale subscribe completion and waits
 for a pending leave before re-entry. Five controller units pass; final packaged
 navigation and the complete regression suite must pass before8 is released.
+
+Those final gates now pass on clean source9df7307771d24f8b9a4654832866929138dd0bc8.
+[Preview8](https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.8)
+is public with all15 uploaded SHA/size mappings and exact tag source verified.
+EXE b06d21022f68a45908008a840c84e0c35cf9bd23f637cc48d45253037fe1f691;
+ZIP a8f31aa9ebe82140d06d4db90e149fafc3350a10910a9afac21572c35517db0c.
+Actual ordered late-data navigation/rapid re-entry, delayed-login QR pixels,
+lost-ACK manual Retry, baseline/security, live directory, group receipts,
+seven viewports/two themes, offline replay/logout and native restart all passed.
+Thirteen controller units and native managed tests passed. No uncaught errors
+occurred in final UI runs; no owner data used. The failed candidate was not
+published as8. Final paired45 download/installation remains a separate gate.
+See `evidence/release-8-candidate.json`; broader mandatory scope remains unfinished.
 
 ## Asserted against real packaged services
 

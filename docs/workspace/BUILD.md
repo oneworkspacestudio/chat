@@ -61,3 +61,17 @@ drops only a real successful server ACK, and exercises the actual message Retry
 menu after timeout. It asserts the original durable ID, a fresh wire request ID,
 and exactly one recipient message after reload. No successful backend response is
 mocked. Use the same isolated loopback fixture variables as the other harnesses.
+
+`topic-id-loading-acceptance.cjs` delays a real login ACK3s (below the SDK5s
+timeout), checks pending actions and compares rendered QR pixels against the
+actual ID. Set CHAT_QRCODE_MODULE when dependencies live in an NTFS mirror.
+`navigation-acceptance.cjs` delays ordered real server frames and leaves the
+conversation before data-end/leave completion, then tests rapid re-entry.
+Run the controller/lifecycle unit scripts against the actual controller source;
+CHAT_BABEL_MODULE and CHAT_BABEL_MODULES_PLUGIN support dependency mirrors.
+
+Native managed engine tests need the workspacetest tag to suppress launcher init:
+`go test -tags postgres,workspace,workspacetest ./workspace ./server ./server/store ./server/db/postgres`.
+Use a named NTFS GOTMPDIR for Windows ACL-dependent tests; build/download caches
+may stay on another drive. Omitting workspacetest invokes launcher flag parsing,
+which is not a successful engine test.
