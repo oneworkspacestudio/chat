@@ -54,3 +54,16 @@ installation, after real group creation and messages, rather than a mockup.
 ![Release8 desktop light,1366×768](release-8-light-1366.png)
 
 ![Release8 narrow light,390×844](release-8-light-390.png)
+
+## Release9 mobile correction
+
+Actual packaged Chat9 /2eca735e mobile layout, real two-user delivery, locale-aware
+conversation times, native chat menu, modal dismissal, draft preservation and ten
+size/theme captures passed.
+The20-entry catalog expansion is a DOM-only layout stress check; real destinations
+and authorization use actual services. No physical-phone/full-parity claim.
+[Exact scope and binary mapping](release-9-mobile.json).
+
+![Mobile light](release-9-mobile-light-390.png)
+
+![Workspace picker with a fixed close button](release-9-workspace-picker.png)

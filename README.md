@@ -74,6 +74,13 @@ Preview9 revises the phone header, navigation, chat list and composer and keeps
 the Workspace picker's close action above its scrolling app grid.
 [Reference and verification scope](docs/whatsapp-parity/MOBILE-LAYOUT.md).
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/whatsapp-parity/evidence/release-9-mobile-dark-390.png">
+  <img src="docs/whatsapp-parity/evidence/release-9-mobile-light-390.png" alt="Chat9 mobile layout using real synthetic conversations" width="390">
+</picture>
+
+[Packaged mobile verification](docs/whatsapp-parity/evidence/release-9-mobile.json).
+
 ## Licenses and upstream
 
 Tinode server: GPL-3.0. Web client: Apache-2.0. PostgreSQL and bundled dependency

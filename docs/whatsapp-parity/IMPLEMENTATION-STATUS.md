@@ -4,6 +4,22 @@ The requested brief remains the delivery contract. This is a usable development
 candidate, **not full WhatsApp parity or a production E2EE messenger**. Public
 release versions and hashes are recorded below after their actual publication.
 
+## Published preview9 mobile correction
+
+Chat9 /2eca735e279585601dd1abdca3fab700254e3e4e is public. It replaces the
+cramped mobile rail with a compact Chat header, three working tabs and separate
+compose action. Real conversation times/unread counts align to the list edge;
+phone rows/composer and a centred Workspace grid keep44px targets. Close and
+footer stay outside the scrolling catalog. More options and actual chat context
+menus work; Escape preserves the conversation and unsent draft.
+
+The exact clean EXE4d3274a9 passed mobile/baseline/security/UI/offline/lost-ACK/
+ordered-navigation/slow-login-QR and native restart regressions, with13 controller
+checks. Ten narrow/short/theme captures, enlarged root text and20-entry DOM-only
+layout stress are labelled separately from physical-phone validation. Public
+release418079522 has15 digest/size/source-verified assets. No8/45 assets changed.
+See `MOBILE-LAYOUT.md` and `evidence/release-9-mobile.json`. Broader E2EE/device/
+recovery/rich/social/calling/native scope remains incomplete.
 ## Published foundation increment
 
 [Chat0.1.0-preview.5](https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.5)

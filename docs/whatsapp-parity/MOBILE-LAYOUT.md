@@ -49,4 +49,3 @@ separately after they run. Existing browser/security/offline regressions remain
 part of acceptance.
 
 Conversation timestamps use actual latest-message/touched times and locale-aware today/yesterday/date formatting. Unread badges align to the list edge. Long press/right-click opens the actual existing chat context menu; its keyboard-accessible options link remains available on focus. The Workspace dialog is centred within the visible viewport.
-

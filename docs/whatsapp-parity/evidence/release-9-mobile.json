@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "version": "0.1.0-preview.9",
+  "sourceCommit": "2eca735e279585601dd1abdca3fab700254e3e4e",
+  "executableSHA256": "4d3274a94b680c4170ab72228909d447abe9ad14feeb44ae13029d05764e205e",
+  "zipSHA256": "8bb4b18d578d84b17d4b1d8ecc1f44927bfe0ab78ef30fbe315f6d22dee43474",
+  "exactFinalBinary": true,
+  "ownerDataUsed": false,
+  "githubActionsUsed": false,
+  "mobileLayout": {
+    "checks": [
+      "Mobile branded header, three real tabs and compose action (empty state captured on first fresh run)",
+      "Real discovery, two-user delivery and full-height conversation without bottom navigation",
+      "Five narrow/short viewports in both themes, visible44px tabs and a fixed close button with a20-item layout stress grid",
+      "Enlarged root text, modal keyboard containment, Escape and opener focus restoration",
+      "Profile/settings/archive actions work; picker Escape preserves conversation and unsent draft",
+      "No uncaught browser errors"
+    ],
+    "captures": [
+      {
+        "theme": "light",
+        "width": 320,
+        "height": 480,
+        "documentOverflow": false
+      },
+      {
+        "theme": "light",
+        "width": 360,
+        "height": 640,
+        "documentOverflow": false
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "height": 700,
+        "documentOverflow": false
+      },
+      {
+        "theme": "light",
+        "width": 412,
+        "height": 720,
+        "documentOverflow": false
+      },
+      {
+        "theme": "light",
+        "width": 640,
+        "height": 360,
+        "documentOverflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 320,
+        "height": 480,
+        "documentOverflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 360,
+        "height": 640,
+        "documentOverflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "height": 700,
+        "documentOverflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 412,
+        "height": 720,
+        "documentOverflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 640,
+        "height": 360,
+        "documentOverflow": false
+      }
+    ],
+    "errors": [],
+    "realSyntheticServices": true,
+    "twentyItemStressIsDOMLayoutOnly": true,
+    "scope": "Desktop Chrome mobile viewport/touch emulation, not physical Android/iOS acceptance",
+    "fullWhatsAppParity": false
+  },
+  "baselineSecurityOfflineUI": true,
+  "nativeRestart": true,
+  "manualLostACKOneRecipientCopy": true,
+  "orderedNavigation": true,
+  "slowLoginRenderedQR": true,
+  "controllerUnits": 13,
+  "applicationE2EE": false,
+  "physicalMobile": false,
+  "fullWhatsAppParity": false,
+  "publicDownloadTested": false
+}
