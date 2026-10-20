@@ -362,6 +362,24 @@ pass pending state, identity-change/stale completion and unmount. Existing five
 retry-controller units now live in scripts/workspace too and pass. New real
 3s delayed-ACK/QR-pixel acceptance remains to run against final8. No8 release yet.
 
+Clean8 r1/source4216e4da7f5812578f7bb11ae61ffa6caeecde91 EXE
+ad93f27b11e8b79fa6a4ffd03bbe3fb2861b98e744acf65eaba89d9f1b29037c passed
+actual3s delayed-login guidance/disabled Copy/no invalid QR and exact rendered
+QR matrix matching the real ID. Fresh45 baseline then passed. Retry/baseline/
+security/live directory/group receipts passed, but UI navigation crashed blank:
+getPinnedMessages on undefined. Do NOT publish r1 as8 or mark its UI pass.
+
+New navigation acceptance reproduces that same actual crash deterministically
+with ordered real server frames: adds2s latency from a positive data-end onward,
+preserving later frame order. Leaving for Settings while leave ACK is pending
+lets the old data-end call a handler whose view already has no topic. Source8 r2
+now owns/guards/detaches topic callbacks immediately, protects deferred pins,
+ignores stale subscribe completion and queues re-entry until pending leave ends.
+Five actual-controller units pass retired callbacks, deferred pin, late leave,
+pending-leave re-entry and stale subscribe ACK. New real navigation harness and
+all final8 regressions/build remain required. Source4216 is not pushed/tagged;
+8 and45 remain unpublished. Owner42 unchanged, actual7 rollback gate passed.
+
 MyAccounts source87a1c98 now pushed main. Real development migration/negative
 checks all passed and Chat state/document preserved. Final build is running in a
 temporary detached NTFS worktree because source processing on I was very slow.

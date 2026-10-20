@@ -208,6 +208,9 @@ class MessagesView extends React.Component {
     this.readNotificationTimer = null;
 
     this.keyPressTimer = null;
+    this.messageViewMounted = false;
+    this.topicCallbacks = null;
+    this.leavingTopics = new Map();
   }
 
   getOrCreateMessageRef(seqId) {
@@ -242,6 +245,7 @@ class MessagesView extends React.Component {
   }
 
   componentDidMount() {
+    this.messageViewMounted = true;
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
@@ -253,6 +257,9 @@ class MessagesView extends React.Component {
   }
 
   componentWillUnmount() {
+    this.messageViewMounted = false;
+    this.detachTopicCallbacks();
+    clearTimeout(this.keyPressTimer);
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
@@ -297,25 +304,17 @@ class MessagesView extends React.Component {
   componentSetup(prevProps, prevState) {
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
     if (this.state.topic != prevState.topic) {
+      this.detachTopicCallbacks();
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
         if (prevState.rtcPanel) {
           this.handleCallHangup(prevState.topic, prevProps.callSeq);
         }
       }
-
-      if (topic) {
-        topic.onData = this.handleMessageUpdate;
-        topic.onAllMessagesReceived = this.handleAllMessagesReceived;
-        topic.onInfo = this.handleInfoReceipt;
-        topic.onMetaDesc = this.handleDescChange;
-        topic.onSubsUpdated = this.handleSubsUpdated;
-        topic.onPres = this.handleSubsUpdated;
-        topic.onAuxUpdated = this.handleAuxUpdate;
-      }
     }
 
     if (topic) {
+      if (this.topicCallbacks?.topic !== topic) this.bindTopicCallbacks(topic);
       if ((this.state.topic != prevState.topic) || (this.props.myUserId && !prevProps.myUserId)) {
         // Don't immediately subscribe to a new p2p topic, wait for the first message.
         const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
@@ -331,6 +330,38 @@ class MessagesView extends React.Component {
         // Connection restored (e.g. wake from sleep): resubscribe to the currently open topic.
         this.subscribe(topic);
       }
+    }
+  }
+
+  bindTopicCallbacks(topic) {
+    this.detachTopicCallbacks();
+    const binding = {topic, handlers: {}};
+    this.topicCallbacks = binding;
+    for (const [name, callback] of Object.entries({
+      onData: this.handleMessageUpdate,
+      onAllMessagesReceived: this.handleAllMessagesReceived,
+      onInfo: this.handleInfoReceipt,
+      onMetaDesc: this.handleDescChange,
+      onSubsUpdated: this.handleSubsUpdated,
+      onPres: this.handleSubsUpdated,
+      onAuxUpdated: this.handleAuxUpdate
+    })) {
+      const guarded = (...args) => {
+        if (!this.messageViewMounted || this.topicCallbacks !== binding ||
+            !this.state.topic || this.props.tinode.getTopic(this.state.topic) !== topic) return;
+        callback(...args);
+      };
+      binding.handlers[name] = guarded;
+      topic[name] = guarded;
+    }
+  }
+
+  detachTopicCallbacks() {
+    const binding = this.topicCallbacks;
+    this.topicCallbacks = null;
+    if (!binding) return;
+    for (const [name, callback] of Object.entries(binding.handlers)) {
+      if (binding.topic[name] === callback) binding.topic[name] = undefined;
     }
   }
 
@@ -538,9 +569,10 @@ class MessagesView extends React.Component {
   }
 
   subscribe(topic) {
-    if (topic.isSubscribed() || !this.props.ready) {
+    if (this.leavingTopics.has(topic) || topic.isSubscribed() || !this.props.ready) {
       return;
     }
+    const binding = this.topicCallbacks;
 
     // Is this a new topic?
     const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
@@ -560,6 +592,10 @@ class MessagesView extends React.Component {
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery)
       .then(ctrl => {
+        if (!this.messageViewMounted || this.topicCallbacks !== binding) {
+          if (this.topicCallbacks?.topic !== topic && this.props.tinode.getTopic(topic.name) === topic) this.leave(topic.name);
+          return;
+        }
         if (ctrl.code == 303) {
           // Redirect to another topic requested.
           HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
@@ -576,6 +612,7 @@ class MessagesView extends React.Component {
         // Keep failed drafts for correction; never delete them on subscribe.
       })
       .catch(err => {
+        if (!this.messageViewMounted || this.topicCallbacks !== binding) return;
         console.error("Failed subscription to", this.state.topic, err);
         this.props.onError(err.message, 'err');
         const blankState = MessagesView.getDerivedStateFromProps({}, {});
@@ -590,21 +627,15 @@ class MessagesView extends React.Component {
     }
 
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
-    if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false)
-        .catch(_ => { /* do nothing here */ })
-        .finally(_ => {
-          // We don't care if the request succeeded or failed.
-          // The topic is dead regardless.
-          this.setState({fetchingMessages: false});
-          oldTopic.onData = undefined;
-          oldTopic.onAllMessagesReceived = undefined;
-          oldTopic.onInfo = undefined;
-          oldTopic.onMetaDesc = undefined;
-          oldTopic.onSubsUpdated = undefined;
-          oldTopic.onPres = undefined;
-          oldTopic.onAuxUpdated = undefined;
-        });
+    if (oldTopic && oldTopic.isSubscribed() && !this.leavingTopics.has(oldTopic)) {
+      if (this.topicCallbacks?.topic === oldTopic) this.detachTopicCallbacks();
+      const pending = oldTopic.leave(false).catch(_ => { /* reconnect can recover */ });
+      this.leavingTopics.set(oldTopic, pending);
+      pending.finally(() => {
+        if (this.leavingTopics.get(oldTopic) !== pending) return;
+        this.leavingTopics.delete(oldTopic);
+        if (this.messageViewMounted && this.topicCallbacks?.topic === oldTopic) this.subscribe(oldTopic);
+      });
     }
   }
 
@@ -830,10 +861,11 @@ class MessagesView extends React.Component {
   }
 
   handleAllMessagesReceived(count) {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    if (!this.messageViewMounted || !topic) return;
     this.setState({fetchingMessages: false});
     if (!count) {
       // All messages received. Nothing left to receive.
-      const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic) {
         // Send read notification for the absolute last message.
         this.postReadNotification(topic.seq);
@@ -845,9 +877,8 @@ class MessagesView extends React.Component {
     if (!this.state.pinsLoaded) {
       // This needs to be guarded to avoid an infinite loop.
       // The loop may happen if some pinned messages are deleted.
-      const topic = this.props.tinode.getTopic(this.state.topic);
       this.setState({pinsLoaded: true}, _ => {
-        topic.getPinnedMessages();
+        if (this.messageViewMounted && this.topicCallbacks?.topic === topic) topic.getPinnedMessages();
       });
     } else {
       this.setState({pinsLoaded: false});

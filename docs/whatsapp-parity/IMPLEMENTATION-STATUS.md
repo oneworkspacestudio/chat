@@ -106,6 +106,14 @@ Packaged slow-connection QR-pixel acceptance and final native/browser regression
 remain required before publication.7 remains immutable; paired45 must be rebuilt
 with the tested8 pin before release. Owner installation remains unchanged.
 
+The first clean8 candidate passed the actual3s delayed-login/QR-pixel test, but
+the UI suite found a separate navigation crash. A deterministic ordered real-frame
+delay reproduces a stale data-end callback trying to load pins after leaving the
+conversation. That candidate is held, not published. The follow-up owns/detaches
+callbacks, guards deferred pin work, ignores stale subscribe completion and waits
+for a pending leave before re-entry. Five controller units pass; final packaged
+navigation and the complete regression suite must pass before8 is released.
+
 ## Asserted against real packaged services
 
 Tests use synthetic Alice, Bob and Charlie accounts, an isolated MyAccounts
