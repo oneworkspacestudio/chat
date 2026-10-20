@@ -18,5 +18,5 @@ export function WorkspaceAppsDialog({close,logout}) {
   }catch(error){if(error.name!=='AbortError')setState(value=>({...value,loading:false,error:error.message}));}
  },[]);
  React.useEffect(()=>{const controller=new AbortController();load(controller.signal);return()=>controller.abort()},[load]);
- return React.createElement(FormContext.Provider,{value:{kind:'workspace-apps',label:'Workspace apps',modal:true,close}},React.createElement(WorkspaceApps,{data:state,onAction:action=>{if(action==='close')close();if(action==='retry')load();if(action==='logout')logout();}}));
+ return React.createElement(FormContext.Provider,{value:{kind:'workspace-apps',label:'Workspace apps',modal:true,outlineIcons:true,close}},React.createElement(WorkspaceApps,{data:state,onAction:action=>{if(action==='close')close();if(action==='retry')load();if(action==='logout')logout();}}));
 }

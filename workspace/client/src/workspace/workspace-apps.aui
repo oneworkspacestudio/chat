@@ -1,16 +1,18 @@
 Page WorkspaceApps
-  Heading level=2 "Your Workspace apps"
-  If condition=$loading
-    Text "Connecting to Workspace…"
-  If condition=$error
-    Alert $error
-    Button action=retry "Retry connection"
-  For each=$apps
-    Link href=$item.url
-      Image src=$item.icon alt=""
-      Text $item.name
-  If condition=$home
-    Link href=$home "Workspace account and settings"
-  Row
-    Button action=close "Close"
+  Row name=dialog-header
+    Heading level=2 "Workspace apps"
+    Button name=dialog-close icon=close label="Close Workspace apps" action=close
+  Section name=app-list
+    If condition=$loading
+      Text "Connecting to Workspace…"
+    If condition=$error
+      Alert $error
+      Button action=retry "Retry connection"
+    For each=$apps
+      Link href=$item.url
+        Image src=$item.icon alt=""
+        Text $item.name
+  Row name=dialog-footer
+    If condition=$home
+      Link href=$home "Workspace settings"
     Button action=logout "Sign out of Chat"

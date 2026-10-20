@@ -1,0 +1,6 @@
+Page MobileHeader
+  Heading level=1 "Chat"
+  Row
+    If condition=$workspace
+      Button icon=apps label="Workspace apps" action=workspace
+    Button icon=more_vert label="More options" action=more

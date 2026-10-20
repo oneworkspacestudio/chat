@@ -1885,7 +1885,7 @@ class MessagesView extends React.Component {
           <>
             <div id="topic-caption-panel" className="caption-panel">
               {this.props.displayMobile ?
-                <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.leave(this.state.topic); this.props.onHideMessagesView();}}>
+                <a href="#" id="hide-message-view" aria-label="Go back" onClick={(e) => {e.preventDefault(); this.leave(this.state.topic); this.props.onHideMessagesView();}}>
                   <i className="material-icons">arrow_back</i>
                 </a>
                 :

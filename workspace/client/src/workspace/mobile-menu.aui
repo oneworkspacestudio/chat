@@ -1,0 +1,10 @@
+Page MobileMenu
+  Row name=dialog-header
+    Heading level=2 "Chat options"
+    Button name=dialog-close icon=close label="Close Chat options" action=close
+  Button icon=person action=profile "Profile"
+  Button icon=contrast action=appearance "Appearance"
+  Button icon=settings action=settings "Settings"
+  If condition=$workspace
+    Button icon=apps action=workspace "Workspace apps"
+  Button icon=logout action=logout "Sign out of Chat"

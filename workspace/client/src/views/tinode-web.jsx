@@ -29,6 +29,7 @@ import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import {ChatRail} from '../workspace/rail.generated.jsx';
+import {MobileNav} from '../workspace/mobile-nav.generated.jsx';
 import {WorkspaceAppsDialog} from '../workspace/workspace-apps.js';
 import {FormContext} from '../workspace/components/ui.js';
 import {applyTheme} from '../workspace/theme.mjs';
@@ -559,6 +560,9 @@ class TinodeWeb extends React.Component {
   }
 
   handleEscapeKey(e) {
+    // Native modal dialogs own Escape and restore their opener. Do not also
+    // clear the conversation underneath the Workspace picker or options menu.
+    if (document.querySelector('dialog[open]')) return;
     if (e.key === 'Escape' || e.keyCode === 27) {
       // Clear selections and navigate to base state
       this.setState({
@@ -2146,15 +2150,18 @@ class TinodeWeb extends React.Component {
     }
   }
 
+  handleWorkspaceNavigation(action) {
+    if(action==='workspace'){this.setState({workspaceAppsOpen:true});return;}
+    if(action==='logout'){this.handleLogout();return;}
+    const panel={chats:'contacts','new-chat':'newtpk',archive:'archive',profile:'general',settings:'edit',appearance:'acc_general'}[action];
+    if(panel)HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash,panel));
+  }
+
   render() {
     const colorSchema = this.state.colorSchema !== 'auto' ? this.state.colorSchema : this.state.systemColorSchema;
     return (
       <div id="app-container" ref={this.selfRef}>
-        {this.state.myUserId ? React.createElement(FormContext.Provider, {value: {kind: 'workspace-rail', label: 'Chat navigation'}}, React.createElement(ChatRail, {data: {workspace:!!window.workspaceChat.workspaceNavigation}, onAction: action => {
-          if(action==='workspace') {this.setState({workspaceAppsOpen:true});return;}
-          const panel = {'chats': 'contacts', 'new-chat': 'newtpk', archive: 'archive', profile: 'general', settings: 'edit', appearance: 'acc_general'}[action];
-          if (panel) HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, panel));
-        }})) : null}
+        {this.state.myUserId && (!this.state.displayMobile || this.state.mobilePanel==='sidepanel') ? React.createElement(FormContext.Provider, {value: {kind: this.state.displayMobile?'workspace-mobile-nav':'workspace-rail',as:'nav',label:'Chat navigation',outlineIcons:this.state.displayMobile,active:this.state.sidePanelSelected==='archive'?'archive':['edit','general','acc_general','notif','security','support','wallpapers'].includes(this.state.sidePanelSelected)?'settings':'chats'}}, React.createElement(this.state.displayMobile?MobileNav:ChatRail, {data: {workspace:!!window.workspaceChat.workspaceNavigation,compose:!this.state.sidePanelSelected||this.state.sidePanelSelected==='contacts'}, onAction: action => this.handleWorkspaceNavigation(action)})) : null}
         {this.state.workspaceAppsOpen ? React.createElement(WorkspaceAppsDialog,{close:()=>this.setState({workspaceAppsOpen:false}),logout:this.handleLogout}) : null}
         {this.state.contextMenuVisible ?
           <ContextMenu
@@ -2219,6 +2226,7 @@ class TinodeWeb extends React.Component {
 
         {!this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ?
           <SidepanelView
+            onMobileAction={action=>this.handleWorkspaceNavigation(action)}
             tinode={this.tinode}
             connected={this.state.connected}
             displayMobile={this.state.displayMobile}

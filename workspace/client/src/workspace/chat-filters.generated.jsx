@@ -1,10 +1,13 @@
-import { Alert, Button, Input, Page, Row } from "@/components/ui"
+import { Alert, Button, Icon, Input, Page, Row } from "@/components/ui"
 
 export function ChatFilters({ data, onAction }) {
   return (
     <Page>
-      <Input name="conversation-search" value={data.query} placeholder="Search chats" />
-      <Row>
+      <Row name="chat-search">
+        <Icon name="search" />
+        <Input name="conversation-search" value={data.query} placeholder="Search chats" />
+      </Row>
+      <Row name="filter-chips">
         <Button name="filter" value="all" onClick={() => onAction("all")}>All</Button>
         <Button name="filter" value="unread" onClick={() => onAction("unread")}>Unread</Button>
         <Button name="filter" value="favourites" onClick={() => onAction("favourites")}>Favourites</Button>

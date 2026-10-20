@@ -1,0 +1,6 @@
+Page ChatListEmpty
+  Image src="img/my_chat.svg" alt=""
+  Heading level=2 $title
+  Text $description
+  If condition=$compose
+    Button action=new-chat "Start a chat"

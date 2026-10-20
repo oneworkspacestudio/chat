@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
+import {MobileChatHeader} from '../workspace/mobile-header.js';
 import TopicCommonView from './topic-common-view.jsx';
 
 const AccountSettingsView = React.lazy(_ => import('./account-settings-view.jsx'));
@@ -137,7 +138,7 @@ class SidepanelView extends React.PureComponent {
 
     return (
       <div id="sidepanel">
-        <SideNavbar
+        {view === 'contacts' && this.props.displayMobile ? React.createElement(MobileChatHeader, {onAction:this.props.onMobileAction}) : <SideNavbar
           state={view}
           title={title}
           avatar={avatar}
@@ -147,7 +148,7 @@ class SidepanelView extends React.PureComponent {
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
           onNewTopic={this.handleNewTopic}
-          onCancel={onCancel} />
+          onCancel={onCancel} />}
 
         <ErrorPanel
           level={this.props.errorLevel}
@@ -273,6 +274,7 @@ class SidepanelView extends React.PureComponent {
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
             onTopicSelected={this.props.onTopicSelected}
+            onNewTopic={this.handleNewTopic}
             onShowArchive={this.props.onShowArchive} /> :
 
           view === 'newtpk' ?

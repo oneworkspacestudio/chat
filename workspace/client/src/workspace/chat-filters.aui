@@ -1,6 +1,8 @@
 Page ChatFilters
-  Input name="conversation-search" value=$query placeholder="Search chats"
-  Row
+  Row name=chat-search
+    Icon name=search
+    Input name="conversation-search" value=$query placeholder="Search chats"
+  Row name=filter-chips
     Button name=filter value=all action=all "All"
     Button name=filter value=unread action=unread "Unread"
     Button name=filter value=favourites action=favourites "Favourites"

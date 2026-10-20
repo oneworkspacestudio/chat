@@ -1,0 +1,7 @@
+Page MobileNav
+  Row name=mobile-tabs
+    Button name=navigation value=chats icon=chat_bubble action=chats "Chats"
+    Button name=navigation value=archive icon=archive action=archive "Archived"
+    Button name=navigation value=settings icon=settings action=settings "Settings"
+  If condition=$compose
+    Button name=mobile-compose icon=add_comment label="New chat" action=new-chat

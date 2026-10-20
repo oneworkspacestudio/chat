@@ -1,12 +1,13 @@
 /* ContactsView holds all contacts-related stuff */
 import React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
 
 import { updateFavicon } from '../lib/utils.js';
 import {ChatFilters} from '../workspace/chat-filters.generated.jsx';
 import {ListEditor} from '../workspace/list-editor.generated.jsx';
+import {ChatListEmpty} from '../workspace/chat-list-empty.generated.jsx';
 import {FormContext} from '../workspace/components/ui.js';
 import {getPreferences, subscribePreferences, updatePreferences, filterConversations} from '../workspace/preferences.mjs';
 
@@ -143,17 +144,15 @@ export default class ContactsView extends React.Component {
     const filters=React.createElement(FormContext.Provider,{value:{kind:'workspace-chat-filters',label:'Conversation filters',filter:this.state.filter,busy:this.state.saving,change:query=>this.setState({query}),select:filter=>this.setState({filter})}},React.createElement(ChatFilters,{data:{query:this.state.query,lists:this.state.preferences.lists,customList:!!customList,selected:!!this.props.topicSelected,favouriteAction:this.state.preferences.favourites.includes(this.props.topicSelected)?'Remove selected chat from favourites':'Favourite selected chat',error:!this.state.editor?this.state.error:''},onAction:action=>this.handleFilterAction(action)}));
     const editor=this.state.editor;
     const modal=editor?React.createElement(FormContext.Provider,{value:{kind:'workspace-list-editor',label:'Edit chat list',modal:true,busy:this.state.saving,close:()=>this.handleListAction('cancel'),change:name=>this.setState({editor:{...editor,name}}),toggle:(id,checked)=>this.setState({editor:{...editor,topics:checked?[...editor.topics,id]:editor.topics.filter(value=>value!==id)}})}},React.createElement(ListEditor,{data:{heading:customList?'Edit list':'New list',name:editor.name,existing:this.state.preferences.lists.some(list=>list.id===editor.id),error:this.state.error,contacts:this.props.chatList.map(c=>({id:c.topic,name:c.public?.fn||c.topic,selected:editor.topics.includes(c.topic)}))},onAction:action=>this.handleListAction(action)})):null;
+    const empty=React.createElement(FormContext.Provider,{value:{kind:'workspace-chat-list-empty'}},React.createElement(ChatListEmpty,{data:{title:this.props.archive?'No archived chats':this.props.blocked?'No blocked contacts':this.state.query||this.state.filter!=='all'?'No chats found':'Your conversations start here',description:this.props.archive?'Chats you archive will appear here.':this.props.blocked?'People you block will appear here.':this.state.query||this.state.filter!=='all'?'Try another search or choose a different filter.':'Find someone in your Workspace and say hello.',compose:!this.props.archive&&!this.props.blocked&&!this.state.query&&this.state.filter==='all'},onAction:()=>this.props.onNewTopic()}));
     return (
       <React.Fragment>
       {filters}{modal}
-      <FormattedMessage id="contacts_not_found"
-        defaultMessage="You have no chats\n¯∖_(ツ)_/¯"
-        description="HTML message shown in ContactList when no contacts are found">{
-        (no_contacts) => <ContactList
+      <ContactList
           tinode={this.props.tinode}
           connected={this.props.connected}
           contacts={contacts}
-          emptyListMessage={this.state.query||this.state.filter!=='all'?'No chats match this filter.':no_contacts}
+          emptyListMessage={empty}
           topicSelected={this.props.topicSelected}
           myUserId={this.props.myUserId}
           showOnline={true}
@@ -161,7 +160,6 @@ export default class ContactsView extends React.Component {
           onTopicSelected={this.props.onTopicSelected}
           showContextMenu={this.props.showContextMenu}
           onAction={this.handleAction} />
-      }</FormattedMessage>
       </React.Fragment>
     );
   }
