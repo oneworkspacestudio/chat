@@ -2,8 +2,26 @@
 
 The requested brief remains the delivery contract. This is a usable development
 candidate, **not full WhatsApp parity or a production E2EE messenger**. Public
-release versions and hashes must be recorded after their actual publication;
-the current work has not yet been published.
+release versions and hashes are recorded below after their actual publication.
+
+## Published foundation increment
+
+[Chat0.1.0-preview.5](https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.5)
+was built locally from clean source `21fe7325a68245372a1ef9cb22856d6ac5ec1ea8`.
+Executable SHA256 is
+`115d4f276129c5b58b843401bdca853072c4a84c8f2499718e7105228b8a7ea8`;
+ZIP SHA256 is
+`db72538e9e722da41a2d46a74b227b4ed2451e3605312e0f8cd402148d87a933`.
+No GitHub Actions were used. The exact executable passed native/browser checks;
+the public ZIP was downloaded and its digest verified. Workspace43 packaging
+and final public install/upgrade checks remain in progress at this checkpoint.
+
+The actual public Workspace42 rejected the independent schema2 app manifest.
+When offered the exact new executable through a complete compatibility-test
+bundle, it attempted startup; Chat refused before runtime extraction or data
+migration. Automatic rollback restored the exact public Chat4 executable,
+immutable IDs, messages, attachment links, download filename and document bytes.
+This is recorded separately from the final public Workspace43 bundle acceptance.
 
 ## Asserted against real packaged services
 
@@ -27,7 +45,7 @@ media or call response is mocked. The owner's installation is not a fixture.
 - Managed Chat uses a dedicated hostname; the old shared hostname cannot access
   its gateway API. The app switcher has actual absolute app links, owner filtering,
   Escape/focus restoration and no duplicate floating launcher.
-- Five viewport sizes in light and dark passed computed bubble-token checks and
+- Seven viewport sizes in light and dark passed computed bubble-token checks and
   document horizontal-overflow checks. These are desktop Chrome emulations.
 - Draft reload and IME Enter guard passed. Static-only offline cache, cached
   account reload, reconnect delivery once and acknowledgement-only draft clearing

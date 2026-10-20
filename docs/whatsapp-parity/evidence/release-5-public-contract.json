@@ -1,0 +1,9 @@
+{
+  "independentUpdateRefused": true,
+  "publishedAppTag": "v0.1.0-preview.5",
+  "ownerDataUsed": false,
+  "oldManager": "0.3.0-preview.42",
+  "schema": 1,
+  "reason": "unsupported schema2 minimumManager contract",
+  "publishedZIPVerifiedSHA256": "db72538e9e722da41a2d46a74b227b4ed2451e3605312e0f8cd402148d87a933"
+}

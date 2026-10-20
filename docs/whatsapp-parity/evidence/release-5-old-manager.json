@@ -1,0 +1,12 @@
+{
+  "path": "explicit complete compatibility bundle; final public bundle not yet built",
+  "admissionBeforeRuntimeExtraction": true,
+  "transaction": "rolled-back",
+  "offeredExecutableSHA256": "115d4f276129c5b58b843401bdca853072c4a84c8f2499718e7105228b8a7ea8",
+  "ownerDataUsed": false,
+  "oldManager": "0.3.0-preview.42",
+  "schema": 1,
+  "offeredChat": "0.1.0-preview.5",
+  "identitiesHistoryAttachmentBytesAndUIDownloadPreserved": true,
+  "restoredChat": "0.1.0-preview.4"
+}

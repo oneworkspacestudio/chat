@@ -197,3 +197,40 @@ SSO/catalog/logout checks. This is an origin contract, not encryption/call/nativ
 mobile acceptance. A real incompatible managed Chat launch exits before its data
 directory exists. Actual old42 offered-release and rollback acceptance remains
 required. No new push/tag/release has occurred at this checkpoint.
+
+## Published Chat5 foundation increment (not task completion)
+
+Source21fe7325a68245372a1ef9cb22856d6ac5ec1ea8 is pushed to master and tagged
+v0.1.0-preview.5. Release https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.5
+published with15 verified assets, source archive, checksums and explicit missing
+application E2EE/full-parity/native/call/recovery scope. Clean executable SHA
+115d4f276129c5b58b843401bdca853072c4a84c8f2499718e7105228b8a7ea8,
+ZIP db72538e9e722da41a2d46a74b227b4ed2451e3605312e0f8cd402148d87a933.
+Exact final native/baseline/UI harness runs passed; UI now7 sizes×2 themes,
+including360×800/1366×768. Representative captures reviewed; actual CDP platform
+font inspection confirmed Arial, not only inherited computed-family text.
+
+Real public42 was restored to isolated fixture (prototype data moved cold to
+named protected sibling). Actual42 installer applied a compatibility-test bundle
+with exact newChat bytes and Chat-only selection. Admission failed before new
+runtime extraction; automatic rollback completed and restored exact Chat4 SHA,
+IDs/history, ordinary document bytes and actual UI download/filename. Then old42
+checked actual public releases and rejected Chat5 independent schema2 manifest
+(unknown minimumManager). These do not replace final public43 bundle acceptance.
+The build-org path downloaded publicChat5ZIP and verified the pinned digest.
+
+Workspace source3c5e951 adds full origin/callback/catalog/logout contract and
+pin5. Build-org43 is running from that commit; no public43 yet. New legacy-route
+filter removes old media auth/token/secret/sid/apikey query entries before new
+origin redirect; suite tests passed. Next finish build-org, actual released43
+install/paired upgrade and public bundle rollback, then normal owner update.
+Owner has not been touched. Continue mandatory independent encryption/device/
+rich/social/call/native/recovery work after this increment; do not stop as done.
+
+CLI lessons: installed gh is old (no release edit/list --json). Draft by-tag API
+returned404; inspect via authenticated release list/ID. Typed -F draft=false gave
+unexpected end JSON; explicit UTF8 --input JSON PATCH succeeded. Release IDs/tags
+were verified before publication. Invoke-WebRequest octet-stream Content may be
+byte[]: UTF8-decode before ConvertFrom-Json, otherwise numeric bytes become a huge
+array. Git archive --output must be one quoted PowerShell argument. No published
+assets were rewritten. Preserve unrelated Workspace untracked histories.

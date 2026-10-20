@@ -1,0 +1,191 @@
+{
+  "ownerDataUsed": false,
+  "baseline": [
+    "Alice MyAccounts browser sign-in",
+    "Find a MyAccounts user before their first Chat login",
+    "Case-insensitive name search",
+    "Username search",
+    "Verified email search",
+    "Invalid ID shows guidance without crashing",
+    "By ID panel and QR code render",
+    "Copy my Chat ID",
+    "Bob independent MyAccounts browser sign-in",
+    "Open by native ID and deliver Alice to Bob",
+    "Two-way message delivery across isolated browser sessions",
+    "Conversation history after reload without repeated sign-in",
+    "Open conversation using copied QR URI",
+    "Anonymous member-directory request rejected",
+    "Unknown person gives an empty result",
+    "No uncaught browser errors"
+  ],
+  "isolatedSyntheticFixture": true,
+  "viewports": [
+    {
+      "theme": "light",
+      "width": 360,
+      "height": 800,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 1365,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "incoming": "rgb(240, 244, 249)",
+      "outgoing": "rgb(211, 227, 253)",
+      "scheme": "light"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "height": 800,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 1365,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "incoming": "rgb(41, 49, 61)",
+      "outgoing": "rgb(36, 63, 96)",
+      "scheme": "dark"
+    }
+  ],
+  "applicationE2EE": false,
+  "cleanHostAcceptanceRun": false,
+  "version": "0.1.0-preview.5",
+  "fullParity": false,
+  "sourceCommit": "21fe7325a68245372a1ef9cb22856d6ac5ec1ea8",
+  "publishedDownloadAcceptanceRun": false,
+  "browser": [
+    "Dedicated-origin app switcher has real app links, Escape/focus restoration and no duplicate floating launcher",
+    "Managed name/password/security point to MyAccounts; no broken second-password or native account-delete control",
+    "Create/select/rename/reorder/delete a real custom list with membership and independent-session synchronization",
+    "Conversation deep link and account/topic draft survive reload",
+    "Composing Enter retains the unsent draft",
+    "Create a native group in the UI, add a contact and exchange actual group messages",
+    "Seven responsive viewports in both themes; actual incoming/outgoing tokens and no document overflow",
+    "Offline worker caches static shell only; no API, credentials or private attachments",
+    "Offline shell reload restores the correct cached account and retains the unacknowledged draft",
+    "Reconnect replays the durable outbox once and clears draft only after server acknowledgement",
+    "Workspace logout revokes open Chat sessions and sockets for Alice; Bob remains authenticated",
+    "No uncaught browser errors"
+  ],
+  "mockedSuccessfulResponses": false,
+  "executableSHA256": "115d4f276129c5b58b843401bdca853072c4a84c8f2499718e7105228b8a7ea8",
+  "schema": 1,
+  "uncaughtErrors": [],
+  "nativeMobileAcceptanceRun": false,
+  "nativeSecurity": [
+    "Three independent MyAccounts identities on a dedicated Chat hostname",
+    "Host-only Chat session does not share the portal cookie",
+    "Native runtime restart preserves identity links, durable deleted-message receipt and exact attachment bytes",
+    "Durable retry returns the original sequence; changed payload rejected; recipient sees one delivery",
+    "Unshared uploaded file denies other signed-in users for GET and HEAD",
+    "Authorized recipient downloads exact bytes; outsider remains denied; active documents sandboxed",
+    "Forged attachment sharing rejected atomically; subsequent valid send still works",
+    "Retry after delete returns Gone without republishing or reinserting deleted content into the SDK",
+    "Account-scoped custom lists persist with concurrent-write conflict protection",
+    "Long-poll session cannot be transplanted to a different authenticated account",
+    "WebSocket gateway identity rejects a valid ticket for a different account",
+    "Group media membership enforced; removed member loses access; outsider denied",
+    "Deleting and reopening a private conversation cannot replay its retired message UUID",
+    "Shared hostname cannot access the isolated gateway"
+  ]
+}

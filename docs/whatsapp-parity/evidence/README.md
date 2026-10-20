@@ -22,3 +22,20 @@ document overflow were asserted in both themes.
 
 Authenticated, versioned WhatsApp reference captures are unavailable; no invented
 side-by-side reference or pixel-match result is supplied.
+
+## Release5 increment
+
+`release-5-build.json` records the clean source and executable mapping.
+`release-5-acceptance.json` records assertions against that exact executable,
+including360×800 and1366×768 in addition to the original five sizes. The separate
+`release-5-old-manager.json` records actual public42 automatic rollback when
+offered the incompatible executable in an explicit compatibility-test bundle.
+`release-5-public-contract.json` records public ZIP digest verification and the
+old manager's refusal of the published independent update contract. This does
+not claim the final public Workspace43 install/upgrade test has run.
+
+Representative manually reviewed release captures:
+
+![Release5 narrow light,360×800](release-5-light-360.png)
+
+![Release5 desktop dark,1366×768](release-5-dark-1366.png)
