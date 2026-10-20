@@ -489,17 +489,12 @@ class ContextMenu extends React.Component {
 
   // Retries sending failed message.
   retryMessage(params, errorHandler) {
-    const topic = this.props.tinode.getTopic(params.topicName);
-    // Remove the existing message entry.
-    if (!topic || !topic.flushMessage(params.seq)) {
-      return;
+    if (typeof params.retrySend === 'function') {
+      return params.retrySend();
     }
-    const msg = topic.createMessage(params.content, false);
-    return topic.publishDraft(msg).catch(err => {
-      if (errorHandler) {
-        errorHandler(err.message, 'err');
-      }
-    });
+    if (errorHandler) {
+      errorHandler('This message remains pending. Reopen its conversation before retrying.', 'warn');
+    }
   }
 
   // Pin or unpin the message.

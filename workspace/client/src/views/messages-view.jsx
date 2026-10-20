@@ -955,6 +955,9 @@ class MessagesView extends React.Component {
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
+      // Retry the original queued publication. Recreating it loses the durable
+      // ID and can duplicate a message when only its acknowledgement was lost.
+      params.retrySend = () => this.retrySend(topic, topic.findMessage(params.seq));
       // Self -> (1) always hard-delete with [Delete] title.
       // P2P -> (1) hard-delete if allowed and not too old, (2) always soft-delete.
       // Group -> (1) hard-delete if allowed and not too old or owner, (2) always soft-delete.
@@ -1042,17 +1045,26 @@ class MessagesView extends React.Component {
   }
 
   // Retry sending a message.
-  async retrySend(pub) {
-    if(pub._sending || Tinode.isServerAssignedSeq(pub.seq))return;
-    const topic=this.props.tinode.getTopic(this.state.topic);
+  async retrySend(topic, pub) {
+    if(!topic || !pub || pub._sending || Tinode.isServerAssignedSeq(pub.seq))return;
+    if(!pub.head?.workspace_id){
+      this.props.onError('This older pending message cannot be retried safely. Check the conversation before sending it again.','warn');
+      return;
+    }
     try{
       if(!topic.isSubscribed())await topic.subscribe();
-      pub.head={...pub.head,workspace_id:pub.head?.workspace_id||crypto.randomUUID()};
+      // Automatic replay may have started while subscription was pending.
+      if(pub._sending || Tinode.isServerAssignedSeq(pub.seq))return;
       pub.id=this.props.tinode.createMessage(topic.name,pub.content,false).id;
-      const ctrl=await topic.publishMessage(pub);
+      const pending=topic.publishMessage(pub);
+      this.forceUpdate();
+      const ctrl=await pending;
+      if(!(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq)))throw new Error('No message acknowledgement');
       refreshDeliveryAudience(topic,ctrl);
-      if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
+      window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
+      return ctrl;
     }catch(error){this.props.onError('This message remains pending. Check your connection and conversation access, then retry.','warn')}
+    finally{this.forceUpdate()}
   }
 
   // sendFileAttachment sends the file as Drafty message:

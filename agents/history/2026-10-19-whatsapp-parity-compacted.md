@@ -295,6 +295,32 @@ Need final clean release build and final native regression before any new releas
 Historical read retention after subscriber deletion/rejoin still requires a durable
 receipt ledger. Do not mark CHAT-04 complete from this subset or claim app E2EE.
 
+## Published6 and manual Retry correction7 (October20)
+
+Chat6 ec0885ee and MyAccounts preview-20261020.1/87a1c98 are public with all
+uploaded SHA/size/source mappings verified. Workspace44/11561f6d is public,
+integrating those binaries and the owned-route ordering fix. Actual old42 gate
+rejected6 before runtime extraction, automatic rollback preserved identities,
+history and document bytes. Exact local44 fresh/paired42 upgrade and retained
+browser SSO passed. Owner installation remains42, deliberately untouched.
+
+A new real network fault test dropped only the actual successful server ACK.
+The recipient received the message; after the SDK timed out, using the actual
+Retry menu caused TWO recipient copies. The upstream context-menu path flushed
+the queued entry and recreated it without its durable workspace_id. Prior tests
+covered automatic/native retry but missed this actual menu. Release6/44 bodies
+now disclose this defect; their immutable assets/tags have not been rewritten.
+
+Correction7 wires the menu to the originating conversation and existing queued
+publication. It keeps headers/content/attachments/UUID, changes only the wire
+request ID, rechecks the automatic-replay race after subscription, and leaves
+legacy ambiguous messages queued with guidance. Native acknowledgement must be
+valid before clearing the composer. New manual-retry-acceptance.cjs exercises
+the actual UI with two real accounts and a dropped real ACK, no fake success.
+Need clean7 build, packaged fault/regression acceptance, publish7/paired45 and
+actual download fresh/upgrade before updating owner. Do not mark full brief done:
+default E2EE/device/recovery/rich/social/calls/native families remain incomplete.
+
 MyAccounts source87a1c98 now pushed main. Real development migration/negative
 checks all passed and Chat state/document preserved. Final build is running in a
 temporary detached NTFS worktree because source processing on I was very slow.
