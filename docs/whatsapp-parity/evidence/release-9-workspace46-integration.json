@@ -1,0 +1,233 @@
+{
+  "installedBytesEqualVerifiedPublicDownloads": true,
+  "fullBriefComplete": false,
+  "CFreeGiB": 16.7,
+  "latestVerifiedOwnerRecoveryRetained": true,
+  "remoteSharedPickerCSSVerified": true,
+  "schema": 1,
+  "oldOwnerBackupRemovedAfterVerificationMB": 3861.8,
+  "recoveryId": "update-20261020T065625-2e5806f6a86f",
+  "date": "2026-10-20",
+  "applicationE2EE": false,
+  "operationalUpdateUsedLocalStage": true,
+  "physicalPhoneAcceptance": false,
+  "packagedIntegration": {
+    "fullWhatsAppParity": false,
+    "freshInstallMode": "offline bundled release candidate",
+    "sourceCommit": "f9a9d21fd40abe72594febb7486b78a5f5bdd32c",
+    "pairedChatVersionBefore": "0.1.0-preview.9",
+    "publicDownloadTested": false,
+    "chatSHA256": "4d3274a94b680c4170ab72228909d447abe9ad14feeb44ae13029d05764e205e",
+    "pairedWorkspace45To46": {
+      "twoApps18OptOuts": true,
+      "chat": "0.1.0-preview.9",
+      "previousWorkspace": "0.3.0-preview.45",
+      "physicalMobile": false,
+      "workspace": "0.3.0-preview.46",
+      "ownerDataUsed": false,
+      "schema": 1,
+      "applicationE2EE": false,
+      "ownerIssuerLocationsPreserved": true,
+      "actualIDsHistoryDocumentBytes": true
+    },
+    "sharedWorkspacePicker": {
+      "checks": [
+        {
+          "theme": "light",
+          "width": 320,
+          "height": 480,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        },
+        {
+          "theme": "light",
+          "width": 390,
+          "height": 700,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "height": 360,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "height": 480,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        },
+        {
+          "theme": "dark",
+          "width": 390,
+          "height": 700,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "height": 360,
+          "closeVisible": true,
+          "scrollingCatalogOnly": true
+        }
+      ],
+      "errors": [],
+      "ownerDataUsed": false,
+      "realServices": true,
+      "twentyEntryStressIsDOMOnly": true,
+      "physicalPhone": false
+    },
+    "applicationE2EE": false,
+    "githubActionsUsed": false,
+    "freshChatMobile": {
+      "checks": [
+        "Mobile branded header, three real tabs and compose action (empty state captured on first fresh run)",
+        "Real discovery, two-user delivery and full-height conversation without bottom navigation",
+        "Five narrow/short viewports in both themes, visible44px tabs and a fixed close button with a20-item layout stress grid",
+        "Enlarged root text, modal keyboard containment, Escape and opener focus restoration",
+        "Profile/settings/archive actions work; picker Escape preserves conversation and unsent draft",
+        "No uncaught browser errors"
+      ],
+      "captures": [
+        {
+          "theme": "light",
+          "width": 320,
+          "height": 480,
+          "documentOverflow": false
+        },
+        {
+          "theme": "light",
+          "width": 360,
+          "height": 640,
+          "documentOverflow": false
+        },
+        {
+          "theme": "light",
+          "width": 390,
+          "height": 700,
+          "documentOverflow": false
+        },
+        {
+          "theme": "light",
+          "width": 412,
+          "height": 720,
+          "documentOverflow": false
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "height": 360,
+          "documentOverflow": false
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "height": 480,
+          "documentOverflow": false
+        },
+        {
+          "theme": "dark",
+          "width": 360,
+          "height": 640,
+          "documentOverflow": false
+        },
+        {
+          "theme": "dark",
+          "width": 390,
+          "height": 700,
+          "documentOverflow": false
+        },
+        {
+          "theme": "dark",
+          "width": 412,
+          "height": 720,
+          "documentOverflow": false
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "height": 360,
+          "documentOverflow": false
+        }
+      ],
+      "errors": [],
+      "realSyntheticServices": true,
+      "twentyItemStressIsDOMLayoutOnly": true,
+      "scope": "Desktop Chrome mobile viewport/touch emulation, not physical Android/iOS acceptance",
+      "fullWhatsAppParity": false
+    },
+    "chat": "0.1.0-preview.9",
+    "freshTwoApps18OptOuts": true,
+    "ownerDataUsedAsFixture": false,
+    "schema": 1,
+    "pairedChatVersionAfter": "0.1.0-preview.9",
+    "workspace": "0.3.0-preview.46",
+    "physicalPhones": false
+  },
+  "syntheticInstallationsStoppedAndRemoved": true,
+  "workspaceSource": "f9a9d21fd40abe72594febb7486b78a5f5bdd32c",
+  "githubActionsUsed": false,
+  "anonymousDownloads": [
+    {
+      "anonymous": true,
+      "verified": true,
+      "asset": "WorkspaceSetup-windows-amd64.exe",
+      "sha256": "ba04974e75a2010dfe6c118e54fc950d633cbafc243f34f638add95d6a83bfdd",
+      "schema": 1,
+      "size": 783180288,
+      "tag": "v0.3.0-preview.46"
+    },
+    {
+      "sha256": "c7b6ab15748a22d4e1844943e0c99127cbc36b049ab2edc242ea8344fd41a519",
+      "size": 773740547,
+      "verified": true,
+      "anonymous": true,
+      "asset": "workspace-bundle.zip",
+      "schema": 1,
+      "tag": "v0.3.0-preview.46"
+    }
+  ],
+  "chat": "0.1.0-preview.9",
+  "workspace": "0.3.0-preview.46",
+  "CClientBuildCacheRemoved": true,
+  "recoveryManifestSHA256": "46b356c0378a98c5487584f8eedb73cab5dcadbcea4661752ed91268287ac35e",
+  "chatSource": "2eca735e279585601dd1abdca3fab700254e3e4e",
+  "operational": {
+    "accounts": "preview-20261020.1",
+    "dedicatedChatOrigin": "https://chat.m8e.co.uk/chat",
+    "actualPublishedBytesInstalled": true,
+    "processApps": 18,
+    "chat": "0.1.0-preview.9",
+    "ownerConversationOrSignInFlowTested": false,
+    "previousWorkspace": "0.3.0-preview.45",
+    "allSelectedProcessAppsRunning": true,
+    "selectedApps": 20,
+    "fullParity": false,
+    "publicHealth": [
+      {
+        "url": "https://workspace.m8e.co.uk/healthz",
+        "status": 200
+      },
+      {
+        "url": "https://accounts.m8e.co.uk/healthz",
+        "status": 200
+      },
+      {
+        "url": "https://chat.m8e.co.uk/chat/healthz",
+        "status": 200
+      }
+    ],
+    "schema": 1,
+    "cloudflareTunnelRunning": true,
+    "ownerDataUsedAsTestFixture": false,
+    "applicationE2EE": false,
+    "githubActionsUsed": false,
+    "builtInApps": 2,
+    "originIssuerOwnerLocationsPreserved": true,
+    "workspace": "0.3.0-preview.46"
+  }
+}
