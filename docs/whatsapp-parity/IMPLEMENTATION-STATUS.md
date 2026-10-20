@@ -90,6 +90,22 @@ The paired45 installer/public download/update acceptance is recorded separately
 when performed. The correction does not establish full CHAT-04 or application
 E2EE, signed device/recovery, complete rich/social/calling or Android/iOS parity.
 
+## Preview8 preparation: By ID startup and QR lifecycle
+
+The NOT-YET-PUBLISHED45 fresh installation found a By ID startup race. Its
+baseline harness read the heading before the ID arrived. Waiting for the actual
+ID fixes that harness assumption; a separate real-login ACK delayed3s (below
+SDK5s timeout) establishes the product defect: Copy was enabled before identity
+and the rendered QR did not encode the later displayed actual ID. An initial6s
+diagnostic exceeded the SDK timeout; it is not counted as a provider failure.
+
+The8 candidate explicitly passes immutable user ID through React, shows connecting
+guidance and disables actions until valid, refreshes QR on URI changes and ignores
+stale/unmounted asynchronous completion. Three controller lifecycle units pass.
+Packaged slow-connection QR-pixel acceptance and final native/browser regressions
+remain required before publication.7 remains immutable; paired45 must be rebuilt
+with the tested8 pin before release. Owner installation remains unchanged.
+
 ## Asserted against real packaged services
 
 Tests use synthetic Alice, Bob and Charlie accounts, an isolated MyAccounts

@@ -138,7 +138,7 @@ class NewTopicView extends React.Component {
 
         this.state.tabSelected === 'byid' ?
           <NewTopicById
-            myURI={Tinode.URI_TOPIC_ID_PREFIX + this.props.tinode.getCurrentUserID()}
+            myURI={this.props.myUserId ? Tinode.URI_TOPIC_ID_PREFIX + this.props.myUserId : ''}
             onSubmit={this.handleGroupByID}
             onError={this.props.onError} /> :
 

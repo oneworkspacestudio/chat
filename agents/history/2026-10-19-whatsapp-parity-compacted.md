@@ -333,6 +333,35 @@ omitted workspacetest and reached launcher flag parsing, not a product failure.
 Workspace45/47b55ed now pins the actual7 ZIP and is building from org releases.
 Owner42 unchanged; primary synthetic fixture is restoring actual42 for45 gates.
 
+## Fresh45 By ID startup race (hold installer publication)
+
+Workspace45/47b55ed is built/staged but NOT tagged/pushed/released. Exact7 old42
+runtime admission/automatic rollback and retained ID/history/document bytes pass.
+Fresh local45 installation/three-member sync passed, but baseline harness read
+the By ID heading before Tinode login supplied the ID and failed its regex.
+The readable ID appeared later; this exposed a real product bug as well as a
+harness wait assumption: Copy was enabled and QR generation ran on mount against
+an unavailable identity, with no refresh on later URI changes. An actual real-login
+ACK delayed by3s (below SDK5s timeout) proves the rendered QR pixels do NOT encode
+the displayed actual ID after login. Copy is also enabled before identity. An
+initial6s diagnostic exceeded the SDK timeout and got504; it is a harness fault
+setting, not evidence of a provider failure. No successful response was mocked.
+
+Uncommitted8 blocks Copy/Open until a valid own user ID, shows connecting text,
+refreshes QR on actual URI changes and ignores stale async QR completion. The
+baseline harness now awaits the actual ID, not just its heading; dedicated new
+topic-id-loading acceptance asserts pending state and actual QR pixels after the
+real delayed ACK. Need complete source8/build/test/publish, then update UNPUBLISHED
+45's pin and rebuild from a new clean commit. Preserve prepared47b55ed candidate
+as release-workspace45; use a separate r2 stage. Never rewrite published7 or6.
+Owner remains42. Broader mandatory E2EE/native/social/calling scope still open.
+
+8 also passes immutable myUserId through Sidepanel→NewTopicView so identity is
+an explicit React input rather than a mutable SDK lookup. Three lifecycle units
+pass pending state, identity-change/stale completion and unmount. Existing five
+retry-controller units now live in scripts/workspace too and pass. New real
+3s delayed-ACK/QR-pixel acceptance remains to run against final8. No8 release yet.
+
 MyAccounts source87a1c98 now pushed main. Real development migration/negative
 checks all passed and Chat state/document preserved. Final build is running in a
 temporary detached NTFS worktree because source processing on I was very slow.
