@@ -1128,6 +1128,9 @@ func (t *Topic) saveAndBroadcastMessage(msg *ClientComMessage, asUid types.Uid, 
 	}
 
 	markedReadBySender := false
+	// This header describes the server's original publication audience. Drop any
+	// supplied copy, including one replayed from a cached outbound message.
+	delete(head, "workspace_audience")
 	if head["workspace_id"] != nil {
 		digest, err := store.ClientMessageDigest(head, content, attachments)
 		if err != nil {
@@ -1155,6 +1158,12 @@ func (t *Topic) saveAndBroadcastMessage(msg *ClientComMessage, asUid types.Uid, 
 			msg.sess.queueOut(reply)
 			return nil
 		}
+	}
+	if audience := t.workspaceReceiptAudience(asUid); audience != nil {
+		if head == nil {
+			head = make(map[string]any)
+		}
+		head["workspace_audience"] = audience
 	}
 	if err, unreadUpdated := store.Messages.Save(
 		&types.Message{

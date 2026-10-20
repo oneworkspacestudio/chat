@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-20",
+  "managedOpenQueryRefreshPassed": true,
+  "applicationE2EE": false,
+  "ownerDataUsed": false,
+  "sourceDirty": true,
+  "baselinePassed": true,
+  "uncaughtBrowserErrors": [],
+  "finalReleaseDownloadTested": false,
+  "fullParity": false,
+  "developmentExecutableSHA256": "d690dcf717d1d2204e63ddfb2f37beaaeb2edf0d30f2fcc2e8fcf0ce56917d67",
+  "sevenViewportTwoThemeUIPassed": true,
+  "securityPassed": true,
+  "schema": 1,
+  "groupChecks": [
+    "One reader with another original recipient offline remains Sent, not all delivered/read",
+    "All original recipients acknowledging receipt changes the real UI to Delivered",
+    "Only all original recipients reading changes the real UI to Read",
+    "Removing the unread member and reloading cannot shrink the historical audience into all-read",
+    "Server ignores forged audience and stores both original recipients after later removal",
+    "Retry after membership change keeps the original sequence and one message"
+  ]
+}

@@ -22,7 +22,15 @@ func ClientMessageDigest(head map[string]any, content any, attachments ...[]stri
 	if len(attachments) > 0 && len(attachments[0]) > 0 {
 		files = attachments[0]
 	}
-	body, err := json.Marshal([]any{head, content, files})
+	// Publication metadata is server-owned and can differ after a membership
+	// change. It cannot change the authenticated client's original retry payload.
+	clientHead := make(map[string]any, len(head))
+	for key, value := range head {
+		if key != "workspace_audience" {
+			clientHead[key] = value
+		}
+	}
+	body, err := json.Marshal([]any{clientHead, content, files})
 	if err != nil {
 		return "", err
 	}

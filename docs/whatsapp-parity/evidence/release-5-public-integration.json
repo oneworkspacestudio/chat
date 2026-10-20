@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "chatVersion": "0.1.0-preview.5",
+  "workspaceVersion": "0.3.0-preview.43",
+  "chatExecutableSHA256": "115d4f276129c5b58b843401bdca853072c4a84c8f2499718e7105228b8a7ea8",
+  "installerSHA256": "3b0099182371b59fd3d9afe30786b11807bd5d5b4a1a41b316e55e2b844204ce",
+  "bundleSHA256": "1be166d1a024d53c05c71762aadb4b37dc7c15ca7fd56b4e5b3ac496e7d4543c",
+  "actualPublicDownloadsVerified": true,
+  "public42To43Upgrade": {
+    "passed": true,
+    "immutableIdentities": true,
+    "retainedMessage": true,
+    "actualUIDocumentDownloadFilenameAndExactBytes": true,
+    "selectedAppsAndOptOutsPreserved": true
+  },
+  "freshDefaultOnlineInstaller": {
+    "passed": true,
+    "selectedApps": ["accounts", "chat"],
+    "explicitOtherAppOptOuts": 18,
+    "baselineAndSecurityAndUI": "Passed after asserting the real MyAccounts directory snapshot was ready",
+    "initialFailure": "An immediately issued Find query missed the new Charlie account. Directory synchronization later completed, but the open query did not refresh automatically. This is a real follow-up defect, not a passed immediate-enrolment test."
+  },
+  "oldManager": {
+    "public42RejectedIndependentPublicChat5": true,
+    "incompatiblePairedBundleRolledBackBeforeRuntimeExtraction": true,
+    "restoredChat4SHAAndIDsAndDocumentBytes": true
+  },
+  "ownerInstallationUsedAsFixture": false,
+  "ownerInstallationUpdated": false,
+  "publicCloudflareDedicatedChatOrigin": "Not tested by these loopback fixtures",
+  "fullWhatsAppParity": false,
+  "applicationE2EE": false,
+  "nativeMobileAcceptance": false
+}

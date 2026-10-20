@@ -81,8 +81,8 @@ class NewTopicView extends React.Component {
         }
       }
     }
-    this.props.onSearchContacts(query);
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
+    return this.props.onSearchContacts(query);
   }
 
   handleSearchResultSelected(topicName) {
@@ -144,6 +144,7 @@ class NewTopicView extends React.Component {
 
           <div className="flex-column">
             <SearchContacts
+              liveDirectory={true}
               placeholder={search_placeholder}
               initialQuery={this.state.searchQuery || ''}
               onSearchContacts={this.handleSearchContacts} />

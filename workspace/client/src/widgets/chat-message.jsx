@@ -254,6 +254,7 @@ class BaseChatMessage extends React.PureComponent {
               </div>
               {this.props.timestamp ?
                 <ReceivedMarker
+                  isGroup={this.props.isGroup}
                   edited={this.props.edited}
                   timestamp={this.props.timestamp}
                   received={this.props.received} />

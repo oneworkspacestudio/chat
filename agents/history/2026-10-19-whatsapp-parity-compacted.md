@@ -234,3 +234,69 @@ were verified before publication. Invoke-WebRequest octet-stream Content may be
 byte[]: UTF8-decode before ConvertFrom-Json, otherwise numeric bytes become a huge
 array. Git archive --output must be one quoted PowerShell argument. No published
 assets were rewritten. Preserve unrelated Workspace untracked histories.
+
+## Public43 verification and continuing defects (October20)
+
+Workspace43 is now public from3c5e951,27 verified assets. Actual public installer
+SHA3b0099182371b59fd3d9afe30786b11807bd5d5b4a1a41b316e55e2b844204ce
+and bundle1be166d1a024d53c05c71762aadb4b37dc7c15ca7fd56b4e5b3ac496e7d4543c
+were downloaded. Real public42→43 upgrade preserved selected apps, immutable IDs,
+retained history and actual UI document download filename/exact bytes. A default
+online fresh43 install selected Accounts+Chat and retained18 opt-outs. Baseline,
+security and seven-viewport/two-theme UI passed AFTER directory-ready assertion.
+Initial immediate Charlie Find timed out: snapshot synchronization is asynchronous
+and the old open query never refreshed. Do not erase that failed precondition.
+See evidence/release-5-public-integration.json; published assets are immutable.
+
+Uncommitted Chat6 candidate adds visible/online query refresh every5s only in the
+managed Find picker. Actual new synthetic member creation while query stays open
+passed without retyping/retry, and the never-signed-in member could be selected.
+Development build SHA57f2ae8527f07bf3a1481c464a76ae461297799767482c1f35ddf72fba26d596
+is dirty and NOT a release. Fresh fixture now manual prototype Chat6 on31060,
+primary30960 remains public43/5 until provider migration. Main owner42 untouched.
+Chat6 real baseline/security passed; correct ui-acceptance.cjs passed (an initial
+command used nonexistent parity-ui-acceptance.cjs; this was harness invocation).
+
+Native OIDC prerequisite against published MyAccounts found changed token-request
+redirect_uri was accepted despite PKCE. Source fix in separate org checkout
+I:/Projects/myaccounts-chat-native binds original URI privately; whole-object
+focused unit passed. Frontend frozen Yarn build/typecheck passed after changing
+only locked download transport URLs from registry.yarnpkg.com to official npm
+(same versions/integrities), using named C NTFS work and I download cache. Root
+compile caught one internal CasWAF call; now passes the constructed exact callback.
+Root regression/vet/native build and real migration/negative harness are running.
+No provider release yet. Do not mistake this prerequisite for complete native apps.
+
+Scoped redundant prototype-cold/baseline42-cold synthetic snapshots were removed
+after absolute path, reparse and active-process checks; reclaimed~1.94GB on C.
+Current fixtures/newest rollback and owner data retained. Source/output remainI.
+Workspace route priority/owned Host repair unit/full suite passed but actual
+Cloudflare route operation remains unverified. Full mandatory scope remains open.
+
+## Group receipt candidate (not yet released)
+
+New server-authored workspace_audience captures sorted active readable original
+members, excludes sender/deleted/channel-only users, strips forged input and is
+excluded ONLY as server metadata from the client retry digest. The full server/
+store/PostgreSQL compile/tests passed; pure JS quorum tests passed. Client bubble
+and contact previews require every original member. Read implies delivery even
+if partial SDK updates omit recv. Unknown/legacy/removed counters stay Sent.
+Post-ACK exact stored-data fetch obtains trusted audience for no-echo drafts.
+Wire getMeta MUST include what:'data'; raw data-only silently failed in initial
+prototype. Tests initially selected .chat-box under #scroller, but #scroller itself
+is .chat-box; corrected to li. To model offline, close Charlie's entire synthetic
+context, not merely one SDK subscription (the UI has another socket).
+
+Real three-account group-receipts run7 passed all original-offline/delivered/read,
+removed-unread+reload, forged-header and membership-change retry/one-copy checks.
+Baseline/security/seven-viewport two-theme UI then passed on the native prototype.
+Current dirty prototype SHA from chat6-receipts-native-build4.log, not public6.
+Need final clean release build and final native regression before any new release.
+Historical read retention after subscriber deletion/rejoin still requires a durable
+receipt ledger. Do not mark CHAT-04 complete from this subset or claim app E2EE.
+
+MyAccounts source87a1c98 now pushed main. Real development migration/negative
+checks all passed and Chat state/document preserved. Final build is running in a
+temporary detached NTFS worktree because source processing on I was very slow.
+Canonical source/artifacts stay I; scoped C worktree/toolchain copies must be
+removed after verification. No provider tag/release44 or owner update yet.

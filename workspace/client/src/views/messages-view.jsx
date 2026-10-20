@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import { Drafty, Tinode, TheCard } from 'tinode-sdk';
+import {deliveryStatus,refreshDeliveryAudience} from '../workspace/delivery-state.mjs';
 
 const CallPanel = React.lazy(_ => import('../widgets/call-panel.jsx'));
 import ChatMessage from '../widgets/chat-message.jsx';
@@ -822,7 +823,7 @@ class MessagesView extends React.Component {
 
     // Aknowledge messages except own messages. They are
     // automatically assumed to be read and recived.
-    const status = topic.msgStatus(msg, true);
+    const status = deliveryStatus(topic,msg,Tinode);
     if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
@@ -1049,6 +1050,7 @@ class MessagesView extends React.Component {
       pub.head={...pub.head,workspace_id:pub.head?.workspace_id||crypto.randomUUID()};
       pub.id=this.props.tinode.createMessage(topic.name,pub.content,false).id;
       const ctrl=await topic.publishMessage(pub);
+      refreshDeliveryAudience(topic,ctrl);
       if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
     }catch(error){this.props.onError('This message remains pending. Check your connection and conversation access, then retry.','warn')}
   }
@@ -1678,7 +1680,7 @@ class MessagesView extends React.Component {
           previousFrom = thisFrom;
 
           const isReply = !(thisFrom == this.props.myUserId);
-          const deliveryStatus = topic.msgStatus(msg, true);
+          const messageDeliveryStatus = deliveryStatus(topic,msg,Tinode);
 
           let userFrom = thisFrom, userName, userAvatar;
           const user = topic.userDesc(thisFrom);
@@ -1731,7 +1733,7 @@ class MessagesView extends React.Component {
                 userName={userName}
                 userAvatar={userAvatar}
                 sequence={sequence}
-                received={deliveryStatus}
+                received={messageDeliveryStatus}
                 uploader={msg._uploader}
                 userIsWriter={this.state.isWriter}
                 userIsAdmin={this.state.isAdmin}

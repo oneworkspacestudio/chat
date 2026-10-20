@@ -7,6 +7,7 @@ import { getMessaging as firebaseGetMessaging, getToken as firebaseGetToken,
   deleteToken as firebaseDelToken, onMessage as firebaseOnMessage } from 'firebase/messaging';
 
 import { Drafty, Tinode } from 'tinode-sdk';
+import {refreshDeliveryAudience} from '../workspace/delivery-state.mjs';
 
 import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
@@ -946,6 +947,7 @@ class TinodeWeb extends React.Component {
           // retaining the durable workspace_id used by the server receipt.
           pub.id=this.tinode.createMessage(topic.name,pub.content,false).id;
           const ctrl=await topic.publishMessage(pub);
+          refreshDeliveryAudience(topic,ctrl);
           if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:pub.head.workspace_id}}));
         }
       }catch(error){this.handleError('A pending message could not be sent: '+String(error.message).slice(0,180)+'. It remains in its conversation; check access and retry.','warn')}
@@ -1151,12 +1153,12 @@ class TinodeWeb extends React.Component {
     if (window.workspaceChat?.managedDirectory) {
       const generation = this.peopleSearchGeneration = (this.peopleSearchGeneration || 0) + 1;
       if (!query || Tinode.isNullValue(query)) {
-        this.setState({searchResults:[]});
+        this.setState({searchResults:[],errorText:'',errorLevel:null});
         return;
       }
       try {
         const response=await fetch(new URL('api/people?q='+encodeURIComponent(query),document.baseURI),{credentials:'same-origin',cache:'no-store'});
-        if(!response.ok) throw new Error(response.status===503?'The member directory is connecting to MyAccounts. Try again shortly.':response.status===401?'Your Chat session has ended. Open Chat from Workspace again.':'Enter at least two characters of a name, username, email or Chat ID.');
+        if(!response.ok) throw new Error(response.status===503?'The member directory is connecting to MyAccounts.':response.status===401?'Your Chat session has ended. Open Chat from Workspace again.':'Enter at least two characters of a name, username, email or Chat ID.');
         const result=await response.json();
         if(generation===this.peopleSearchGeneration) this.setState({searchResults:result.users,errorText:'',errorLevel:null});
       } catch(err) {
@@ -1256,6 +1258,7 @@ class TinodeWeb extends React.Component {
     // TODO: check if return is required.
     return topic.publishDraft(msg, Promise.all(completion))
       .then(ctrl => {
+        refreshDeliveryAudience(topic,ctrl);
         if(ctrl?.code>=200&&ctrl.code<300&&Number.isInteger(ctrl.params?.seq))window.dispatchEvent(new CustomEvent('workspace:chat-ack',{detail:{topic:topic.name,id:head.workspace_id}}));
         if (topic.isArchived()) {
           topic.archive(false);

@@ -12,6 +12,11 @@ func TestClientMessageDigestBindsCompletePayload(t *testing.T) {
 	if err != nil || first != second {
 		t.Fatal("map order changed retry digest")
 	}
+	head["workspace_audience"] = map[string]any{"version": 1, "members": []string{"usrSynthetic"}}
+	withAudience, _ := ClientMessageDigest(head, "synthetic content")
+	if withAudience != first {
+		t.Fatal("server-owned audience changed the client retry digest")
+	}
 	changed, _ := ClientMessageDigest(head, "changed content")
 	if changed == first {
 		t.Fatal("different content reused digest")

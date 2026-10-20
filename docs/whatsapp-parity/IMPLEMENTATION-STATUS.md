@@ -13,8 +13,12 @@ Executable SHA256 is
 ZIP SHA256 is
 `db72538e9e722da41a2d46a74b227b4ed2451e3605312e0f8cd402148d87a933`.
 No GitHub Actions were used. The exact executable passed native/browser checks;
-the public ZIP was downloaded and its digest verified. Workspace43 packaging
-and final public install/upgrade checks remain in progress at this checkpoint.
+the public ZIP was downloaded and its digest verified. Workspace43 was then
+published; actual public42→43 upgrade preserved IDs, history, app selection and
+actual UI document filename/bytes. Default-online fresh installation passed
+baseline/security/UI checks **after the directory snapshot was ready**. Its first
+immediate Find query missed a newly created account, which prompted the next fix.
+See `evidence/release-5-public-integration.json` for the exact boundary and hashes.
 
 The actual public Workspace42 rejected the independent schema2 app manifest.
 When offered the exact new executable through a complete compatibility-test
@@ -22,6 +26,35 @@ bundle, it attempted startup; Chat refused before runtime extraction or data
 migration. Automatic rollback restored the exact public Chat4 executable,
 immutable IDs, messages, attachment links, download filename and document bytes.
 This is recorded separately from the final public Workspace43 bundle acceptance.
+
+## Preview6 development verification (publication pending)
+
+The new managed Find picker refreshes an open query while visible and online.
+A real account created after the empty search appeared automatically, without
+retyping or Retry, and could be selected before its first Chat sign-in.
+
+New group messages carry a server-authored original recipient snapshot. The
+actual three-account UI remains Sent with one original recipient offline,
+changes to Delivered when all acknowledge receiving, and Read only when all
+acknowledge reading. A read also proves delivery if a partial SDK update omitted
+the recv counter. Sender drafts fetch their exact stored header after ACK.
+Forged client audience is discarded, and UUID retry after membership changes
+keeps the original sequence and one message. Removing an unread member and
+reloading cannot shrink the historical audience into all-read. Text/accessible
+labels accompany the receipt icons. Server/store and pure client tests passed.
+
+Legacy group messages without an original audience are conservatively Sent.
+Historical receipt proof after subscriber deletion/rejoining still needs a
+durable receipt ledger; a lost recipient counter cannot establish Read. Message
+info, receipt privacy policy and the complete CHAT-04 family remain incomplete.
+These tested subsets do not mark the whole family complete or establish E2EE.
+
+The companion MyAccounts fix binds token exchange to the exact original callback.
+Actual public-client S256, signature/nonce, wrong/missing/alternate registered
+callback, replay and concurrent single-use checks passed, including existing
+database/token/SSO and Chat document/history preservation. Final clean release
+and downloads are tracked separately. This is a native-auth prerequisite, not
+complete native Android/iOS delivery. No owner installation is a test fixture.
 
 ## Asserted against real packaged services
 

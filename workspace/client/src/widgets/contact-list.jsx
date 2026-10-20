@@ -8,6 +8,7 @@ import { Drafty, Tinode } from 'tinode-sdk';
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 import {readDraft} from '../workspace/composer-state.mjs';
+import {deliveryStatus as messageDeliveryStatus} from '../workspace/delivery-state.mjs';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
@@ -112,7 +113,7 @@ class ContactList extends React.PureComponent {
             const msg = c.latestMessage();
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
-              deliveryStatus = msg._status || c.msgStatus(msg, true);
+              deliveryStatus = messageDeliveryStatus(c,msg,Tinode);
               previewIsResponse = msg.from != this.props.myUserId;
               if (msg.content) {
                 preview = typeof msg.content == 'string' ?

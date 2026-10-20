@@ -59,7 +59,7 @@ GitHub Actions are disabled.
 
 ## Preview scope
 
-Candidate version: 0.1.0-preview.5. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
+Candidate version: 0.1.0-preview.6. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
 and the [security boundary](docs/whatsapp-parity/SECURITY.md). Release/download
 acceptance remains separate from development fixture results.
 
