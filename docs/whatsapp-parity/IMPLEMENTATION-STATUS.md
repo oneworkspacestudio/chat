@@ -127,6 +127,17 @@ occurred in final UI runs; no owner data used. The failed candidate was not
 published as8. Final paired45 download/installation remains a separate gate.
 See `evidence/release-8-candidate.json`; broader mandatory scope remains unfinished.
 
+Actual public Workspace45 downloads now passed default-online fresh setup,
+browser/security/UI and supported rollback/reapply against synthetic accounts.
+The paired42→45 update preserved browser SSO, client credentials, immutable IDs,
+history and exact document filename/bytes. Its old42 independent manifest and
+Chat-only bundle gates rejected8 before runtime extraction and rolled back safely.
+The operational installation was then updated with published bytes:18 selected
+app processes plus Cloudflare are running, with2 built-in app routes; Workspace,
+Accounts and dedicated Chat public health return200. Owner conversation/sign-in
+and Safe Browsing classification were not tested. See the separate
+`evidence/release-8-public45-integration.json` for these boundaries.
+
 ## Asserted against real packaged services
 
 Tests use synthetic Alice, Bob and Charlie accounts, an isolated MyAccounts
@@ -181,7 +192,7 @@ encrypted media, full voice/expressive/location/Drive flows; signed device trust
 default E2EE and legacy migration; polls/events/status/channel/community/broadcast
 families; individual/group/guest calling with SFU/TURN/media keys; complete native
 clients, configured push and device integrations; portable fresh-PC/key recovery;
-actual old-manager offered-release and final fresh/install/rollback checks.
+fresh-PC recovery with client keys. Actual public45 fresh/install/rollback gates are recorded above.
 
 Authenticated reference WhatsApp build/version/captures are unavailable. No exact
 pixel parity claim is made. Android/Apple signing, a Mac host, physical devices

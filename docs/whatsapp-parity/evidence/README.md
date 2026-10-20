@@ -39,3 +39,18 @@ Representative manually reviewed release captures:
 ![Release5 narrow light,360×800](release-5-light-360.png)
 
 ![Release5 desktop dark,1366×768](release-5-dark-1366.png)
+
+## Release8 / actual public Workspace45
+
+`release-8-public45-integration.json` records anonymous public file verification,
+default-online fresh installation, supported rollback/reapply, preserved SSO,
+identities/history/document bytes and installed-service/public-health checks.
+Owner content/sign-in was not used as a test fixture; browser checks use synthetic
+accounts. Physical phones, full parity and application E2EE remain incomplete.
+
+The following capture is from the actual downloaded Workspace45 / Chat8 fresh
+installation, after real group creation and messages, rather than a mockup.
+
+![Release8 desktop light,1366×768](release-8-light-1366.png)
+
+![Release8 narrow light,390×844](release-8-light-390.png)

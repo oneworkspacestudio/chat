@@ -2,7 +2,7 @@
 <img src="docs/workspace/my_chat.svg" alt="Chat logo" width="112" height="112">
 <h1>Chat</h1>
 <p>Your conversations, together.</p>
-<p><a href="https://github.com/oneworkspacestudio/chat/releases">Download for Windows</a> Â· <a href="docs/workspace/HOSTING.md">Hosting guide</a></p>
+<p><a href="https://github.com/oneworkspacestudio/chat/releases">Download for Windows</a> · <a href="docs/workspace/HOSTING.md">Hosting guide</a></p>
 </div>
 
 Chat is the One Workspace messaging app, built from [Tinode](https://github.com/tinode/chat)
@@ -15,10 +15,7 @@ reconnect, custom lists and Workspace navigation. See the
 [implementation status](docs/whatsapp-parity/IMPLEMENTATION-STATUS.md) and
 [platform feature matrix](docs/whatsapp-parity/features.csv) for the remaining work.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/whatsapp-parity/evidence/foundation-5-dark-1365.png">
-  <img src="docs/whatsapp-parity/evidence/foundation-5-light-1365.png" alt="Chat candidate with a real synthetic group conversation in the One Workspace design system">
-</picture>
+![Chat preview8 with a real synthetic group conversation in the One Workspace design system](docs/whatsapp-parity/evidence/release-8-light-1366.png)
 
 Browser capture with synthetic users. [Narrow layout and evidence](docs/whatsapp-parity/evidence/README.md).
 
@@ -34,7 +31,7 @@ Lists and favourites synchronize between signed-in sessions. Drafts remain on
 their account and conversation until the server confirms a send. Reconnecting
 reuses a durable message ID so an acknowledgement retry does not send another copy.
 
-Managed Chat 5 requires **One Workspace 43 or newer**. It gets its own browser
+Managed Chat 5–8 requires **One Workspace 43 or newer**. It gets its own browser
 hostname, reuses the existing MyAccounts identity and keeps old Workspace Chat
 links working. The app switcher links to installed apps without sharing portal
 cookies, browser storage or scripts with Chat.
@@ -61,7 +58,9 @@ GitHub Actions are disabled.
 
 Candidate version: 0.1.0-preview.8. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
 and the [security boundary](docs/whatsapp-parity/SECURITY.md). Release/download
-acceptance remains separate from development fixture results.
+acceptance remains separate from development fixture results. The actual public
+Workspace45 downloads passed default-online fresh setup and rollback/paired
+upgrade checks with8; see [public integration evidence](docs/whatsapp-parity/evidence/release-8-public45-integration.json).
 
 Application messages and attachments are **not end-to-end encrypted**. The shared
 OpenMLS native/browser module is a protocol proof, not production Chat encryption.
@@ -72,5 +71,5 @@ acceptance is claimed.
 ## Licenses and upstream
 
 Tinode server: GPL-3.0. Web client: Apache-2.0. PostgreSQL and bundled dependency
-licenses remain included. [Notices](NOTICE) Â· [upstream README](UPSTREAM-README.md).
+licenses remain included. [Notices](NOTICE) · [upstream README](UPSTREAM-README.md).
 The upstream projects are credited; this fork is maintained by One Workspace Studio.

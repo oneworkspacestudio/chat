@@ -1,0 +1,96 @@
+{
+  "operationalInstallation": {
+    "actualPublishedBytesInstalled": true,
+    "originIssuerOwnerLocationsPreserved": true,
+    "processApps": 18,
+    "schema": 1,
+    "dedicatedChatOrigin": "https://chat.m8e.co.uk/chat",
+    "builtInApps": 2,
+    "applicationE2EE": false,
+    "selectedApps": 20,
+    "chat": "0.1.0-preview.8",
+    "previousWorkspace": "0.3.0-preview.42",
+    "workspace": "0.3.0-preview.45",
+    "githubActionsUsed": false,
+    "allSelectedProcessAppsRunning": true,
+    "cloudflareTunnelRunning": true,
+    "publicHealth": [
+      {
+        "status": 200,
+        "url": "https://workspace.m8e.co.uk/healthz"
+      },
+      {
+        "status": 200,
+        "url": "https://accounts.m8e.co.uk/healthz"
+      },
+      {
+        "status": 200,
+        "url": "https://chat.m8e.co.uk/chat/healthz"
+      }
+    ],
+    "ownerConversationOrSignInFlowTested": false,
+    "fullParity": false,
+    "accounts": "preview-20261020.1",
+    "ownerDataUsedAsTestFixture": false
+  },
+  "physicalMobileAcceptance": false,
+  "schema": 1,
+  "actualPublicRollbackAndPairedUpgrade": {
+    "existingClientCredentialsAndLocationsPreserved": true,
+    "oldBrowserSSOWithoutPassword": true,
+    "chat": "0.1.0-preview.8",
+    "ownerDataUsed": false,
+    "immutableIDsHistoryAndActualDocumentDownloadPreserved": true,
+    "applicationE2EE": false,
+    "supportedRollbackRestoredPublic42": true,
+    "fullParity": false,
+    "actualAnonymousDownloadedInstallerAndBundle": true,
+    "workspace": "0.3.0-preview.45",
+    "schema": 1,
+    "twoAppsAnd18OptOutsPreserved": true,
+    "public42PairedUpgrade": true
+  },
+  "ownerLatestVerifiedRecoveryRetained": true,
+  "sourceArtifactsAndEncryptedProofArchiveOnBuildDrive": true,
+  "actualPublicDefaultOnlineFresh": {
+    "applicationE2EE": false,
+    "ownerDataUsed": false,
+    "schema": 1,
+    "manualLostACKOneCopyPassed": true,
+    "defaultOnline": true,
+    "delayedLoginQRAndOrderedNavigationPassed": true,
+    "twoAppsAnd18OptOutsPreserved": true,
+    "actualAnonymousDownloadedInstaller": true,
+    "workspace": "0.3.0-preview.45",
+    "noMockSuccessfulResponses": true,
+    "chat": "0.1.0-preview.8",
+    "fullParity": false,
+    "baselineSecurityUIPassed": true
+  },
+  "applicationE2EE": false,
+  "workspace": {
+    "tag": "v0.3.0-preview.45",
+    "uploadedAssetsVerified": 28,
+    "installerSHA256": "833e9b40f186a464cacf4765c398cb9f8fda658f2e4b40bd77fe2e748d5887e7",
+    "bundleSHA256": "6b9fb6481421bf226f4a49e18c6d9ce02bd199b3448a732d5359fa76f5ad0482",
+    "source": "edf3a8affbf89fd0ceed31a83f9fbffc6174c5a4"
+  },
+  "githubActionsUsed": false,
+  "browserSafeBrowsingClassificationChecked": false,
+  "anonymousPublicDownloadsVerified": true,
+  "ownerConversationsOrSignInTested": false,
+  "syntheticTestInstallationsStoppedAndRemoved": true,
+  "date": "2026-10-20",
+  "fullBriefComplete": false,
+  "accounts": {
+    "tag": "preview-20261020.1",
+    "source": "87a1c98d83f2ec1751e5d8eac114b94ba30c4660"
+  },
+  "chat": {
+    "tag": "v0.1.0-preview.8",
+    "zipSHA256": "a8f31aa9ebe82140d06d4db90e149fafc3350a10910a9afac21572c35517db0c",
+    "uploadedAssetsVerified": 15,
+    "source": "9df7307771d24f8b9a4654832866929138dd0bc8",
+    "executableSHA256": "b06d21022f68a45908008a840c84e0c35cf9bd23f637cc48d45253037fe1f691"
+  }
+}

@@ -413,3 +413,44 @@ email and refused before mutation; corrected guard verifies exact origin/data
 root and all synthetic example.test users. Owner42/recovery copies untouched.
 New45 public fresh/paired/recovery/remote-origin gates precede owner update.
 Full mandatory encryption/device/rich/social/calls/native/recovery scope stays open.
+
+## Latest installed/public integration checkpoint
+
+Actual anonymous public45 installer833e9b40/bundle6b9fb648 downloads completed
+and SHA/size verified (full values in public integration JSON). Actual default-
+online fresh installation passed all six browser suites: real3s login/QR pixels,
+baseline, security, ordered navigation/re-entry,7viewports×2themes/offline/logout,
+lost-ACK actual Retry/one copy. Actual public45 rollback to pre42 and paired
+reapply preserved portal/Chat client credentials, owner/issuer/paths,2apps/18optouts,
+old browser SSO and immutable history/actual document filename+bytes. No mock
+successful response and no owner data as fixture.
+
+Owner C:/tmp/workspace/Private was then updated from42 to45 using those exact
+downloaded files, selecting workspace/accounts/chat. Exact manager58840dde,
+Chatb06d2102 and Accountsc3a309d3 installed.20 selected apps =18process +2builtin
+(Docs/Studio); health reports19 running entries including Cloudflare. The first
+operational checker incorrectly compared20 app tiles to process count and failed
+AFTER successful native update. Verification was corrected against process apps
+and the updater's retained pre42 metadata, no reinstall/downgrade. Identity/paths
+preserved; public Workspace/Accounts/https://chat.m8e.co.uk/chat/healthz all200.
+Saved permanent origin is chat/workspace-hosting.json, ready. Owner conversations,
+owner browser sign-in and Safe Browsing classification not tested. Preview open
+request was queued in Codex; do not claim the user viewed it.
+
+Native update kept verified owner backup update-20261020T043741-fb353976043a
+and removed1 older backup after verification (~3244.6MB). Do not delete newest
+owner recovery. All synthetic primary/local/public roots were stopped, path/
+process/reparse checked and removed after sanitized evidence preserved on I.
+An initial cleanup check ran before shutdown finished, safely refused; retry
+handled already-stopped instances. C client/Rust/test caches removed. Encrypted
+provider .age proof archive moved to I only after encryption-header/hash checks.
+C free~20.18GiB; source/builds/downloads/evidence remain I. No test services remain.
+
+Public summary is evidence/release-8-public45-integration.json (also Workspace
+docs/CHAT-PUBLIC45-ACCEPTANCE.json); updated README uses real public45 fresh capture.
+Published8/45 binaries/tags were not rewritten. All broader mandatory consumer,
+crypto/device/recovery/calling/native work remains incomplete. Mobile signing,
+Mac build-host and device availability question remains unanswered; no native
+phone or production E2EE acceptance. Continue from I sources, never owner data.
+Recreate named C client with dependency install before future builds; old mirror
+and fixture roots are intentionally gone. No Actions, agents or goals were used.
