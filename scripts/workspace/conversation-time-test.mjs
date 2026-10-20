@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {conversationTime} from '../../workspace/client/src/workspace/conversation-time.mjs';
+const now=new Date(2026,9,20,15,30),today=new Date(2026,9,20,7,12),yesterday=new Date(2026,9,19,23,10),older=new Date(2026,8,1,12);
+assert.equal(conversationTime(today,'en-GB',now).time,today.toLocaleTimeString('en-GB',{timeStyle:'short'}));
+assert.equal(conversationTime(yesterday,'en-GB',now).time,'yesterday');
+assert.equal(conversationTime(older,'en-GB',now).time,older.toLocaleDateString('en-GB',{dateStyle:'short'}));
+assert.equal(conversationTime(today.toISOString(),'en-GB',now).dateTime,today.toISOString());
+assert.equal(conversationTime('not-a-date','en-GB',now),null);
+assert.equal(conversationTime(undefined,'en-GB',now),null);
+console.log('PASS Actual conversation timestamps: today, yesterday, older, ISO, invalid and absent');

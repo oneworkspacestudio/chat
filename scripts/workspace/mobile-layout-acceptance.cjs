@@ -37,6 +37,9 @@ async function main(){
   assert.equal(await page.locator('.workspace-mobile-nav').count(),0);
   await page.screenshot({path:root+'/mobile-conversation.png'});pass('Real discovery, two-user delivery and full-height conversation without bottom navigation');
   await page.locator('#hide-message-view').click();await page.locator('.workspace-mobile-header').waitFor();
+  await page.locator('.workspace-contact-time').first().waitFor();assert(await page.locator('.workspace-contact-time').first().getAttribute('datetime'));
+  await page.locator('.contact-box>li').filter({hasText:'Bob Tester'}).first().click({button:'right'});
+  await page.getByText('Archive',{exact:true}).waitFor();await page.locator('.workspace-mobile-header h1').click();
   for(const theme of ['light','dark']){
    await page.getByRole('button',{name:'More options',exact:true}).click();let menu=page.getByRole('dialog',{name:'Chat options',exact:true});
    await menu.getByRole('button',{name:'Appearance',exact:true}).click();await page.locator('input#'+theme).check();await page.waitForFunction(theme=>document.documentElement.dataset.theme===theme,theme);

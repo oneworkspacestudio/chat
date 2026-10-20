@@ -7,6 +7,9 @@ import { Tinode } from 'tinode-sdk';
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
 import UnreadBadge from './unread-badge.jsx';
+import {ContactTime} from '../workspace/contact-time.generated.jsx';
+import {FormContext} from '../workspace/components/ui.js';
+import {conversationTime} from '../workspace/conversation-time.mjs';
 
 import { Drafty } from 'tinode-sdk';
 
@@ -118,8 +121,9 @@ class Contact extends React.Component {
       (self ? this.props.intl.formatMessage(messages.self_topic_comment) : '\u00A0');
     const bgColor = this.props.showCheckmark ? null :
       (this.props.selected ? 'selected' : (this.props.pinned ? 'tpinned' : null));
+    const stamp=conversationTime(this.props.lastActivity,this.props.intl.locale);
     return (
-      <li className={bgColor} onClick={this.handleClick}>
+      <li className={bgColor} onClick={this.handleClick} onContextMenu={this.props.showContextMenu?this.handleContextClick:undefined}>
         <div className="avatar-box">
           <LetterTile
             authorizeURL={this.props.tinode.authorizeURL}
@@ -139,6 +143,7 @@ class Contact extends React.Component {
             {this.props.isChannel ? <i className="material-icons as-badge">podcasts</i> : null}
             {!self ? <ContactBadges badges={icon_badges} /> : null}
             {!this.props.deleted ? <UnreadBadge count={this.props.unread} /> : null}
+            {stamp?React.createElement(FormContext.Provider,{value:{kind:'workspace-contact-time',as:'time',dateTime:stamp.dateTime,label:stamp.title}},React.createElement(ContactTime,{data:stamp,onAction:()=>{}})):null}
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
@@ -146,7 +151,7 @@ class Contact extends React.Component {
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
-            <a href="#" onClick={this.handleContextClick}>
+            <a href="#" aria-label={'Chat options for '+(this.props.title||'this conversation')} onClick={this.handleContextClick}>
               <i className="material-icons">expand_more</i>
             </a>
           </span> : null}

@@ -183,4 +183,15 @@ a[href="#register"],a[href="#reset"],a[href="#settings"]{display:none!important}
  #send-message-input{flex:1;box-sizing:border-box;min-width:0;width:0;min-height:48px;max-height:30dvh;margin:0;padding:12px;border:1px solid transparent;border-radius:24px;background:var(--clr-bright);font-size:max(16px,var(--message-text-size));line-height:22px;box-shadow:none}
  #send-message-input:focus{border:1px solid var(--clr-primary-action);outline:none;box-shadow:none}
  #sidepanel .panel-form-column>.flat-button{display:flex;align-items:center;gap:12px;min-height:52px;padding:12px 16px;font-size:16px;text-transform:none;box-shadow:none}
+}.workspace-apps{position:fixed;inset:0;margin:auto;height:fit-content}
+.workspace-contact-time{margin-left:auto;padding-left:12px;flex:none;color:var(--clr-text-secondary);font-size:12px;line-height:18px;white-space:nowrap}
+.contact-box .text-box{min-width:0;flex:1}
+@media(max-width:720px){
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li .text-box>div:first-child{gap:6px}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li .contact-title{min-width:0;flex:1}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li .contact-comment{padding-right:28px}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li .unread{position:absolute;right:16px;top:48px;margin:0;min-width:20px;min-height:20px;line-height:20px;background:var(--clr-primary-action);color:light-dark(#fff,#082c63)}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li .menuTrigger{opacity:0;top:auto;bottom:6px;right:8px;width:44px;height:44px;line-height:44px}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li:focus-within .menuTrigger{opacity:1;background:var(--clr-bright)}
+ #sidepanel>.scrollable-panel>.contact-box:not(.small)>li:focus-within .unread{right:56px}
 }

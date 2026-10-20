@@ -109,9 +109,11 @@ class ContactList extends React.PureComponent {
           let forwarded;
           let previewIsResponse;
           let deliveryStatus;
+          let lastActivity=c.touched;
           if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage();
             if (msg) {
+              lastActivity=msg.ts||lastActivity;
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = messageDeliveryStatus(c,msg,Tinode);
               previewIsResponse = msg.from != this.props.myUserId;
@@ -135,6 +137,7 @@ class ContactList extends React.PureComponent {
               previewIsResponse={previewIsResponse}
               forwarded={forwarded}
               received={deliveryStatus}
+              lastActivity={!this.props.showMode?lastActivity:null}
               unread={this.props.showUnread ? c.unread : 0}
               now={c.online && this.props.connected}
               acs={c.acs}

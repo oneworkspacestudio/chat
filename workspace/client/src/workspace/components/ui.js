@@ -8,11 +8,11 @@ export const Page=({children})=>{
   document.body.style.overflow='hidden';ref.current.showModal();
   return ()=>{ref.current?.close();document.body.style.overflow=previousOverflow;if(opener?.isConnected)opener.focus()};
  },[!!form?.modal]);
- return React.createElement(form?.modal?'dialog':form?.as||'section',{ref,id:form?.id,className:form?.kind || 'workspace-connection','aria-label':form?.label,onCancel:form?.modal?e=>{e.preventDefault();form.close()}:undefined},children);
+ return React.createElement(form?.modal?'dialog':form?.as||'section',{ref,id:form?.id,dateTime:form?.dateTime,className:form?.kind || 'workspace-connection','aria-label':form?.label,onCancel:form?.modal?e=>{e.preventDefault();form.close()}:undefined},children);
 };
 export const Card=({children})=>React.createElement(React.Fragment,null,children);
 export const Heading=({level=1,children})=>React.createElement('h'+level,null,children);
-export const Text=({children})=>React.createElement('p',null,children);
+export const Text=({children,name})=>React.createElement(name==='inline'?'span':'p',null,children);
 export const Image=({src,alt})=>React.createElement('img',{src,alt});
 const iconPaths={
  search:['M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0ZM15 15l6 6'],

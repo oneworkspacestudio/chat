@@ -39,3 +39,6 @@ retry/navigation regressions; inspect captures. Then immutable Chat9 and compati
 Workspace pin/release/update. Retain owner/newest recovery. Stop/ref-check scoped
 test suites and remove disposable C caches after evidence preserved on I. Preserve
 four unrelated untracked Workspace histories. Do not retag or overwrite8/45.
+
+First clean85ea0c96 candidate passed full packaged mobile/baseline/security/offline/UI/retry/QR/navigation/restart and13 controller checks. Final manual review then added actual conversation timestamps, native long-press context menu support, right-aligned unread badges and centred Workspace modal.85 was held, never tagged/published as9. Repeat exact-byte final gates after the refinement build. Health helper localhost2s polling timed out despite healthy apps;127.0.0.1 with10s avoids IPv6 fallback delay. It was a fixture-checker issue, not a claimed startup failure.
+

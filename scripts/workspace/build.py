@@ -33,7 +33,7 @@ def main():
     p.add_argument('--cache', required=True)
     p.add_argument('--client-build')
     p.add_argument('--skip-client', action='store_true')
-    p.add_argument('--version', default='0.1.0-preview.8')
+    p.add_argument('--version', default='0.1.0-preview.9')
     p.add_argument('--release', action='store_true', help='require a clean committed source tree and matching client build sources')
     args = p.parse_args()
     if args.release and args.skip_client:

@@ -31,7 +31,7 @@ Lists and favourites synchronize between signed-in sessions. Drafts remain on
 their account and conversation until the server confirms a send. Reconnecting
 reuses a durable message ID so an acknowledgement retry does not send another copy.
 
-Managed Chat 5–8 requires **One Workspace 43 or newer**. It gets its own browser
+Managed Chat 5–9 requires **One Workspace 43 or newer**. It gets its own browser
 hostname, reuses the existing MyAccounts identity and keeps old Workspace Chat
 links working. The app switcher links to installed apps without sharing portal
 cookies, browser storage or scripts with Chat.
@@ -56,7 +56,7 @@ GitHub Actions are disabled.
 
 ## Preview scope
 
-Candidate version: 0.1.0-preview.8. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
+Candidate version: 0.1.0-preview.9. See [acceptance scope](docs/workspace/ACCEPTANCE.md)
 and the [security boundary](docs/whatsapp-parity/SECURITY.md). Release/download
 acceptance remains separate from development fixture results. The actual public
 Workspace45 downloads passed default-online fresh setup and rollback/paired
@@ -67,6 +67,12 @@ OpenMLS native/browser module is a protocol proof, not production Chat encryptio
 Device trust/recovery, complete social families, calls and native Android/iOS
 clients remain incomplete. No full-parity, exact pixel-match or physical-device
 acceptance is claimed.
+
+## Mobile layout
+
+Preview9 revises the phone header, navigation, chat list and composer and keeps
+the Workspace picker's close action above its scrolling app grid.
+[Reference and verification scope](docs/whatsapp-parity/MOBILE-LAYOUT.md).
 
 ## Licenses and upstream
 
