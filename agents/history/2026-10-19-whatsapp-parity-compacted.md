@@ -321,6 +321,18 @@ Need clean7 build, packaged fault/regression acceptance, publish7/paired45 and
 actual download fresh/upgrade before updating owner. Do not mark full brief done:
 default E2EE/device/recovery/rich/social/calls/native families remain incomplete.
 
+That7 build/acceptance/publication is now complete: source0e968335, EXE
+b1d8ecb27e8bf326845f41cb2ccf43d91f2f0c575d5a20fad1946a8b452eb051,
+ZIPa2d6f53f65589315d006ef9ff7bc6435c7d7c93ac27103a8dcd56cb840c17082.
+Release417956914 public; all15 uploaded digests/sizes/tag commit verified. Real
+manual lost-ACK menu, baseline/security, live new-member query, group receipts,
+7viewport/two-theme UI, offline/logout and restart passed exact final bytes on
+isolated local44 and fresh43 fixtures. Five controller unit checks passed. Full
+native tests passed using postgres,workspace,workspacetest: an initial invocation
+omitted workspacetest and reached launcher flag parsing, not a product failure.
+Workspace45/47b55ed now pins the actual7 ZIP and is building from org releases.
+Owner42 unchanged; primary synthetic fixture is restoring actual42 for45 gates.
+
 MyAccounts source87a1c98 now pushed main. Real development migration/negative
 checks all passed and Chat state/document preserved. Final build is running in a
 temporary detached NTFS worktree because source processing on I was very slow.

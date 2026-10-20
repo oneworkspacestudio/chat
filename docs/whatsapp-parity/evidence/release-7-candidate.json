@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "version": "0.1.0-preview.7",
+  "sourceCommit": "0e968335d3db37d9e97283286104a5e81a74cf41",
+  "executableSHA256": "b1d8ecb27e8bf326845f41cb2ccf43d91f2f0c575d5a20fad1946a8b452eb051",
+  "zipSHA256": "a2d6f53f65589315d006ef9ff7bc6435c7d7c93ac27103a8dcd56cb840c17082",
+  "exactFinalBinary": true,
+  "ownerDataUsed": false,
+  "githubActionsUsed": false,
+  "baselineAndSecurity": true,
+  "newMemberInOpenQuery": true,
+  "originalGroupAudienceReceiptTransitions": true,
+  "sevenViewportTwoThemeUI": true,
+  "nativeRestart": true,
+  "manualLostACKRetryOneCopy": true,
+  "manualRetryControllerUnits": 5,
+  "uncaughtBrowserErrors": [],
+  "applicationE2EE": false,
+  "physicalMobile": false,
+  "fullWhatsAppParity": false,
+  "publicDownloadTested": false
+}

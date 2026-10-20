@@ -55,3 +55,9 @@ interop helper. `crypto-interop.cjs` connects that actual Windows process to a
 real browser WASM client. Set `CHAT_CRYPTO_PROOF_ROOT` to the proof artifact
 folder and `PLAYWRIGHT_MODULE` to your local Playwright installation. Signing,
 native mobile clients and production device/keystore/recovery are not implied.
+
+`manual-retry-acceptance.cjs` uses two real synthetic browser sessions, deliberately
+drops only a real successful server ACK, and exercises the actual message Retry
+menu after timeout. It asserts the original durable ID, a fresh wire request ID,
+and exactly one recipient message after reload. No successful backend response is
+mocked. Use the same isolated loopback fixture variables as the other harnesses.

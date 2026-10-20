@@ -27,7 +27,7 @@ migration. Automatic rollback restored the exact public Chat4 executable,
 immutable IDs, messages, attachment links, download filename and document bytes.
 This is recorded separately from the final public Workspace43 bundle acceptance.
 
-## Preview6 development verification (publication pending)
+## Published preview6 verification
 
 The new managed Find picker refreshes an open query while visible and online.
 A real account created after the empty search appeared automatically, without
@@ -55,6 +55,40 @@ callback, replay and concurrent single-use checks passed, including existing
 database/token/SSO and Chat document/history preservation. Final clean release
 and downloads are tracked separately. This is a native-auth prerequisite, not
 complete native Android/iOS delivery. No owner installation is a test fixture.
+
+Chat6/ec0885ee and MyAccounts preview-20261020.1/87a1c98 are public. Workspace44
+packages the exact public binaries; all uploaded asset SHA/size/source mappings
+were checked. Exact local44 fresh/paired42 upgrade and existing browser SSO,
+IDs/history/document bytes passed; actual public44 installer/bundle were downloaded
+and their SHA verified. Owner42 was held pending the retry correction below.
+
+## Published preview7: actual manual Retry correction
+
+[Preview7](https://github.com/oneworkspacestudio/chat/releases/tag/v0.1.0-preview.7)
+is built from clean source0e968335d3db37d9e97283286104a5e81a74cf41. EXE SHA
+b1d8ecb27e8bf326845f41cb2ccf43d91f2f0c575d5a20fad1946a8b452eb051;
+ZIP a2d6f53f65589315d006ef9ff7bc6435c7d7c93ac27103a8dcd56cb840c17082.
+All15 uploaded assets' server digests/sizes and exact tag commit were verified.
+
+A new fault test dropped only the actual successful server ACK, after real
+recipient delivery. Against6 the actual Retry menu recreated the queued message
+without its durable ID and the recipient saw TWO copies. Earlier tests covered
+automatic/native replay but missed this UI menu. Both6/44 release bodies disclose
+the defect; their immutable assets/tags remain unchanged.
+
+The packaged7 actual menu retains the existing queued publication/ID/topic,
+refreshes only the wire request ID and leaves exactly one recipient message after
+reload. Five separate controller checks cover original object/header/document
+retention, ambiguous legacy draft guidance, the subscribe/replay race, rejected
+acknowledgement and menu delegation. Exact packaged baseline/security, open-query
+new member, original group receipts, seven viewports/two themes and native restart
+passed again with no uncaught browser errors. Full native managed tests passed
+with postgres,workspace,workspacetest; an initial invocation omitted workspacetest
+and entered launcher flag parsing, so that invocation is not counted as a pass.
+
+The paired45 installer/public download/update acceptance is recorded separately
+when performed. The correction does not establish full CHAT-04 or application
+E2EE, signed device/recovery, complete rich/social/calling or Android/iOS parity.
 
 ## Asserted against real packaged services
 
