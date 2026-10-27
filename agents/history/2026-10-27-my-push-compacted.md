@@ -25,3 +25,15 @@ I:/Projects/tooling/my-push-20261027. No device/Doze, live server or synthetic A
 acceptance run. Original I:/Projects/workspace-chat unrelated Linux work untouched.
 Reconcile current main/managed requirements and actual release versions before
 any authorized publication; no GitHub Actions or owner fixture.
+
+## 27 October authorized acceptance
+
+User authorized attached-phone testing and publication/install. Synthetic fresh
+NTFS three-app fixture passes independent Alice/Bob MyAccounts sign-in, native
+linking, public bearer bootstrap, scoped My Push provisioning, authenticated
+Centrifuge WebSocket, Bob-to-Alice Chat delivery, opaque wake payload, durable
+pending queue, acknowledgement and immediate Chat-device revocation. Test artifacts
+remain outside source. Phone installed debug2 but UI acceptance awaits unlock;
+no Doze/reboot/physical notification action claim. Releasing evaluation previews,
+not full WhatsApp parity. No GitHub Actions. Preserve existing Linux gateway work
+in the separate original workspace-chat checkout.
