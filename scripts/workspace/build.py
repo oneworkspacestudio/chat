@@ -26,6 +26,15 @@ def sha(path):
     return h.hexdigest()
 
 
+def source_sha(path):
+    # Windows checkouts can use CRLF while build generators emit LF. Compare
+    # text with Git's line-ending normalization, retaining byte checks for art.
+    data = path.read_bytes()
+    if path.suffix in {'.js', '.mjs', '.cjs', '.jsx', '.json', '.css', '.html', '.svg'}:
+        data = data.replace(b'\r\n', b'\n')
+    return hashlib.sha256(data).hexdigest()
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--go', default='go')
@@ -70,7 +79,7 @@ def main():
                      'css/base.css', 'css/workspace.css', 'img/apps']:
             path = canonical / name
             for file in sorted(path.rglob('*')) if path.is_dir() else [path]:
-                if file.is_file() and sha(file) != sha(client / file.relative_to(canonical)):
+                if file.is_file() and source_sha(file) != source_sha(client / file.relative_to(canonical)):
                     raise RuntimeError('Release client source differs from committed checkout: ' + str(file.relative_to(canonical)))
     env = dict(os.environ)
     env['GOTMPDIR'] = str(cache / 'go-tmp')
