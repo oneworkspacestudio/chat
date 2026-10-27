@@ -269,6 +269,13 @@ func run(c Config, noBrowser bool) error {
 		"media":        map[string]any{"use_handler": "fs", "max_size": 25 << 20, "gc_period": 3600, "gc_block_size": 100, "handlers": map[string]any{"fs": map[string]any{"upload_dir": filepath.Join(c.Data, "attachments"), "serve_url": pathBase(c.Origin) + "/v0/file/s/", "cache_control": "private, no-store"}}},
 	}
 	confPath := filepath.Join(c.Data, "engine.json")
+	if local, _, key, ok := selfPushSettings(); ok {
+		config["push"] = []any{map[string]any{"name": "workspace", "config": map[string]any{"enabled": true, "url": local, "key": key}}}
+	} else if _, credential, err := nativePushConfig(c.Data); err != nil {
+		log.Print("Android push settings need attention; Chat continues without cloud push")
+	} else if credential != "" {
+		config["push"] = []any{map[string]any{"name": "fcm", "config": map[string]any{"enabled": true, "credentials_file": credential, "opaque": true, "workspace_origin": c.Origin}}}
+	}
 	if e = platform.SaveJSON(confPath, config); e != nil {
 		return e
 	}

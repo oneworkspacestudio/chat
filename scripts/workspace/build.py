@@ -80,7 +80,7 @@ def main():
                     '-o', str(cache / 'tinode-db.exe'), './tinode-db'], cwd=ROOT, env=env, check=True)
     payload = ROOT / 'workspace/payload/runtime.zip'
     payload.parent.mkdir(parents=True, exist_ok=True)
-    static_names = ['index.html', 'workspace-bootstrap.js', 'workspace-offline.mjs', 'manifest.json', 'umd', 'css', 'img', 'audio', 'fonts']
+    static_names = ['index.html', 'workspace-bootstrap.js', 'workspace-offline.mjs', 'workspace-native-devices.html', 'workspace-native-devices.js', 'manifest.json', 'umd', 'css', 'img', 'audio', 'fonts']
     assets = []
     asset_hash = hashlib.sha256()
     for name in static_names:

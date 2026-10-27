@@ -50,6 +50,8 @@ type Handler struct {
 }
 
 type configType struct {
+	Opaque          bool            `json:"opaque,omitempty"`
+	WorkspaceOrigin string          `json:"workspace_origin,omitempty"`
 	Enabled         bool            `json:"enabled"`
 	DryRun          bool            `json:"dry_run"`
 	Credentials     json.RawMessage `json:"credentials"`
@@ -133,6 +135,17 @@ func (Handler) Init(jsonconf json.RawMessage) (bool, error) {
 func sendFcmV1(rcpt *push.Receipt, config *configType) {
 	messages, uids := PrepareV1Notifications(rcpt, config)
 	for i := range messages {
+		if config.Opaque {
+			m := messages[i]
+			m.Data = map[string]string{"what": rcpt.Payload.What, "topic": rcpt.Payload.Topic, "uid": uids[i].UserId(), "origin": config.WorkspaceOrigin}
+			m.Notification = nil
+			m.Apns = nil
+			m.Webpush = nil
+			m.Android = &fcmv1.AndroidConfig{Priority: "high", Ttl: "120s"}
+			if rcpt.Payload.Silent || rcpt.Payload.What != push.ActMsg {
+				m.Android.Priority = "normal"
+			}
+		}
 		req := &fcmv1.SendMessageRequest{
 			Message:      messages[i],
 			ValidateOnly: config.DryRun,

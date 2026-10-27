@@ -70,6 +70,16 @@ networks and physical mobile devices have not been accepted.
 The desktop rail also uses the shared navigation states and outline icons,
 with readable selected/hover text and non-shrinking controls.
 
+## Android companion
+
+The One Workspace Android app opens Chat alongside the rest of your installed
+apps. This development source adds linked-phone access, native notification and
+background-sync endpoints, private push payloads and device revocation. See the
+[Android setup and limits](docs/workspace/ANDROID.md). My Push provides the self hosted route
+without a Firebase account. Matching server installation and physical-device
+verification are still required before claiming reliable background delivery.
+This does not complete native WhatsApp feature parity or native background calls.
+
 ## Build locally
 
 See [BUILD.md](docs/workspace/BUILD.md). Source includes the exact vendored web

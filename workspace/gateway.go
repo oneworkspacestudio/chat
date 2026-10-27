@@ -36,10 +36,11 @@ type flow struct {
 	Expires         time.Time
 }
 type loginSession struct {
-	Ticket  workspace.Ticket
-	Expires time.Time
-	Context context.Context
-	Cancel  context.CancelFunc
+	NativeDevice string
+	Ticket       workspace.Ticket
+	Expires      time.Time
+	Context      context.Context
+	Cancel       context.CancelFunc
 }
 type gatewaySessionContext struct{}
 
@@ -54,6 +55,7 @@ func (g *Gateway) signedTicket(s *loginSession) string {
 }
 
 type Gateway struct {
+	native            nativeState
 	config            Config
 	base              string
 	oauth             oauth2.Config
@@ -311,6 +313,9 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("X-Chat-Instance", g.instance)
+	if g.nativeRoutes(w, r, path) {
+		return
+	}
 	s := g.session(r)
 	if s == nil {
 		if path == "/" && r.Method == "GET" {
@@ -405,6 +410,10 @@ func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Header().Set("X-Chat-Shell", "static")
 		w.Write(body)
+		return
+	}
+	if path == "/devices" {
+		http.Redirect(w, r, g.base+"/workspace-native-devices.html", http.StatusSeeOther)
 		return
 	}
 	clean, e := platform.Inside(g.web, strings.TrimPrefix(path, "/"))

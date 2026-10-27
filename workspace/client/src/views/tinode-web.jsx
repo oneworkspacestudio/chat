@@ -1695,6 +1695,7 @@ class TinodeWeb extends React.Component {
   }
 
   async handleLogout() {
+    window.WorkspaceNative?.postMessage(JSON.stringify({type:'signedOut'}));
     this.workspaceSessionEnding=true;clearInterval(this.workspaceSessionHeartbeat);
     // An unsynced direct message may be its only surviving copy. Keep the
     // encrypted account-scoped outbox for this same account's next sign-in.

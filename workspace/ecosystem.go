@@ -42,6 +42,10 @@ func (g *Gateway) revokeSessions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	g.mu.Unlock()
+	if g.revokeNativeIdentity(identity.Subject) != nil {
+		http.Error(w, "Linked device revocation could not be saved; retry", 503)
+		return
+	}
 	w.Header().Set("Cache-Control", "no-store")
 	w.WriteHeader(204)
 }

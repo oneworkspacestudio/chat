@@ -71,6 +71,7 @@ func (g *Gateway) syncDirectory(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	g.mu.Unlock()
+	g.reconcileNativeDirectory(active)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-store")
 	json.NewEncoder(w).Encode(map[string]any{"members": len(result.Users)})
