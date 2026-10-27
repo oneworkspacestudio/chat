@@ -37,3 +37,30 @@ remain outside source. Phone installed debug2 but UI acceptance awaits unlock;
 no Doze/reboot/physical notification action claim. Releasing evaluation previews,
 not full WhatsApp parity. No GitHub Actions. Preserve existing Linux gateway work
 in the separate original workspace-chat checkout.
+
+## Chat11 public delivery and acceptance
+
+Published Chat11 at15996b0d with complete corresponding source/update metadata;
+all14 release assets verified against local SHA256/size and channel promoted.
+History-only later commits do not move the release tag. Release mirror checks
+normalize Windows CRLF for text while retaining byte checks for artwork.
+Final native protocol tests pass16 checks with My Push2/Workspace94: two-user
+sign-in, native link/bootstrap, real server publish ACK then opaque public wake,
+durable queue/ACK, native socket auth/content/reply, browser-session restoration
+and immediate revocation. Do not treat optimistic/direct-fallback UI text as a
+committed server message. Separate acceptance evidence is authoritative; the
+builder's build-info flag does not mean externally run tests were absent.
+
+Normal protected93→94 update added Push automatically and respected26 fixture
+exclusions. Primary owner update then installed Chat11, all28 services healthy;
+existing credentials/config and unselected app bytes retained. No owner data was
+a functional fixture. MyAI14/Maps8/Tasks4 retained. Signed Android2 is installed,
+exact public APK hash checked, app closed and Appium session deleted. Physical
+notification/reply/Doze/reboot acceptance remains pending locked-phone unlock;
+secondary install pending user MyAccounts login. No native incoming-call/full
+WhatsApp or Linux gateway certification. Original separate Linux edits untouched.
+
+All synthetic C data/build mirrors, task services and three Quick Tunnels cleaned.
+Source/artifacts/receipts remain on I. Do not rerun completed primary update;
+recreate fresh isolated synthetic state for physical tests. See Workspace's
+public docs/ANDROID-DELIVERY.json for sanitized current delivery status.
